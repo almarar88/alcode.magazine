@@ -20,7 +20,7 @@ const posts = fs.readdirSync(dir).filter(f => /\.mdx?$/.test(f)).map(f => {
 // Related: shared tags (×2) + same category (×1)
 for (const p of posts) p.related = posts.filter(o => o !== p).map(o => ({ s: o.slug, n: o.tags.filter(t => p.tags.includes(t)).length * 2 + (o.category === p.category ? 1 : 0) }))
   .sort((a, b) => b.n - a.n).slice(0, 3).map(o => o.s);
-const PLACES = ['الكويت', 'البصرة', 'بوشهر', 'البحرين', 'لنجة', 'أبوظبي', 'صير بني ياس', 'رأس الخيمة', 'الذيد', 'البريمي', 'صحار', 'مسقط', 'مطرح', 'نزوى', 'هرمز', 'غمرون', 'بندر عباس'];
+const PLACES = ['الكويت', 'البصرة', 'بوشهر', 'البحرين', 'لنجة', 'أبوظبي', 'صير بني ياس', 'رأس الخيمة', 'الذيد', 'البريمي', 'صحار', 'مسقط', 'مطرح', 'نزوى', 'هرمز', 'غمرون', 'بندر عباس', 'الشارقة', 'الأحساء'];
 const tags = [...new Set([...posts.flatMap(p => p.tags), ...PLACES])].map(t => ({ name: t, slug: tagSlug(t), count: posts.filter(p => p.tags.includes(t)).length }));
 fs.mkdirSync(path.join(root, 'src/generated'), { recursive: true });
 const photos = JSON.parse(fs.readFileSync(path.join(dir, 'photos.json'), 'utf8'));

@@ -23,6 +23,16 @@ META={ # slug, category, tags, era, eraSort
  '18':('oman-plants-1838-aucher-eloy','التراث',['نزوى','الجبل الأخضر','مسقط','النبات'],'1838',1838.1),
  '19':('bushehr-port-1816-buckingham','الاقتصاد والتجارة',['بوشهر','ملاقف الهواء','التجارة','بومباي'],'1816',1816.1),
  '20':('oman-imams-aflaj-stuhlmann','التاريخ',['مسقط','نزوى','الأفلاج','هرمز'],'1916',1916.1),
+ '21':('kuwait-1916-stuhlmann','التاريخ',['الكويت','البصرة'],'1916',1916.2),
+ '22':('sharjah-rak-1816-buckingham','المخطوطات والرحالة',['الشارقة','رأس الخيمة','البحرين'],'1816',1816.2),
+ '23':('muscat-1816-buckingham','الاقتصاد والتجارة',['مسقط','مطرح','بومباي','التجارة'],'1816',1816.3),
+ '24':('muscat-arabia-1663-godinho','المخطوطات والرحالة',['مسقط','الأحساء','الخيل'],'1663',1663.2),
+ '25':('basra-ahwaz-1831-stocqueler','التاريخ',['البصرة','الأهواز'],'1831',1831.2),
+ '26':('pearl-origin-history-rosenthal','التراث',['اللؤلؤ'],'',0),
+ '27':('famous-pearls-rosenthal','الاقتصاد والتجارة',['اللؤلؤ','مسقط','هرمز'],'',0),
+ '28':('bahrain-pearls-1618-silva','التاريخ',['البحرين','اللؤلؤ','البصرة','هرمز'],'1618',1618),
+ '29':('shiraz-persepolis-basra-valentyn','المخطوطات والرحالة',['شيراز','البصرة','مسقط'],'1726',1726.1),
+ '30':('godinho-desert-1663','المخطوطات والرحالة',['البصرة','الأحساء'],'1663',1663.3),
 }
 APPROX=set()  # md: «وبعضها تقريبي بصفحةٍ واحدة»
 def imgs(n):
@@ -30,7 +40,7 @@ def imgs(n):
   out=[]
   for blk in open(f'{IN}/{f}').read().split('## الصورة')[1:]:
     g=lambda k: (re.search(r'- '+k+r'[^:]*:\s*(.+)',blk) or [None,''])[1].strip()
-    out.append(dict(path=g('المسار'),desc=g('الوصف'),cap=g('التعليق'),orig=g('المصدر الأصلي'),page=(re.search(r'\d+',g('موضعها')) or [''])[0],added=bool(re.search(r'added_by_editor:\s*true',blk)),kind=g('طبيعة الصورة'),pbook=(re.search(r'من كتاب «([^»]+)»',g('موضعها')) or [None,None])[1]))
+    out.append(dict(path=g('المسار'),desc=g('الوصف'),cap=g('التعليق'),orig=g('المصدر الأصلي'),page=(re.search(r'ص\s*(\d+)',g('موضعها')) or [0,''])[1],added=bool(re.search(r'added_by_editor:\s*true',blk)),kind=g('طبيعة الصورة'),pbook=(re.search(r'«([^»]+)»',g('موضعها')) or [None,None])[1]))
   return out
 for n,(slug,cat,tags,era,es) in META.items():
   f=[x for x in os.listdir(IN) if x.startswith(n+'_') and not x.endswith('_images.md')][0]
@@ -54,13 +64,17 @@ for n,(slug,cat,tags,era,es) in META.items():
     cap=im['cap']; orig=im['orig']
     if n=='01': cap='لوحة خيالية لإدمون دولاك عن أساطير اللؤلؤ، وليست مشهدًا من الخليج: '+cap
     if n=='14': cap='لوحة رمزية لإدمون دولاك عن أساطير اللؤلؤ، وليست صورةً لتجارة اللؤلؤ: '+cap
+    if n=='27': cap='لوحة لإدمون دولاك من فصل الأساطير، توضيحٌ لأسطورةٍ من أساطير اللؤلؤ: '+cap
+    if n=='23' and 'بومباي' in cap: cap=cap+' — من فصلٍ آخر في الكتاب (بومباي)، لا من فصل مسقط'
+    if n=='22' and im['added']: cap=cap+' — من كتابٍ آخر للمحقق'
+    if n=='30' and 'Bassora' in cap: cap=cap+' — من الفصل السادس عشر عن البصرة، وقد وردت أيضًا في مقالٍ سابق'
     if n=='08': cap='القرنة قرب البصرة (وليست مسقط): '+cap
     if True: orig=re.sub(r'\s*\([^()]*Persian[^()]*\)','',orig)
     ednote=''
     if n=='15' and ': اللوحة الملوّنة' in cap:  # editor note: description, not book caption
       cap,ednote=cap.split(': ',1)
     if im['added']: cap=cap+' (صورة أضافها المحقق)'
-    if ednote: ednote=f'<span class="fig-orig">ملاحظة تحريرية: {ednote}</span>'
+    ednote=''  # editor: description not in the book; dropped
     note=f'<span class="fig-orig">طبيعة الصورة: {im["kind"]}</span>' if im['added'] and im['kind'] else ''
     alt=re.sub(r'[«»"]','',im['desc'])
     figs.append((o,I.size,f'<figure class="art-fig"><img src="{o}" alt="{alt}" width="{I.size[0]}" height="{I.size[1]}" loading="lazy" /><figcaption><span class="fig-cap">{cap}</span><span class="fig-src">المصدر: «{im['pbook'] or book}»، ص {im["page"]}{' تقريباً' if n in APPROX else ''}</span>{note}{ednote}<span class="fig-orig">أصل الصورة: {orig}</span></figcaption></figure>'))
@@ -82,7 +96,7 @@ for n,(slug,cat,tags,era,es) in META.items():
   rest=re.sub(r'- page_approx: true\s*—\s*','- **أرقام الصفحات تقريبية:** ',rest); rest=re.sub(r'- page_approx: false\s*—\s*','- ',rest)
   cover=figs[0][0]; capc=re.sub(r'<[^>]+>',' ',figs[0][2].split('<figcaption>')[1].split('</span>')[0])
   fm={'title':title,'author':author,'book':book,'category':cat,'date':f'2026-10-{31-int(n):02d}' if int(n)<11 else '','cover':cover,'coverCaption':capc.strip()+' — المصدر: «'+(ims[0]['pbook'] or book)+'»، ص '+ims[0]['page']+(' تقريباً' if n in APPROX else ''),'excerpt':excerpt,'tags':tags,'era':era,'eraSort':es}
-  k=int(n); fm['date']=f'2026-10-{21-(k-11):02d}' if k>10 else f'2026-10-{12-k:02d}'
+  k=int(n); fm['date']=f'2026-10-{21-(k-21):02d}' if k>20 else (f'2026-10-{11-(k-11):02d}' if k>10 else f'2026-09-{31-k:02d}')
   y='---\n'+''.join(f'{k}: {json.dumps(v,ensure_ascii=False)}\n' for k,v in fm.items())+'---\n\n'
   open(f'{R}/content/{n}-{slug}.md','w').write(y+'\n\n'.join(out)+'\n\n'+rest.strip()+'\n')
   print(n,len(ims),'quote' if quote else 'NOQUOTE',len(excerpt))
