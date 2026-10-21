@@ -8,6 +8,8 @@ let tpl = fs.readFileSync(path.join(out, 'index.html'), 'utf8');
 const extra = [INT.verification.google && `<meta name="google-site-verification" content="${INT.verification.google}">`, INT.verification.bing && `<meta name="msvalidate.01" content="${INT.verification.bing}">`,
   FLAGS.analytics && `<script data-goatcounter="https://${INT.analytics.code}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`].filter(Boolean).join('');
 tpl = tpl.replace('</head>', extra + '</head>');
+// Inline the main stylesheet so first paint doesn't wait on a second request.
+tpl = tpl.replace(/<link rel="stylesheet" crossorigin href="([^"]+\.css)">/, (m, href) => { const css = fs.readFileSync(path.join(out, href.replace(SITE.base, '')), 'utf8'); return `<style>${css}</style>`; });
 const entry = tpl.match(/<script type="module" crossorigin src="([^"]+)"><\/script>/)[1];
 tpl = tpl.replace(/<script type="module" crossorigin src="[^"]+"><\/script>/, '').replace(/<link rel="modulepreload"[^>]*>/g, '')
   .replace('</body>', `<script>requestAnimationFrame(function(){setTimeout(function(){var s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='${entry}';document.head.appendChild(s);},0)});</script>\n</body>`);

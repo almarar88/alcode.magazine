@@ -54,7 +54,7 @@ export default function Article({ slug }: { slug: string }) {
     <ProgressBar />
     <main id="main">
       <header className="relative overflow-hidden bg-[var(--hero-bg)] text-[#f6efe1]">
-        <img src={asset(p.cover)} alt="" className="absolute inset-0 size-full object-cover opacity-45" width="1200" height="750" />
+        <img src={asset(p.cover)} alt="" className="absolute inset-0 size-full object-cover opacity-45" width="1200" height="750" fetchPriority="high" decoding="async" />
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[var(--hero-bg)] via-[var(--hero-bg)]/80 to-[var(--hero-bg)]/30" />
         <div className="relative mx-auto max-w-[1000px] px-4 pb-14 pt-20 sm:px-6 sm:pt-28">
           <motion.nav aria-label="مسار التنقل" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-wrap items-center gap-2 text-sm text-[#e6d9bf]"><Link to="" className="hover:text-[#e2b866]">الرئيسية</Link><span aria-hidden="true">‹</span><Link to={`category/${p.categorySlug}/`} className="font-bold text-[#e2b866] hover:underline">{p.category}</Link></motion.nav>
