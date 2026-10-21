@@ -7,7 +7,7 @@ import { asset, bySlug, fmtDate, minutesLabel, tagSlug, arNum, SITE_URL, type Po
 import { Link } from '../router';
 import { Prose, headings } from '../Prose';
 import { ArticleCard, Meta } from '../cards';
-import { SaveButton } from '../chrome';
+import { SaveButton, StoreButton, SocialLinks } from '../chrome';
 import NotFound from './NotFound';
 
 function ProgressBar() {
@@ -57,7 +57,7 @@ export default function Article({ slug }: { slug: string }) {
         <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[var(--hero-bg)] via-[var(--hero-bg)]/80 to-[var(--hero-bg)]/30" />
         <div className="relative mx-auto max-w-[1000px] px-4 pb-14 pt-20 sm:px-6 sm:pt-28">
           <motion.nav aria-label="مسار التنقل" initial={reduce ? false : { opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-wrap items-center gap-2 text-sm text-[#e6d9bf]"><Link to="" className="hover:text-[#e2b866]">الرئيسية</Link><span aria-hidden="true">‹</span><Link to={`category/${p.categorySlug}/`} className="font-bold text-[#e2b866] hover:underline">{p.category}</Link></motion.nav>
-          <div className="mt-5 flex flex-wrap gap-2">{p.sample && <span className="sample-badge !bg-[#e2b866] !text-[#1b1712]">مقال تجريبي</span>}</div>
+          <div className="mt-5 flex flex-wrap gap-2"></div>
           <motion.h1 initial={reduce ? false : { y: 24 }} animate={{ y: 0 }} transition={{ duration: .8, ease: [.2, .8, .2, 1] }} className="mt-4 text-[clamp(2rem,5.5vw,3.8rem)] font-black leading-[1.25] text-[#f6efe1]">{p.title}</motion.h1>
           <p className="mt-5 max-w-3xl text-lg leading-9 text-[#e6d9bf] sm:text-xl">{p.excerpt}</p>
           {p.book && <p className="mt-4 text-base font-semibold text-[#e2b866]">عن كتاب «{p.book}» · {p.author} · تحقيق: أحمد علي المرر</p>}
@@ -92,6 +92,12 @@ export default function Article({ slug }: { slug: string }) {
           </div>
         </aside>
       </div>
+      <aside aria-labelledby="store-card" className="mx-auto mb-14 max-w-[900px] px-4 sm:px-6"><div className="store-card relative overflow-hidden rounded-[24px] border border-[var(--border-strong)] bg-[var(--card)] p-6 sm:p-8">
+        <div className="pattern pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
+        <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div><p className="kicker">من مكتبة الكود</p><h2 id="store-card" className="mt-1 text-xl sm:text-2xl">{p.book ? <>كتاب «{p.book}» وغيره من كتب التراث</> : 'كتب التراث وتاريخ الخليج'}</h2><p className="mt-1 text-[var(--text-muted)]">تصفّح إصدارات المكتبة واطلبها من المتجر.</p></div>
+          <div className="flex items-center gap-3"><StoreButton /><SocialLinks /></div>
+        </div></div></aside>
       {related.length > 0 && <section aria-labelledby="rel" className="mx-auto max-w-[1320px] px-4 sm:px-6">
         <div className="rule-orn mb-8"><h2 id="rel" className="text-2xl">مقالات ذات صلة</h2></div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">{related.map((r, i) => <ArticleCard key={r.slug} p={r} i={i} />)}</div>

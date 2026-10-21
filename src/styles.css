@@ -169,3 +169,14 @@ textarea.field-input { font-family: var(--font-body); font-size: .95rem; line-he
   .art-fig .fig-src { color: var(--accent); font-weight: 700; font-size: .9rem; }
   .art-fig .fig-orig { color: var(--text-muted); font-size: .82rem; }
 }
+
+@layer components {
+  .social-btn { display: inline-grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 999px; border: 1px solid var(--border); color: var(--text-secondary); transition: transform .25s cubic-bezier(.3,1.6,.5,1), color .2s, background-color .2s, border-color .2s; }
+  .social-btn:hover, .social-btn:focus-visible { transform: translateY(-3px) rotate(-8deg) scale(1.08); color: var(--accent); border-color: var(--accent); background: var(--accent-subtle); }
+  .social-dark { color: #f6efe1; border-color: rgba(255,255,255,.25); }
+  .social-dark:hover, .social-dark:focus-visible { color: #1b1712; background: #e2b866; border-color: #e2b866; }
+  .store-btn { display: inline-flex; align-items: center; gap: .45rem; border-radius: 999px; padding: .5rem 1rem; font-weight: 700; background: #e2b866; color: #1b1712; border: 1px solid #c99a45; transition: transform .25s cubic-bezier(.3,1.6,.5,1), box-shadow .25s, background-color .2s; white-space: nowrap; }
+  .store-btn:hover, .store-btn:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 20px -8px rgba(201,154,69,.8); background: #ecc87e; }
+  .store-btn svg { transition: transform .3s; } .store-btn:hover svg { transform: rotate(-12deg) scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) { .social-btn, .store-btn, .store-btn svg { transition: none; } .social-btn:hover, .store-btn:hover, .store-btn:hover svg { transform: none; } }

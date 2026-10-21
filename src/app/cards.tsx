@@ -21,7 +21,7 @@ export function ArticleCard({ p, i = 0 }: { p: Post; i?: number }) {
       <div className="cover-zoom relative aspect-[16/10] overflow-hidden">
         <img src={asset(p.cover)} alt="" loading="lazy" className="size-full object-cover" width="1200" height="750" />
         <div className="absolute inset-x-3 top-3 flex items-center justify-between">
-          {p.sample ? <span className="sample-badge">مقال تجريبي</span> : <span />}
+          <span />
           <SaveButton slug={p.slug} compact />
         </div>
       </div>
@@ -43,7 +43,7 @@ export function FeaturedCard({ p }: { p: Post }) {
           <span className="absolute start-4 top-4 rounded-full bg-[var(--hero-bg)] px-3 py-1 text-sm font-bold text-[#e2b866]">المقال المختار</span>
         </div>
         <div className="relative flex flex-col justify-center gap-4 p-6 sm:p-10">
-          <div className="flex items-center gap-2">{p.sample && <span className="sample-badge">مقال تجريبي</span>}<Link to={`category/${p.categorySlug}/`} className="kicker hover:underline">{p.category}</Link></div>
+          <div className="flex items-center gap-2"><Link to={`category/${p.categorySlug}/`} className="kicker hover:underline">{p.category}</Link></div>
           <h3 className="text-3xl leading-tight sm:text-[2.6rem]"><Link to={`article/${p.slug}/`} className="after:absolute after:inset-0 after:content-['']"><span className="ulink">{p.title}</span></Link></h3>
           <p className="text-lg text-[var(--text-secondary)]">{p.excerpt}</p>
           <Meta p={p} />

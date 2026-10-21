@@ -1,4 +1,4 @@
-# Demo build: not for indexing
 User-agent: *
-Disallow: /
-Sitemap: https://liberty-screen-honolulu-platform.trycloudflare.com/sitemap.xml
+Allow: /
+
+Sitemap: https://blog.alcode.ae/sitemap.xml

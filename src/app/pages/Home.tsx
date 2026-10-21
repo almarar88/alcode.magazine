@@ -35,7 +35,7 @@ function Hero() {
     <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-4 pb-20 pt-14 sm:px-6 lg:grid-cols-[1.15fr_1fr] lg:pb-28 lg:pt-20">
       <div>
         <motion.p {...rise(0)} className="flex flex-wrap items-center gap-3 text-sm font-semibold text-[#e2b866]">
-          <span className="rounded-full border border-[#e2b866]/60 px-3 py-1">العدد التجريبي</span><span>من مكتبة الكود · alcode.ae</span>
+          <span className="rounded-full border border-[#e2b866]/60 px-3 py-1">مجلة الكود</span><span>من مكتبة الكود · alcode.ae</span>
         </motion.p>
         <h1 id="hero-t" className="mt-6 text-[#f6efe1]">
           <motion.span {...slide(0)} className="block font-display text-[clamp(3rem,10vw,7.4rem)] font-black leading-[1.05] text-[#f6efe1]">مجلة الكود</motion.span>
@@ -112,7 +112,7 @@ export default function Home() {
           <StarOrnament className="absolute -bottom-16 -left-16 hidden size-72 text-[#e2b866] opacity-40 md:block" />
           <div className="relative max-w-xl">
             <h2 id="cta" className="text-3xl text-[#f6efe1] sm:text-4xl">لديك مقال؟ <span style={{ fontFamily: 'Aref Ruqaa, serif' }} className="text-[#e2b866]">اكتبه الآن</span></h2>
-            <p className="mt-3 text-lg text-[#e6d9bf]">محرّر بمعاينة حيّة يحفظ مسودتك في متصفحك ويصدّر ملفاً جاهزاً للنشر.</p>
+            <p className="mt-3 text-lg text-[#e6d9bf]">محرّر بعرض حيّ يحفظ مسودتك في متصفحك ويصدّر ملفاً جاهزاً للنشر.</p>
             <MagneticButton strength={.3} glow={false} onClick={() => navigate('write/')} className="mt-6 !rounded-full !bg-[#e2b866] !px-6 !py-3 !text-base !font-bold !text-[#1b1712] hover:!bg-[#f1d59c]"><PenLine size={18} aria-hidden="true" /> افتح المحرّر</MagneticButton>
           </div>
         </div>
@@ -135,7 +135,7 @@ function IndexList() {
       <Link to={`article/${p.slug}/`} className="grid grid-cols-[3rem_1fr] items-baseline gap-x-4 gap-y-1 py-6 sm:grid-cols-[5rem_1fr_auto] sm:py-8" onFocus={() => setHot(i)}>
         <span className="font-display text-3xl font-black text-[var(--accent)] sm:text-5xl">{arNum(i + 1).padStart(2, '٠')}</span>
         <span className="min-w-0">
-          <span className="flex flex-wrap items-center gap-2 text-sm"><span className="kicker">{p.category}</span>{p.sample && <span className="sample-badge">مقال تجريبي</span>}</span>
+          <span className="flex flex-wrap items-center gap-2 text-sm"><span className="kicker">{p.category}</span></span>
           <span className="mt-1 block font-display text-2xl font-bold leading-snug transition-transform duration-500 group-hover:-translate-x-2 sm:text-[2rem]">{p.title}</span>
           <span className="mt-2 block max-w-2xl text-[var(--text-muted)]">{p.excerpt}</span>
         </span>

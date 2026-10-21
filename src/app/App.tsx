@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect } from 'react';
 import { MotionConfig } from 'motion/react';
 import { usePath } from './router';
-import { DemoRibbon, Header, Footer } from './chrome';
+import { Header, Footer } from './chrome';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 const Article = lazy(() => import('./pages/Article'));
@@ -14,7 +14,7 @@ const Credits = lazy(() => import('./pages/Credits'));
 const Saved = lazy(() => import('./pages/Saved'));
 const TimelinePage = lazy(() => import('./pages/TimelinePage'));
 const About = lazy(() => import('./pages/About'));
-const TITLES: Record<string, string> = { search: 'البحث', write: 'اكتب مقالاً', dashboard: 'لوحة الناشر (تجريبية)', gallery: 'مكتبة الصور', credits: 'حقوق الصور والمصادر', saved: 'المقالات المحفوظة', timeline: 'الخط الزمني', about: 'عن المجلة' };
+const TITLES: Record<string, string> = { search: 'البحث', write: 'اكتب مقالاً', dashboard: 'لوحة الناشر', gallery: 'مكتبة الصور', credits: 'حقوق الصور والمصادر', saved: 'المقالات المحفوظة', timeline: 'الخط الزمني', about: 'عن المجلة' };
 function route(path: string) {
   const [a, b] = path.split('/');
   switch (a) {
@@ -38,7 +38,6 @@ export default function App() {
   useEffect(() => { const a = path.split('/')[0]; if (a !== 'article') document.title = TITLES[a] ? `${TITLES[a]} — مجلة الكود الرقمية` : 'مجلة الكود الرقمية · Alcode Digital Magazine'; }, [path]);
   return <MotionConfig reducedMotion="user">
     <a href="#main" className="skip">تخطَّ إلى المحتوى</a>
-    <DemoRibbon />
     <Header path={path} />
     <Suspense fallback={<div className="min-h-[70vh]" aria-busy="true" />}><div key={path + location.search}>{route(path)}</div></Suspense>
     <Footer />

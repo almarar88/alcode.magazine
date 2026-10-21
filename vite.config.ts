@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
-// Served at the site root (temporary preview; permanent host TBD)
+// Served at the site root (blog.alcode.ae)
 export default defineConfig({
   base: process.env.SITE_BASE || '/',
   plugins: [react(), tailwindcss()],

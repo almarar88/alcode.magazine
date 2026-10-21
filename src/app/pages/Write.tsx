@@ -88,7 +88,7 @@ export default function Write() {
       </div>
       <div className="mt-4 grid gap-6 lg:grid-cols-2">
         <div className={pane === 'write' ? '' : 'hidden lg:block'}>{editor}</div>
-        <div className={pane === 'preview' ? '' : 'hidden lg:block'} aria-label="معاينة حيّة" role="region"><div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">{preview}</div></div>
+        <div className={pane === 'preview' ? '' : 'hidden lg:block'} aria-label="العرض الحيّ" role="region"><div className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">{preview}</div></div>
       </div>
     </div>
   </main>;

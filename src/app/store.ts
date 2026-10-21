@@ -1,4 +1,4 @@
-// Browser-only persistence (demo). Nothing leaves the device.
+// Browser-only persistence . Nothing leaves the device.
 import { useEffect, useState } from 'react';
 const read = <T,>(k: string, d: T): T => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
 const write = (k: string, v: unknown) => { try { localStorage.setItem(k, JSON.stringify(v)); dispatchEvent(new CustomEvent('alcode-store', { detail: k })); } catch {} };

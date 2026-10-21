@@ -13,6 +13,6 @@ console.log('closed', await pg.evaluate(() => !document.querySelector('[role=dia
 await pg.goto('http://127.0.0.1:4173/', { waitUntil: 'networkidle0' });
 await pg.evaluate(() => document.querySelector('a[aria-label="مقالات عن الكويت"]').dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, button: 0 })));
 await new Promise(r => setTimeout(r, 800)); console.log('map ->', decodeURI(await pg.evaluate(() => location.pathname)), await pg.evaluate(() => document.querySelector('h1')?.getAttribute('aria-label')));
-await pg.goto('http://127.0.0.1:4173/article/welcome-to-the-magazine/', { waitUntil: 'networkidle0' }); await new Promise(r => setTimeout(r, 1500));
-console.log('pele svg', await pg.evaluate(() => !!document.querySelector('.pele-host svg')), 'steps/quote/callout', await pg.evaluate(() => document.querySelectorAll('.mdx-ar').length));
+//removed demo article check
+
 console.log('errors', errs); await b.close();
