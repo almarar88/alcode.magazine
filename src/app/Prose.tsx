@@ -9,6 +9,7 @@ import { Callout } from '@/registry/default/callout/callout';
 import { Steps } from '@/registry/default/steps/steps';
 import { Quote } from '@/registry/default/quote/quote';
 import { asset } from './data';
+import { Gloss } from './reader';
 
 export const slugify = (s: string) => s.trim().toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').replace(/\s+/g, '-');
 const text = (n: ReactNode): string => Children.toArray(n).map(c => typeof c === 'string' || typeof c === 'number' ? String(c) : isValidElement(c) ? text((c.props as { children?: ReactNode }).children) : '').join('');
@@ -31,6 +32,7 @@ const components: Record<string, any> = {
   callout: ({ type, title, children }: any) => <Callout className="mdx-ar" type={type} title={title}>{children}</Callout>,
   steps: ({ title, children }: any) => <Steps className="mdx-ar" title={title}>{children}</Steps>,
   quote: ({ by, source, children }: any) => <Quote className="mdx-ar" by={by} source={source}>{children}</Quote>,
+  gloss: ({ node, children, ...rest }: any) => <Gloss g={rest['data-g']}>{children}</Gloss>,
   h2: ({ children }: any) => <h2 id={slugify(text(children))}>{children}</h2>,
   h3: ({ children }: any) => <h3 id={slugify(text(children))}>{children}</h3>,
   img: ({ src, alt }: any) => <img src={asset(String(src || ''))} alt={alt || ''} loading="lazy" className="rounded-xl" />,

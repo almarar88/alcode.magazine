@@ -138,6 +138,7 @@ export function Footer() {
         <div><h2 className="text-base text-[#f6efe1]">عن الموقع</h2><ul className="mt-3 space-y-1.5">
           <li><Link to="about/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">عن المجلة</span></Link></li>
           <li><Link to="credits/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">حقوق الصور والمصادر</span></Link></li>
+          <li><Link to="travelers/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">الرحالة والكتب</span></Link></li>
           <li><Link to="contact/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">تواصل معنا</span></Link></li>
           <li><Link to="privacy/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">سياسة الخصوصية</span></Link></li>
           <li><Link to="terms/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">شروط الاستخدام</span></Link></li>

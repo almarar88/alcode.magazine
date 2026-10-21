@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useSpring, useMotionValueEvent } from 'motion/react';
 import { Copy, Check, Share2, Tag as TagIcon, Type } from 'lucide-react';
 import { Gauge, GaugeTrack, GaugeArc, GaugeValue, GaugeText } from '@/components/gauge';
@@ -10,6 +10,8 @@ import { ArticleCard, Meta } from '../cards';
 import { SaveButton, StoreButton, SocialLinks } from '../chrome';
 import NotFound from './NotFound';
 import { Comments } from '../Comments';
+import { ResumeBar, useSavePosition, GlossCtx, GlossaryList, SeriesNav, JourneyMap, BeforeAfter, HighlightShare } from '../reader';
+import { travelerOf } from '../data';
 
 function ProgressBar() {
   const { scrollYProgress } = useScroll();
@@ -44,6 +46,8 @@ function Share({ p }: { p: Post }) {
 export default function Article({ slug }: { slug: string }) {
   const p = bySlug(slug);
   const reduce = useReducedMotion();
+  const body = useRef<HTMLDivElement>(null);
+  useSavePosition(slug);
   const [scale, setScale] = useState(() => Number(localStorage.getItem('alcode-scale') || 100));
   useEffect(() => { document.documentElement.style.setProperty('--reader-scale', String(scale / 100)); localStorage.setItem('alcode-scale', String(scale)); return () => { document.documentElement.style.setProperty('--reader-scale', '1'); }; }, [scale]);
   useEffect(() => { if (p) document.title = `${p.title} — مجلة الكود الرقمية`; }, [p]);
@@ -61,13 +65,19 @@ export default function Article({ slug }: { slug: string }) {
           <div className="mt-5 flex flex-wrap gap-2"></div>
           <motion.h1 initial={reduce ? false : { y: 24 }} animate={{ y: 0 }} transition={{ duration: .8, ease: [.2, .8, .2, 1] }} className="mt-4 text-[clamp(2rem,5.5vw,3.8rem)] font-black leading-[1.25] text-[#f6efe1]">{p.title}</motion.h1>
           <p className="mt-5 max-w-3xl text-lg leading-9 text-[#e6d9bf] sm:text-xl">{p.excerpt}</p>
-          {p.book && <p className="mt-4 text-base font-semibold text-[#e2b866]">عن كتاب «{p.book}» · {p.author} · تحقيق: أحمد علي المرر</p>}
+          {p.book && <p className="mt-4 text-base font-semibold text-[#e2b866]">عن كتاب «{p.book}» · {travelerOf(p) ? <Link to={`traveler/${p.traveler}/`} className="underline decoration-dotted underline-offset-4 hover:text-[#f6efe1]">{p.author === '—' ? 'الرحالة' : p.author}</Link> : p.author} · تحقيق: أحمد علي المرر</p>}
           <div className="mt-6"><Meta p={p} light /></div>
         </div>
       </header>
       <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_260px]">
         <article className="mx-auto w-full max-w-[720px] min-w-0">
-          <Prose source={p.body} />
+          <ResumeBar slug={p.slug} />
+          {p.journey.length > 0 && <div className="lg:hidden"><JourneyMap p={p} target={body} compact /></div>}
+          <div ref={body}><GlossCtx.Provider value={p.glossary}><Prose source={p.body} /></GlossCtx.Provider></div>
+          {p.beforeAfter.map(id => <BeforeAfter key={id} id={id} />)}
+          <GlossaryList items={p.glossary} />
+          <SeriesNav p={p} />
+          <HighlightShare p={p} root={body} />
           <div className="mt-12 flex flex-wrap items-center gap-2 border-t border-[var(--border)] pt-6">
             <TagIcon size={16} aria-hidden="true" className="text-[var(--accent)]" />
             {p.tags.map(t => <Link key={t} to={`tag/${tagSlug(t)}/`} className="chip">#{t}</Link>)}
@@ -76,6 +86,7 @@ export default function Article({ slug }: { slug: string }) {
         </article>
         <aside className="order-first lg:order-none" aria-label="أدوات القراءة">
           <div className="space-y-5 lg:sticky lg:top-28">
+            {p.journey.length > 0 && <div className="hidden lg:block"><JourneyMap p={p} target={body} /></div>}
             <div className="flex items-center justify-around gap-4 rounded-[22px] border border-[var(--border)] bg-[var(--card)] p-4">
               <ProgressGauge />
               <div className="flex flex-col items-center gap-1 text-[var(--text-primary)]">

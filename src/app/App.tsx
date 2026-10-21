@@ -12,13 +12,15 @@ const Gallery = lazy(() => import('./pages/Gallery'));
 const Credits = lazy(() => import('./pages/Credits'));
 const Saved = lazy(() => import('./pages/Saved'));
 const TimelinePage = lazy(() => import('./pages/TimelinePage'));
+const Traveler = lazy(() => import('./pages/Traveler'));
+const TravelersIndex = lazy(() => import('./pages/Traveler').then(m => ({ default: m.TravelersIndex })));
 const About = lazy(() => import('./pages/About'));
 const Account = lazy(() => import('./pages/Account'));
 const Studio = lazy(() => import('./pages/Studio'));
 const Contact = lazy(() => import('./pages/Static').then(m => ({ default: m.Contact })));
 const Privacy = lazy(() => import('./pages/Static').then(m => ({ default: m.Privacy })));
 const Terms = lazy(() => import('./pages/Static').then(m => ({ default: m.Terms })));
-const TITLES: Record<string, string> = { search: 'البحث', gallery: 'مكتبة الصور', credits: 'حقوق الصور والمصادر', contact: 'تواصل معنا', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام', account: 'الحساب', studio: 'لوحة الناشر', saved: 'المقالات المحفوظة', timeline: 'الخط الزمني', about: 'عن المجلة' };
+const TITLES: Record<string, string> = { search: 'البحث', gallery: 'مكتبة الصور', credits: 'حقوق الصور والمصادر', contact: 'تواصل معنا', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام', account: 'الحساب', studio: 'لوحة الناشر', saved: 'المقالات المحفوظة', timeline: 'الخط الزمني', travelers: 'الرحالة والكتب', about: 'عن المجلة' };
 function route(path: string) {
   const [a, b] = path.split('/');
   switch (a) {
@@ -32,6 +34,8 @@ function route(path: string) {
     case 'saved': return <Saved />;
     case 'timeline': return <TimelinePage />;
     case 'about': return <About />;
+    case 'traveler': return <Traveler slug={b} />;
+    case 'travelers': return <TravelersIndex />;
     case 'account': return <Account />;
     case 'studio': return <Studio />;
     case 'contact': return <Contact />;

@@ -15,3 +15,5 @@ export const minutesLabel = (m: number) => m === 1 ? 'دقيقة واحدة' : m
 export function readingMinutes(md: string) { const w = md.replace(/```[\s\S]*?```/g, ' ').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length; return { words: w, minutes: Math.max(1, Math.round(w / 200)) }; }
 export const photos = data.photos;
 export type Photo = (typeof data.photos)[number];
+export const travelers = (data as any).travelers as { slug: string; name: string; book: string; bio: { text: string; slug: string }[]; posts: string[]; images: { src: string; alt: string; cap: string; slug: string }[] }[];
+export const travelerOf = (p: Post) => travelers.find(t => t.slug === p.traveler);

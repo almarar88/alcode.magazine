@@ -1,3 +1,4 @@
+import { BeforeAfter } from '../reader';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'motion/react';
 import { ChevronLeft, ChevronRight, ExternalLink, X, ZoomIn } from 'lucide-react';
@@ -60,6 +61,7 @@ export default function Gallery() {
           </motion.li>)}</AnimatePresence>
         </motion.ul></LayoutGroup>
       </>}
+      <section aria-labelledby="ba-h" className="mt-14"><h2 id="ba-h" className="text-2xl">بين الأمس واليوم</h2><BeforeAfter id="mutrah" /></section>
       <p className="mt-8 text-sm text-[var(--text-muted)]">تفاصيل كل صورة وترخيصها في <Link to="credits/" className="text-[var(--accent)] underline">صفحة الحقوق والمصادر</Link>.</p>
     </div>
     <AnimatePresence>{open !== null && <Lightbox list={list} i={open} setI={setOpen} />}</AnimatePresence>
