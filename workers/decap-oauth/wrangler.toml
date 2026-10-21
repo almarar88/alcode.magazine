@@ -1,0 +1,7 @@
+name = "alcode-decap-oauth"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+[vars]
+ALLOWED_ORIGIN = "https://blog.alcode.ae"
+# wrangler secret put GITHUB_CLIENT_ID
+# wrangler secret put GITHUB_CLIENT_SECRET

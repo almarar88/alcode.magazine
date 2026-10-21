@@ -1,0 +1,9 @@
+{
+  "_comment": "Third-party integrations. Each feature stays hidden until its value is filled (here, or via the env var named in brackets at build time).",
+  "cms": { "repo": "almarar88/alcode.magazine", "branch": "main", "oauthBaseUrl": "" },
+  "newsletter": { "provider": "buttondown", "username": "" },
+  "comments": { "provider": "giscus", "enabled": false, "repo": "almarar88/alcode.magazine", "repoId": "R_kgDOVR0hgA", "category": "Announcements", "categoryId": "DIC_kwDOVR0hgM4DJPZ6" },
+  "contact": { "provider": "web3forms", "accessKey": "" },
+  "analytics": { "provider": "goatcounter", "code": "alcode" },
+  "verification": { "google": "", "bing": "" }
+}

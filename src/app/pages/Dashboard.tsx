@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { FLAGS } from '../integrations';
 import { motion, AnimatePresence } from 'motion/react';
 import { FileText, PencilLine, Trash2, Upload, BarChart3, Images, ExternalLink, FilePlus2 } from 'lucide-react';
 import { AnimatedTabs } from '@/vendor/easyui/ui/AnimatedTabs';
@@ -22,11 +23,11 @@ export default function Dashboard() {
   return <main id="main" className="mx-auto max-w-[1320px] px-4 pt-10 sm:px-6">
     <div role="note" className="flex items-start gap-3 rounded-2xl border-2 border-dashed border-[#1d3a4a] bg-[color-mix(in_oklab,#1d3a4a_10%,var(--card))] p-4">
       <FileText size={22} aria-hidden="true" className="mt-0.5 shrink-0 text-[var(--accent)]" />
-      <p><b>مساحة عمل في متصفحك.</b> المسودات والوسائط تُحفظ على هذا الجهاز فقط؛ للنشر صدّر المقال بصيغة ‎.md‎ وأرسله إلى فريق التحرير.</p>
+      <p>{FLAGS.cms ? <><b>للنشر على الموقع</b> استخدم «لوحة النشر على الموقع» (تسجيل دخول GitHub). هذه الصفحة مساحة مسودات محلية في متصفحك.</> : <><b>مساحة عمل في متصفحك.</b> المسودات والوسائط تُحفظ على هذا الجهاز فقط؛ للنشر صدّر المقال بصيغة ‎.md‎ وأرسله إلى فريق التحرير.</>}</p>
     </div>
     <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
       <div><p className="kicker">لوحة الناشر</p><h1 className="mt-1 text-[clamp(2.2rem,5vw,3.4rem)] font-black">مرحباً بك في غرفة التحرير</h1></div>
-      <button type="button" className="ink-btn" onClick={newOne}><FilePlus2 size={18} aria-hidden="true" /> مقال جديد</button>
+      <div className="flex flex-wrap gap-2">{FLAGS.cms && <a href="/admin/" className="store-btn">لوحة النشر على الموقع</a>}<button type="button" className="ink-btn" onClick={newOne}><FilePlus2 size={18} aria-hidden="true" /> مقال جديد</button></div>
     </div>
     <div className="mt-6"><AnimatedTabs className="tabs-heritage" variant="pill" activeTab={tab} onChange={setTab} renderContent={false} tabs={[
       { id: 'articles', label: 'المقالات', icon: <FileText size={15} />, badge: arNum(posts.length) }, { id: 'drafts', label: 'المسودات', icon: <PencilLine size={15} />, badge: arNum(drafts.length) },

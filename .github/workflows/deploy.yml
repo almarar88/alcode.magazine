@@ -1,0 +1,43 @@
+name: Build and deploy to GitHub Pages
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['tools-verify/**', 'screens/**', 'incoming_articles/**', 'workers/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: npm }
+      - run: npm ci
+      - name: Build
+        env:
+          SITE_BASE: /
+          SITE_ORIGIN: https://blog.alcode.ae
+          # Optional integrations (Settings → Secrets and variables → Actions → Variables). Empty = feature stays hidden.
+          CMS_OAUTH_BASE_URL: ${{ vars.CMS_OAUTH_BASE_URL }}
+          BUTTONDOWN_USERNAME: ${{ vars.BUTTONDOWN_USERNAME }}
+          GISCUS_ENABLED: ${{ vars.GISCUS_ENABLED }}
+          WEB3FORMS_ACCESS_KEY: ${{ vars.WEB3FORMS_ACCESS_KEY }}
+          GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
+          BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}
+        run: npm run build
+      - name: Prepare Pages output
+        run: rm -f dist/serve.json && touch dist/.nojekyll
+      - uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          cname: blog.alcode.ae
+          force_orphan: false
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_message: 'Deploy ${{ github.sha }}'

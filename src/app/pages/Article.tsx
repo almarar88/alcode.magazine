@@ -9,6 +9,7 @@ import { Prose, headings } from '../Prose';
 import { ArticleCard, Meta } from '../cards';
 import { SaveButton, StoreButton, SocialLinks } from '../chrome';
 import NotFound from './NotFound';
+import { Comments } from '../Comments';
 
 function ProgressBar() {
   const { scrollYProgress } = useScroll();
@@ -92,6 +93,7 @@ export default function Article({ slug }: { slug: string }) {
           </div>
         </aside>
       </div>
+      <Comments slug={p.slug} />
       <aside aria-labelledby="store-card" className="mx-auto mb-14 max-w-[900px] px-4 sm:px-6"><div className="store-card relative overflow-hidden rounded-[24px] border border-[var(--border-strong)] bg-[var(--card)] p-6 sm:p-8">
         <div className="pattern pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
         <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

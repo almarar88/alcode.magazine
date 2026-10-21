@@ -4,6 +4,7 @@ import { Bookmark, BookmarkCheck, Menu, PenLine, Rss, Search, X, LayoutDashboard
 import { ThemeSwitch, type Theme } from '@/registry/components/theme-switch/theme-switch';
 import { Link } from './router';
 import { categories, asset } from './data';
+import { FLAGS, INT } from './integrations';
 import { StarOrnament } from './art';
 import { useStored } from './store';
 
@@ -95,18 +96,27 @@ export function SaveButton({ slug, compact = false }: { slug: string; compact?: 
 }
 
 export function Newsletter() {
+  const [sent, setSent] = useState(false);
   return <section aria-labelledby="nl" className="relative overflow-hidden rounded-[28px] border border-[var(--border-strong)] bg-[var(--card)] p-6 sm:p-10">
     <div className="pattern pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
     <div className="relative grid items-center gap-6 md:grid-cols-[1.2fr_1fr]">
       <div>
-        <p className="kicker">تابع المجلة</p>
-        <h2 id="nl" className="mt-2 text-2xl sm:text-3xl">أحدث المقالات في قارئ الخلاصات</h2>
-        <p className="mt-2 text-[var(--text-muted)]">اشترك في خلاصة RSS لتصلك المقالات الجديدة فور نشرها، أو تابعنا على إنستغرام وتيك توك.</p>
+        <p className="kicker">{FLAGS.newsletter ? 'النشرة البريدية' : 'تابع المجلة'}</p>
+        <h2 id="nl" className="mt-2 text-2xl sm:text-3xl">{FLAGS.newsletter ? 'تصلك المقالات الجديدة على بريدك' : 'أحدث المقالات في قارئ الخلاصات'}</h2>
+        <p className="mt-2 text-[var(--text-muted)]">{FLAGS.newsletter ? 'رسالة عند نشر مقالات جديدة، ويمكنك إلغاء الاشتراك في أي وقت.' : 'اشترك في خلاصة RSS لتصلك المقالات الجديدة فور نشرها، أو تابعنا على إنستغرام وتيك توك.'}</p>
       </div>
-      <div className="flex flex-col gap-2 sm:flex-row">
+      {FLAGS.newsletter ? <div>
+        <form action={`https://buttondown.com/api/emails/embed-subscribe/${INT.newsletter.username}`} method="post" target="bd-popup" onSubmit={() => { window.open('', 'bd-popup', 'width=520,height=640'); setSent(true); }} className="flex flex-col gap-2 sm:flex-row">
+          <label htmlFor="nl-email" className="sr-only">البريد الإلكتروني</label>
+          <input id="nl-email" name="email" type="email" required dir="ltr" placeholder="name@example.com" className="field-input flex-1 text-left" />
+          <input type="hidden" name="embed" value="1" />
+          <button className="ink-btn justify-center" type="submit">اشترك</button>
+        </form>
+        <p aria-live="polite" className="mt-2 text-sm text-[var(--text-muted)]">{sent ? 'أرسلنا رسالة تأكيد إلى بريدك؛ افتحها لإتمام الاشتراك.' : <>الاشتراك عبر Buttondown · <Link to="privacy/" className="underline">الخصوصية</Link></>}</p>
+      </div> : <div className="flex flex-col gap-2 sm:flex-row">
         <a className="ink-btn justify-center" href={asset('rss.xml')}><Rss size={17} aria-hidden="true" /> خلاصة RSS</a>
         <StoreButton className="justify-center" />
-      </div>
+      </div>}
     </div>
   </section>;
 }
@@ -125,6 +135,9 @@ export function Footer() {
         <div><h2 className="text-base text-[#f6efe1]">عن الموقع</h2><ul className="mt-3 space-y-1.5">
           <li><Link to="about/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">عن المجلة</span></Link></li>
           <li><Link to="credits/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">حقوق الصور والمصادر</span></Link></li>
+          <li><Link to="contact/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">تواصل معنا</span></Link></li>
+          <li><Link to="privacy/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">سياسة الخصوصية</span></Link></li>
+          <li><Link to="terms/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">شروط الاستخدام</span></Link></li>
           <li><a href="/rss.xml" className="inline-flex items-center gap-1.5 text-[#d9cbb0] hover:text-[#e2b866]"><Rss size={15} aria-hidden="true" /><span className="ulink">خلاصة RSS</span></a></li>
           <li><a href="/sitemap.xml" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">خريطة الموقع</span></a></li>
         </ul></div>

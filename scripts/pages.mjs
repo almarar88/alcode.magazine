@@ -1,10 +1,13 @@
 // After vite build: write one index.html per route (correct title/description/OG), plus 404.html fallback.
 import './prerender-env.mjs'; import { setRoute } from './prerender-env.mjs';
 import fs from 'node:fs'; import path from 'node:path';
-import { routesList } from './content.mjs'; import { SITE, url } from './site.mjs';
+import { routesList } from './content.mjs'; import { SITE, url } from './site.mjs'; import { INT, FLAGS } from './integrations.mjs';
 const out = path.resolve(import.meta.dirname, '../dist');
 let tpl = fs.readFileSync(path.join(out, 'index.html'), 'utf8');
 // Prerendered HTML paints on its own; the app bundle is started right after the first frame so it never delays first paint.
+const extra = [INT.verification.google && `<meta name="google-site-verification" content="${INT.verification.google}">`, INT.verification.bing && `<meta name="msvalidate.01" content="${INT.verification.bing}">`,
+  FLAGS.analytics && `<script data-goatcounter="https://${INT.analytics.code}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`].filter(Boolean).join('');
+tpl = tpl.replace('</head>', extra + '</head>');
 const entry = tpl.match(/<script type="module" crossorigin src="([^"]+)"><\/script>/)[1];
 tpl = tpl.replace(/<script type="module" crossorigin src="[^"]+"><\/script>/, '').replace(/<link rel="modulepreload"[^>]*>/g, '')
   .replace('</body>', `<script>requestAnimationFrame(function(){setTimeout(function(){var s=document.createElement('script');s.type='module';s.crossOrigin='';s.src='${entry}';document.head.appendChild(s);},0)});</script>\n</body>`);

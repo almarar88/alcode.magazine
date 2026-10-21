@@ -1,4 +1,6 @@
 // Content pipeline: content/*.md(x) + frontmatter → src/generated/posts.json, public/rss.xml, public/sitemap.xml
+import { INT, FLAGS } from './integrations.mjs';
+import { writeAdmin } from './admin.mjs';
 import fs from 'node:fs'; import path from 'node:path'; import matter from 'gray-matter';
 import { SITE, url, tagSlug } from './site.mjs';
 const root = path.resolve(import.meta.dirname, '..');
@@ -25,7 +27,7 @@ const tags = [...new Set([...posts.flatMap(p => p.tags), ...PLACES])].map(t => (
 fs.mkdirSync(path.join(root, 'src/generated'), { recursive: true });
 const photos = JSON.parse(fs.readFileSync(path.join(dir, 'photos.json'), 'utf8'));
 const cats = allCats.filter(c => posts.some(p => p.categorySlug === c.slug));
-fs.writeFileSync(path.join(root, 'src/generated/posts.json'), JSON.stringify({ posts, categories: cats, tags, photos }, null, 1));
+fs.writeFileSync(path.join(root, 'src/generated/posts.json'), JSON.stringify({ posts, categories: cats, tags, photos, integrations: { ...INT, flags: FLAGS } }, null, 1));
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const rss = `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel>
 <title>${esc(SITE.title)}</title><link>${url()}</link><description>${esc(SITE.description)}</description><language>ar</language>
@@ -35,14 +37,15 @@ ${posts.map(p => `<item><title>${esc(p.title)}</title><link>${url(`article/${p.s
 fs.writeFileSync(path.join(root, 'public/rss.xml'), rss);
 const routes = routesList();
 fs.writeFileSync(path.join(root, 'public/sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${routes.map(r => `<url><loc>${encodeURI(url(r.path))}</loc></url>`).join('\n')}\n</urlset>\n`);
-fs.writeFileSync(path.join(root, 'public/robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${url('sitemap.xml')}\n`);
+fs.writeFileSync(path.join(root, 'public/robots.txt'), `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${url('sitemap.xml')}\n`);
 export function routesList() {
   return [{ path: '', title: SITE.title, desc: SITE.description },
     { path: 'search/', title: 'البحث', desc: 'ابحث في مقالات المجلة.' },
     { path: 'write/', title: 'اكتب مقالاً', desc: 'محرّر المقالات مع عرض حيّ للنص.' },
-    { path: 'about/', title: 'عن المجلة', desc: SITE.description }, { path: 'gallery/', title: 'مكتبة الصور', desc: 'صور تاريخية من الخليج بتراخيص مفتوحة.' }, { path: 'credits/', title: 'حقوق الصور والمصادر', desc: 'مصدر كل صورة وترخيصها.' }, { path: 'dashboard/', title: 'لوحة الناشر', desc: 'مساحة عمل للمسودات والوسائط في المتصفح.' }, { path: 'saved/', title: 'المقالات المحفوظة', desc: 'قائمة قراءتك المحفوظة في متصفحك.' }, { path: 'timeline/', title: 'الخط الزمني', desc: 'محطات مقالات المجلة مرتبة زمنياً.' },
+    { path: 'about/', title: 'عن المجلة', desc: SITE.description }, { path: 'contact/', title: 'تواصل معنا', desc: 'طرق التواصل مع مجلة الكود الرقمية.' }, { path: 'privacy/', title: 'سياسة الخصوصية', desc: 'كيف تتعامل مجلة الكود الرقمية مع بيانات الزوار.' }, { path: 'terms/', title: 'شروط الاستخدام', desc: 'شروط استخدام مجلة الكود الرقمية ومحتواها.' }, { path: 'gallery/', title: 'مكتبة الصور', desc: 'صور تاريخية من الخليج بتراخيص مفتوحة.' }, { path: 'credits/', title: 'حقوق الصور والمصادر', desc: 'مصدر كل صورة وترخيصها.' }, { path: 'dashboard/', title: 'لوحة الناشر', desc: 'مساحة عمل للمسودات والوسائط في المتصفح.' }, { path: 'saved/', title: 'المقالات المحفوظة', desc: 'قائمة قراءتك المحفوظة في متصفحك.' }, { path: 'timeline/', title: 'الخط الزمني', desc: 'محطات مقالات المجلة مرتبة زمنياً.' },
     ...cats.map(c => ({ path: `category/${c.slug}/`, title: c.name, desc: c.blurb })),
     ...tags.map(t => ({ path: `tag/${t.slug}/`, title: `وسم: ${t.name}`, desc: `مقالات موسومة بـ ${t.name}` })),
     ...posts.map(p => ({ path: `article/${p.slug}/`, title: p.title, desc: p.excerpt, image: p.cover }))];
 }
+writeAdmin(allCats);
 console.log(`content: ${posts.length} posts, ${cats.length} categories, ${tags.length} tags`);
