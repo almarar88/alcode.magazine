@@ -56,10 +56,14 @@ for n,(slug,cat,tags,era,es) in META.items():
     if n=='14': cap='لوحة رمزية لإدمون دولاك عن أساطير اللؤلؤ، وليست صورةً لتجارة اللؤلؤ: '+cap
     if n=='08': cap='القرنة قرب البصرة (وليست مسقط): '+cap
     if True: orig=re.sub(r'\s*\([^()]*Persian[^()]*\)','',orig)
+    ednote=''
+    if n=='15' and ': اللوحة الملوّنة' in cap:  # editor note: description, not book caption
+      cap,ednote=cap.split(': ',1)
     if im['added']: cap=cap+' (صورة أضافها المحقق)'
+    if ednote: ednote=f'<span class="fig-orig">ملاحظة تحريرية: {ednote}</span>'
     note=f'<span class="fig-orig">طبيعة الصورة: {im["kind"]}</span>' if im['added'] and im['kind'] else ''
     alt=re.sub(r'[«»"]','',im['desc'])
-    figs.append((o,I.size,f'<figure class="art-fig"><img src="{o}" alt="{alt}" width="{I.size[0]}" height="{I.size[1]}" loading="lazy" /><figcaption><span class="fig-cap">{cap}</span><span class="fig-src">المصدر: «{im['pbook'] or book}»، ص {im["page"]}{' تقريباً' if n in APPROX else ''}</span>{note}<span class="fig-orig">أصل الصورة: {orig}</span></figcaption></figure>'))
+    figs.append((o,I.size,f'<figure class="art-fig"><img src="{o}" alt="{alt}" width="{I.size[0]}" height="{I.size[1]}" loading="lazy" /><figcaption><span class="fig-cap">{cap}</span><span class="fig-src">المصدر: «{im['pbook'] or book}»، ص {im["page"]}{' تقريباً' if n in APPROX else ''}</span>{note}{ednote}<span class="fig-orig">أصل الصورة: {orig}</span></figcaption></figure>'))
   # place figures after the first paragraph of successive H2 sections; quote after first para of section 2
   out=[]; sec=0; pending=None; fi=0
   parts=main.strip().split('\n\n'); secs=[i for i,p in enumerate(parts) if p.startswith('## ')]
