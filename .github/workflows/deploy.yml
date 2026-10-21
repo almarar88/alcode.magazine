@@ -2,7 +2,7 @@ name: Build and deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths-ignore: ['tools-verify/**', 'screens/**', 'incoming_articles/**', 'workers/**']
+    paths-ignore: ['tools-verify/**', 'screens/**', 'incoming_articles/**', 'supabase/**']
   workflow_dispatch:
 permissions:
   contents: write
@@ -22,9 +22,10 @@ jobs:
           SITE_BASE: /
           SITE_ORIGIN: https://blog.alcode.ae
           # Optional integrations (Settings → Secrets and variables → Actions → Variables). Empty = feature stays hidden.
-          CMS_OAUTH_BASE_URL: ${{ vars.CMS_OAUTH_BASE_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+          SUPABASE_GOOGLE: ${{ vars.SUPABASE_GOOGLE }}
           BUTTONDOWN_USERNAME: ${{ vars.BUTTONDOWN_USERNAME }}
-          GISCUS_ENABLED: ${{ vars.GISCUS_ENABLED }}
           WEB3FORMS_ACCESS_KEY: ${{ vars.WEB3FORMS_ACCESS_KEY }}
           GOOGLE_SITE_VERIFICATION: ${{ vars.GOOGLE_SITE_VERIFICATION }}
           BING_SITE_VERIFICATION: ${{ vars.BING_SITE_VERIFICATION }}

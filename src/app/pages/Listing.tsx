@@ -43,8 +43,7 @@ export default function Listing({ kind, slug }: { kind: 'category' | 'tag'; slug
         : <div className="grid place-items-center rounded-[28px] border border-dashed border-[var(--border-strong)] bg-[var(--card)] px-6 py-16 text-center">
           <StarOrnament className="size-24 text-[var(--accent)]" />
           <h2 className="mt-4 text-2xl">هذا القسم ينتظر أول مقال</h2>
-          <p className="mt-2 max-w-md text-[var(--text-muted)]">اكتب مقالاً واختر هذا القسم في بياناته، ثم انشر الملف.</p>
-          <Link to="write/" className="ink-btn mt-6">اكتب مقالاً</Link>
+          <Link to="" className="ink-btn mt-6">العودة إلى الرئيسية</Link>
         </div>}
     </div>
   </main>;

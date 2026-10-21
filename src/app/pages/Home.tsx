@@ -1,6 +1,6 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { useEffect, useRef } from 'react';
-import { ArrowLeft, PenLine, Images} from 'lucide-react';
+import { ArrowLeft, Images, ShoppingBag } from 'lucide-react';
 import { InViewTitle } from '@/registry/components/in-view-title/in-view-title';
 import { MagneticButton } from '@/vendor/easyui/ui/MagneticButton';
 import { posts, categories, photos, asset, arNum } from '../data';
@@ -41,10 +41,10 @@ function Hero() {
           <motion.span {...slide(0)} className="block font-display text-[clamp(3rem,10vw,7.4rem)] font-black leading-[1.05] text-[#f6efe1]">مجلة الكود</motion.span>
           <motion.span {...slide(.1)} className="mt-1 block text-[clamp(2.4rem,7vw,5rem)] leading-[1.15] text-[#e2b866]" style={{ fontFamily: 'Aref Ruqaa, serif' }}>الرقمية</motion.span>
         </h1>
-        <motion.p {...rise(.32)} className="mt-6 max-w-xl text-lg leading-9 text-[#e6d9bf] sm:text-xl">مساحة للمقالات عن تاريخ الخليج وتراثه ومخطوطاته وشعره، تُكتب وتُنشر بسهولة من المتصفح.</motion.p>
+        <motion.p {...rise(.32)} className="mt-6 max-w-xl text-lg leading-9 text-[#e6d9bf] sm:text-xl">مقالات عن تاريخ الخليج العربي وتراثه، مأخوذة من كتب الرحّالة والمصادر التاريخية مع صورها.</motion.p>
         <motion.div {...rise(.44)} className="mt-8 flex flex-wrap gap-3">
           <MagneticButton strength={.25} glow={false} onClick={() => navigate(`article/${posts[0].slug}/`)} className="!rounded-full !bg-[#e2b866] !px-6 !py-3 !text-base !font-bold !text-[#1b1712] hover:!bg-[#f1d59c]">ابدأ القراءة <ArrowLeft size={18} aria-hidden="true" /></MagneticButton>
-          <Link to="write/" className="inline-flex items-center gap-2 rounded-full border border-[#e2b866]/70 px-6 py-3 font-bold text-[#f6efe1] transition hover:bg-[#e2b866]/15 active:scale-95"><PenLine size={18} aria-hidden="true" /> اكتب مقالاً</Link>
+          <Link to="gallery/" className="inline-flex items-center gap-2 rounded-full border border-[#e2b866]/70 px-6 py-3 font-bold text-[#f6efe1] transition hover:bg-[#e2b866]/15 active:scale-95"><Images size={18} aria-hidden="true" /> مكتبة الصور</Link>
         </motion.div>
         <motion.dl {...rise(.56)} className="mt-10 grid max-w-md grid-cols-3 gap-4 border-t border-white/15 pt-6">
           {[[posts.length, 'مقالات'], [categories.length, 'أقسام'], [photos.length, 'عمل أرشيفي']].map(([n, l]) => <div key={l as string}><dt className="text-sm text-[#d9cbb0]">{l}</dt><dd className="font-display text-3xl font-bold text-[#f6efe1]">{arNum(n as number)}</dd></div>)}
@@ -103,7 +103,7 @@ export default function Home() {
         <MapExplorer />
       </section>
       <section aria-labelledby="tl" className="pt-24">
-        <SectionHead kicker="مكوّن تفاعلي" title="الخط الزمني" id="tl" to="timeline/" linkLabel="عرض كامل" />
+        <SectionHead kicker="من مقالات المجلة" title="الخط الزمني" id="tl" to="timeline/" linkLabel="عرض كامل" />
         <Timeline />
       </section>
       <section aria-labelledby="cta" className="pt-24">
@@ -111,9 +111,9 @@ export default function Home() {
           <div className="pattern absolute inset-0 opacity-70" aria-hidden="true" />
           <StarOrnament className="absolute -bottom-16 -left-16 hidden size-72 text-[#e2b866] opacity-40 md:block" />
           <div className="relative max-w-xl">
-            <h2 id="cta" className="text-3xl text-[#f6efe1] sm:text-4xl">لديك مقال؟ <span style={{ fontFamily: 'Aref Ruqaa, serif' }} className="text-[#e2b866]">اكتبه الآن</span></h2>
-            <p className="mt-3 text-lg text-[#e6d9bf]">محرّر بعرض حيّ يحفظ مسودتك في متصفحك ويصدّر ملفاً جاهزاً للنشر.</p>
-            <MagneticButton strength={.3} glow={false} onClick={() => navigate('write/')} className="mt-6 !rounded-full !bg-[#e2b866] !px-6 !py-3 !text-base !font-bold !text-[#1b1712] hover:!bg-[#f1d59c]"><PenLine size={18} aria-hidden="true" /> افتح المحرّر</MagneticButton>
+            <h2 id="cta" className="text-3xl text-[#f6efe1] sm:text-4xl">كتب التراث <span style={{ fontFamily: 'Aref Ruqaa, serif' }} className="text-[#e2b866]">في متجر الكود</span></h2>
+            <p className="mt-3 text-lg text-[#e6d9bf]">مقالات المجلة مأخوذة من إصدارات مكتبة الكود في التراث وتاريخ الخليج؛ تصفّحها واطلبها من المتجر.</p>
+            <MagneticButton strength={.3} glow={false} onClick={() => window.open('https://alcode.ae', '_blank', 'noopener')} className="mt-6 !rounded-full !bg-[#e2b866] !px-6 !py-3 !text-base !font-bold !text-[#1b1712] hover:!bg-[#f1d59c]"><ShoppingBag size={18} aria-hidden="true" /> متجر الكود</MagneticButton>
           </div>
         </div>
       </section>

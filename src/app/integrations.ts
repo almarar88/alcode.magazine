@@ -1,8 +1,7 @@
 import data from '../generated/posts.json';
 export const INT = (data as any).integrations as {
-  cms: { repo: string; oauthBaseUrl: string }; newsletter: { username: string };
-  comments: { repo: string; repoId: string; category: string; categoryId: string };
+  accounts: { url: string; anonKey: string; google: boolean }; newsletter: { username: string };
   contact: { accessKey: string }; analytics: { code: string };
-  flags: { cms: boolean; newsletter: boolean; comments: boolean; contact: boolean; analytics: boolean };
+  flags: { accounts: boolean; newsletter: boolean; contact: boolean; analytics: boolean };
 };
 export const FLAGS = INT.flags;

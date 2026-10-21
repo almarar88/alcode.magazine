@@ -1,0 +1,3 @@
+# Minimal Supabase CLI config for deploying the function: supabase functions deploy publish
+[functions.publish]
+verify_jwt = true

@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { Bookmark, BookmarkCheck, Menu, PenLine, Rss, Search, X, LayoutDashboard, Images, Clock, ShoppingBag } from 'lucide-react';
+import { Bookmark, BookmarkCheck, Menu, Rss, Search, X, Images, Clock, ShoppingBag } from 'lucide-react';
 import { ThemeSwitch, type Theme } from '@/registry/components/theme-switch/theme-switch';
 import { Link } from './router';
 import { categories, asset } from './data';
 import { FLAGS, INT } from './integrations';
+import { useAuth } from './auth';
+import { NotifyBell } from './NotifyBell';
+import { UserRound } from 'lucide-react';
 import { StarOrnament } from './art';
 import { useStored } from './store';
 
@@ -36,7 +39,7 @@ export function Logo({ small = false }: { small?: boolean }) {
   </span>;
 }
 
-const NAV = [{ to: 'gallery/', label: 'مكتبة الصور', icon: Images }, { to: 'timeline/', label: 'الخط الزمني', icon: Clock }, { to: 'saved/', label: 'المحفوظات', icon: Bookmark }, { to: 'dashboard/', label: 'لوحة الناشر', icon: LayoutDashboard }];
+const NAV = [{ to: 'gallery/', label: 'مكتبة الصور', icon: Images }, { to: 'timeline/', label: 'الخط الزمني', icon: Clock }, { to: 'saved/', label: 'المحفوظات', icon: Bookmark }];
 
 export function Header({ path }: { path: string }) {
   const [theme, setTheme] = useTheme();
@@ -56,13 +59,13 @@ export function Header({ path }: { path: string }) {
           </Link></li>)}
         </ul>
       </nav>
-      <div className="ms-auto flex items-center gap-1.5 xl:ms-0">
+      <div className="ms-auto flex items-center gap-1 sm:gap-1.5 xl:ms-0">
         <Link to="search/" aria-label="البحث" className="tool-btn"><Search size={20} /></Link>
         <Link to="saved/" aria-label="المقالات المحفوظة" className="tool-btn hidden sm:inline-grid"><Bookmark size={20} /></Link>
         <ThemeSwitch theme={theme} iconOnly variant="eclipse" label={theme === 'dark' ? 'التبديل إلى الوضع الفاتح' : 'التبديل إلى الوضع الداكن'} onThemeChange={t => setTheme(t)} />
         <SocialLinks className="hidden lg:flex" />
+        {FLAGS.accounts && <><NotifyBell /><Link to="account/" className="tool-btn hidden sm:inline-grid" aria-label="الحساب"><UserRound size={18} /></Link></>}
         <StoreButton className="hidden sm:inline-flex" />
-        <Link to="write/" className="ink-btn hidden !py-2 md:inline-flex"><PenLine size={17} aria-hidden="true" /> اكتب مقالاً</Link>
         <button type="button" className="tool-btn xl:hidden" aria-expanded={open} aria-controls="mnav" aria-label={open ? 'إغلاق القائمة' : 'فتح القائمة'} onClick={() => setOpen(o => !o)}>{open ? <X size={22} /> : <Menu size={22} />}</button>
       </div>
     </div>
@@ -76,8 +79,8 @@ export function Header({ path }: { path: string }) {
         <div className="mx-auto grid max-w-[1320px] gap-1 px-4 py-4 sm:grid-cols-2 sm:px-6">
           {categories.map((c, i) => <motion.div key={c.slug} initial={reduce ? false : { opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * .03 }}><Link to={`category/${c.slug}/`} className="flex items-center justify-between rounded-xl px-3 py-3 font-display text-lg font-bold hover:bg-[var(--accent-subtle)]">{c.name}<span aria-hidden="true" className="text-[var(--accent)]">◆</span></Link></motion.div>)}
           {NAV.map(n => <Link key={n.to} to={n.to} className="flex items-center gap-2 rounded-xl px-3 py-3 font-semibold text-[var(--text-secondary)] hover:bg-[var(--accent-subtle)]"><n.icon size={18} aria-hidden="true" />{n.label}</Link>)}
-          <Link to="write/" className="ink-btn mt-2 justify-center sm:col-span-2"><PenLine size={17} aria-hidden="true" /> اكتب مقالاً</Link>
           <div className="flex items-center justify-between gap-3 sm:col-span-2"><StoreButton /><SocialLinks /></div>
+          {FLAGS.accounts && <Link to="account/" className="ghost-btn justify-center sm:col-span-2">الحساب</Link>}
         </div>
       </motion.nav>}
     </AnimatePresence>
@@ -131,7 +134,7 @@ export function Footer() {
           <div className="mt-4 flex flex-wrap items-center gap-3"><StoreButton /><SocialLinks dark /></div>
         </div>
         <div><h2 className="text-base text-[#f6efe1]">الأقسام</h2><ul className="mt-3 space-y-1.5">{categories.map(c => <li key={c.slug}><Link to={`category/${c.slug}/`} className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">{c.name}</span></Link></li>)}</ul></div>
-        <div><h2 className="text-base text-[#f6efe1]">استكشف</h2><ul className="mt-3 space-y-1.5">{[...NAV, { to: 'search/', label: 'البحث' }, { to: 'write/', label: 'اكتب مقالاً' }].map(n => <li key={n.to}><Link to={n.to} className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">{n.label}</span></Link></li>)}</ul></div>
+        <div><h2 className="text-base text-[#f6efe1]">استكشف</h2><ul className="mt-3 space-y-1.5">{[...NAV, { to: 'search/', label: 'البحث' }].map(n => <li key={n.to}><Link to={n.to} className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">{n.label}</span></Link></li>)}</ul></div>
         <div><h2 className="text-base text-[#f6efe1]">عن الموقع</h2><ul className="mt-3 space-y-1.5">
           <li><Link to="about/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">عن المجلة</span></Link></li>
           <li><Link to="credits/" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">حقوق الصور والمصادر</span></Link></li>
@@ -142,7 +145,7 @@ export function Footer() {
           <li><a href="/sitemap.xml" className="text-[#d9cbb0] hover:text-[#e2b866]"><span className="ulink">خريطة الموقع</span></a></li>
         </ul></div>
       </div>
-      <div className="border-t border-white/10"><p className="mx-auto max-w-[1320px] px-4 py-4 text-sm text-[#d9cbb0] sm:px-6">© مكتبة الكود · الصور التاريخية من مصادر بتراخيص مفتوحة (انظر صفحة الحقوق) · لا صور مولّدة أو رسوم مختلقة.</p></div>
+      <div className="border-t border-white/10"><p className="mx-auto max-w-[1320px] px-4 py-4 text-sm text-[#d9cbb0] sm:px-6">© مكتبة الكود · الصور التاريخية من مصادر بتراخيص مفتوحة (انظر صفحة الحقوق) · لا صور مولّدة أو رسوم مختلقة.{FLAGS.accounts && <> · <Link to="account/" className="text-[#d9cbb0] underline-offset-4 hover:underline">الحساب</Link></>}</p></div>
     </div>
   </footer>;
 }

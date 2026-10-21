@@ -13,7 +13,6 @@ console.log('saved list', await pg.evaluate(() => document.querySelectorAll('mai
 console.log('store/social', await pg.evaluate(() => [...document.querySelectorAll('a.store-btn')].length, ), await pg.evaluate(() => [...document.querySelectorAll('a.social-btn')].map(a=>a.href).filter((v,i,a)=>a.indexOf(v)===i)));
 await pg.goto(B+'timeline/', { waitUntil: 'networkidle0' });
 console.log('timeline links', await pg.evaluate(() => document.querySelectorAll('main a[href*="article/"]').length));
-await pg.goto(B+'dashboard/', { waitUntil: 'networkidle0' });
-console.log('dashboard rows', await pg.evaluate(() => document.querySelectorAll('tbody tr').length));
+for (const p of ['write/','dashboard/']) { const r = await pg.goto(B+p); console.log('removed', p, r.status(), await pg.evaluate(() => !!document.querySelector('a[href*="write/"],a[href*="dashboard/"]'))); }
 const rss = await (await fetch(B+'rss.xml')).text(); console.log('rss items', (rss.match(/<item>/g)||[]).length);
 console.log('errors', errs); await br.close();
