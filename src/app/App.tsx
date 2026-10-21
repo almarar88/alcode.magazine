@@ -1,0 +1,46 @@
+import { lazy, Suspense, useEffect } from 'react';
+import { MotionConfig } from 'motion/react';
+import { usePath } from './router';
+import { DemoRibbon, Header, Footer } from './chrome';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+const Article = lazy(() => import('./pages/Article'));
+const Listing = lazy(() => import('./pages/Listing'));
+const Search = lazy(() => import('./pages/Search'));
+const Write = lazy(() => import('./pages/Write'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Credits = lazy(() => import('./pages/Credits'));
+const Saved = lazy(() => import('./pages/Saved'));
+const TimelinePage = lazy(() => import('./pages/TimelinePage'));
+const About = lazy(() => import('./pages/About'));
+const TITLES: Record<string, string> = { search: 'البحث', write: 'اكتب مقالاً', dashboard: 'لوحة الناشر (تجريبية)', gallery: 'مكتبة الصور', credits: 'حقوق الصور والمصادر', saved: 'المقالات المحفوظة', timeline: 'الخط الزمني', about: 'عن المجلة' };
+function route(path: string) {
+  const [a, b] = path.split('/');
+  switch (a) {
+    case '': return <Home />;
+    case 'article': return <Article slug={b} />;
+    case 'category': return <Listing kind="category" slug={b} />;
+    case 'tag': return <Listing kind="tag" slug={b} />;
+    case 'search': return <Search />;
+    case 'write': return <Write />;
+    case 'dashboard': return <Dashboard />;
+    case 'gallery': return <Gallery />;
+    case 'credits': return <Credits />;
+    case 'saved': return <Saved />;
+    case 'timeline': return <TimelinePage />;
+    case 'about': return <About />;
+    default: return <NotFound />;
+  }
+}
+export default function App() {
+  const path = usePath();
+  useEffect(() => { const a = path.split('/')[0]; if (a !== 'article') document.title = TITLES[a] ? `${TITLES[a]} — مجلة الكود الرقمية` : 'مجلة الكود الرقمية · Alcode Digital Magazine'; }, [path]);
+  return <MotionConfig reducedMotion="user">
+    <a href="#main" className="skip">تخطَّ إلى المحتوى</a>
+    <DemoRibbon />
+    <Header path={path} />
+    <Suspense fallback={<div className="min-h-[70vh]" aria-busy="true" />}><div key={path + location.search}>{route(path)}</div></Suspense>
+    <Footer />
+  </MotionConfig>;
+}

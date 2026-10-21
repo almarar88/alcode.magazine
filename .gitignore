@@ -1,0 +1,6 @@
+node_modules/
+tools-verify/node_modules/
+dist/
+dist-ssr/
+tmpcrop/
+pdf/

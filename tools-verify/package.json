@@ -1,0 +1,19 @@
+{
+  "name": "tools-verify",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "axe-core": "^4.14.0",
+    "lighthouse": "^12.8.2",
+    "puppeteer-core": "^24.43.1",
+    "serve": "^14.2.6"
+  }
+}
