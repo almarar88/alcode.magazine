@@ -72,13 +72,13 @@ export default function Home() {
       </div>
     </div>
     <div className="mx-auto max-w-[1320px] px-4 sm:px-6">
-      <section aria-labelledby="feat" className="pt-16">
-        <SectionHead kicker="افتتاحية العدد" title="المقال المختار" id="feat" />
-        <FeaturedCard p={feat} />
-      </section>
-      <section aria-labelledby="latest" className="pt-24">
-        <SectionHead kicker="جديد المجلة" title="فهرس العدد" id="latest" to="search/" linkLabel="كل المقالات" />
+      <section aria-labelledby="latest" className="pt-16">
+        <SectionHead kicker="جديد المجلة" title="أحدث المقالات" id="latest" to="search/" linkLabel="كل المقالات" />
         <IndexList />
+      </section>
+      <section aria-labelledby="feat" className="pt-24">
+        <SectionHead kicker="أحدث ما نُشر" title="المقال الأحدث" id="feat" />
+        <FeaturedCard p={feat} />
       </section>
     </div>
     <ArchiveReel />
@@ -86,7 +86,7 @@ export default function Home() {
       <section aria-labelledby="cats" className="pt-24">
         <div className="mb-8"><p className="kicker">أبواب المجلة</p><InViewTitle as="h2" id="cats" variant="word" text="أقسام تحفظ ذاكرة المكان" className="mt-1 text-3xl sm:text-4xl" /></div>
         <div className="grid auto-rows-[220px] gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((c, i) => { const ph = photos.find(p => p.slug === CAT_ART[c.slug]) ?? photos[0]; const n = posts.filter(p => p.category === c.name).length; return <Reveal key={c.slug} delay={i * .05} className={i === 0 ? 'sm:col-span-2 lg:row-span-2' : i >= 3 ? 'lg:col-span-2' : ''}>
+          {categories.map((c, i) => { const ph = photos.find(p => p.slug === CAT_ART[c.slug]) ?? { thumb: posts.find(p => p.category === c.name)?.cover || photos[0].thumb }; const n = posts.filter(p => p.category === c.name).length; return <Reveal key={c.slug} delay={i * .05} className={i === 0 ? 'sm:col-span-2 lg:row-span-2' : i >= 3 ? 'lg:col-span-2' : ''}>
             <Link to={`category/${c.slug}/`} className="group relative flex h-full overflow-hidden rounded-[22px] bg-[#1b1712] text-[#f6efe1]">
               <img src={asset(ph.thumb)} alt="" loading="lazy" className="absolute inset-0 size-full object-cover opacity-70 sepia-[.35] transition duration-[1.2s] ease-out group-hover:scale-110 group-hover:opacity-50" />
               <span aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-[#1b1712] via-[#1b1712]/60 to-transparent" />
@@ -122,7 +122,7 @@ export default function Home() {
   </main>;
 }
 
-const CAT_ART: Record<string, string> = { history: 'mascate-1680', heritage: 'bahrain-fort-1870', 'manuscripts-travelers': 'arabia-map-1771', poetry: 'joassamee-dow-1837', 'bookstore-news': 'hidaya-school-1919', guide: 'gulf-map-dutch', 'economy-trade': 'bahrain-market-1930s' };
+const CAT_ART: Record<string, string> = { history: 'mascate-1680', heritage: 'bahrain-fort-1870', 'manuscripts-travelers': 'arabia-map-1771', poetry: 'joassamee-dow-1837', 'bookstore-news': 'hidaya-school-1919', guide: 'gulf-map-dutch', 'economy-trade': 'bahrain-market-1930s', 'sea-ships': 'dhow-nestor-sander', 'horses-camels': 'kuwait-camel-1938' };
 
 /* Editorial numbered index: hovering a row reveals its cover, which follows the cursor. */
 function IndexList() {

@@ -33,6 +33,16 @@ META={ # slug, category, tags, era, eraSort
  '28':('bahrain-pearls-1618-silva','التاريخ',['البحرين','اللؤلؤ','البصرة','هرمز'],'1618',1618),
  '29':('shiraz-persepolis-basra-valentyn','المخطوطات والرحالة',['شيراز','البصرة','مسقط'],'1726',1726.1),
  '30':('godinho-desert-1663','المخطوطات والرحالة',['البصرة','الأحساء'],'1663',1663.3),
+ '31':('palm-cultivation-kaempfer','الزراعة والنخيل',['جمرون','بندر عباس','النخيل'],'1685–1688',1686.0),
+ '32':('palm-grove-summer-kaempfer','الزراعة والنخيل',['جمرون','النخيل'],'1685–1688',1686.5),
+ '33':('tenreiro-hormuz-aleppo-1528','المخطوطات والرحالة',['هرمز','البحرين','القطيف','خارك','البصرة'],'1528',1528.0),
+ '34':('tenreiro-cairo-1525','المخطوطات والرحالة',['هرمز','القاهرة'],'1525',1525.0),
+ '35':('mandelslo-gamron-1638','الاقتصاد والتجارة',['جمرون','بندر عباس'],'1638',1638.0),
+ '36':('mandelslo-swan-voyage-1638','البحر والسفن',['جمرون','هرمز','قشم'],'1638',1638.5),
+ '37':('upton-sbaa-tents','التراث',['عنزة','البادية'],'سبعينيات القرن التاسع عشر',1875.0),
+ '38':('upton-arabian-horse','الخيل والإبل',['عنزة','الخيل العربية'],'1875',1875.5),
+ '39':('dhafra-dates-camel-festivals','المهرجانات والفعاليات',['الظفرة','ليوا','مدينة زايد','النخيل','الهجن'],'2009–2026',2017.0),
+ '40':('dalma-sea-festivals','المهرجانات والفعاليات',['دلما','الظفرة','اللؤلؤ'],'2009–2026',2018.0),
 }
 APPROX=set()  # md: «وبعضها تقريبي بصفحةٍ واحدة»
 def imgs(n):
@@ -73,9 +83,17 @@ for n,(slug,cat,tags,era,es) in META.items():
     ednote=''
     if n=='15' and ': اللوحة الملوّنة' in cap:  # editor note: description, not book caption
       cap,ednote=cap.split(': ',1)
-    if im['added']: cap=cap+' (صورة أضافها المحقق)'
+    orig=re.sub(r'(ويكيميديا كومنز)(؛\s*\1)+',r'\1',orig)  # 37: dedupe repeated «ويكيميديا كومنز»
+    if n in ('39','40'):  # Ahmed's own book: Commons photos printed in it — credit book page + Commons author/licence
+      m=re.match(r'تصوير:\s*([^،]+)،\s*ويكيميديا كومنز\s*\(([^)]+)\)؛\s*(.*)$',orig)
+      if m:
+        rest3=m[3].replace(m[1]+'، ','',1); fm2=re.match(r'(«[^»]+»)،\s*ويكيميديا كومنز،\s*(\S+)',rest3)
+        orig=f'تصوير: {m[1]}، {fm2[1]} ({m[2]})، ويكيميديا كومنز: {fm2[2]}' if fm2 else f'تصوير: {m[1]} ({m[2]})، {rest3}'
+      cap=cap+' (صورة من ويكيميديا كومنز منشورة في الكتاب)'
+    elif n=='33' and 'دمشق' in cap: cap=cap+' — من فصلٍ آخر في الكتاب؛ وإلى دمشق وحلب كانت تسير القوافل الكبرى من البصرة (صورة أضافها المحقق)'
+    elif im['added']: cap=cap+' (صورة أضافها المحقق)'
     ednote=''  # editor: description not in the book; dropped
-    note=f'<span class="fig-orig">طبيعة الصورة: {im["kind"]}</span>' if im['added'] and im['kind'] else ''
+    note=f'<span class="fig-orig">طبيعة الصورة: {im["kind"]}</span>' if im['added'] and im['kind'] and n not in ('39','40') else ''
     alt=re.sub(r'[«»"]','',im['desc'])
     figs.append((o,I.size,f'<figure class="art-fig"><img src="{o}" alt="{alt}" width="{I.size[0]}" height="{I.size[1]}" loading="lazy" /><figcaption><span class="fig-cap">{cap}</span><span class="fig-src">المصدر: «{im['pbook'] or book}»، ص {im["page"]}{' تقريباً' if n in APPROX else ''}</span>{note}{ednote}<span class="fig-orig">أصل الصورة: {orig}</span></figcaption></figure>'))
   # place figures after the first paragraph of successive H2 sections; quote after first para of section 2
@@ -96,7 +114,7 @@ for n,(slug,cat,tags,era,es) in META.items():
   rest=re.sub(r'- page_approx: true\s*—\s*','- **أرقام الصفحات تقريبية:** ',rest); rest=re.sub(r'- page_approx: false\s*—\s*','- ',rest)
   cover=figs[0][0]; capc=re.sub(r'<[^>]+>',' ',figs[0][2].split('<figcaption>')[1].split('</span>')[0])
   fm={'title':title,'author':author,'book':book,'category':cat,'date':f'2026-10-{31-int(n):02d}' if int(n)<11 else '','cover':cover,'coverCaption':capc.strip()+' — المصدر: «'+(ims[0]['pbook'] or book)+'»، ص '+ims[0]['page']+(' تقريباً' if n in APPROX else ''),'excerpt':excerpt,'tags':tags,'era':era,'eraSort':es}
-  k=int(n); fm['date']=f'2026-10-{21-(k-21):02d}' if k>20 else (f'2026-10-{11-(k-11):02d}' if k>10 else f'2026-09-{31-k:02d}')
+  k=int(n); import datetime as _d; fm['date']=(_d.date(2026,10,21)-_d.timedelta(days=40-k)).isoformat()  # newest = highest number, one per day ending today
   y='---\n'+''.join(f'{k}: {json.dumps(v,ensure_ascii=False)}\n' for k,v in fm.items())+'---\n\n'
   open(f'{R}/content/{n}-{slug}.md','w').write(y+'\n\n'.join(out)+'\n\n'+rest.strip()+'\n')
   print(n,len(ims),'quote' if quote else 'NOQUOTE',len(excerpt))

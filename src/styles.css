@@ -180,3 +180,6 @@ textarea.field-input { font-family: var(--font-body); font-size: .95rem; line-he
   .store-btn svg { transition: transform .3s; } .store-btn:hover svg { transform: rotate(-12deg) scale(1.15); }
 }
 @media (prefers-reduced-motion: reduce) { .social-btn, .store-btn, .store-btn svg { transition: none; } .social-btn:hover, .store-btn:hover, .store-btn:hover svg { transform: none; } }
+
+/* long URLs in credits/sources must wrap on mobile */
+.art-fig figcaption, .prose-ar li, .prose-ar p { overflow-wrap: anywhere; }

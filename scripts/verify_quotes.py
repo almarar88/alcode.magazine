@@ -1,6 +1,6 @@
 # Spot-check «…» quotes in incoming articles against book PDFs (normalised Arabic, whitespace-insensitive).
 import re,glob,unicodedata,sys
-BOOK={'01':'rosenthal','02':'trucial','03':'stuhlmann','04':'stocqueler','05':'valentijn','06':'garcia','07':'buckingham','08':'heude','09':'godinho','10':'aucher',
+BOOK={'31':'kaempfer','32':'kaempfer','33':'tenreiro','34':'tenreiro','35':'mandelslo','36':'mandelslo','37':'upton','38':'upton','39':'hamdan_dhafra','40':'hamdan_dhafra','01':'rosenthal','02':'trucial','03':'stuhlmann','04':'stocqueler','05':'valentijn','06':'garcia','07':'buckingham','08':'heude','09':'godinho','10':'aucher',
  '21':'stuhlmann','22':'buckingham','23':'buckingham','24':'godinho','25':'stocqueler','26':'rosenthal','27':'rosenthal','28':'garcia','29':'valentijn','30':'godinho'}
 def norm(t):
   t=unicodedata.normalize('NFKC',t)

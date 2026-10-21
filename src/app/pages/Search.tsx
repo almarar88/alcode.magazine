@@ -11,7 +11,7 @@ export default function Search() {
   const res = useMemo(() => { const n = norm(q.trim()); if (!n) return posts; const words = n.split(/\s+/);
     return posts.map(p => { const hay = norm([p.title, p.excerpt, p.tags.join(' '), p.category, p.author, p.body].join(' ')); const title = norm(p.title);
       const score = words.reduce((s, w) => s + (hay.includes(w) ? 1 : 0) + (title.includes(w) ? 2 : 0), 0); return { p, score, all: words.every(w => hay.includes(w)) }; })
-      .filter(x => x.all).sort((a, b) => b.score - a.score).map(x => x.p); }, [q]);
+      .filter(x => x.all).sort((a, b) => b.score - a.score || b.p.date.localeCompare(a.p.date)).map(x => x.p); }, [q]);
   return <main id="main">
     <PageHero kicker="البحث" title="ابحث في المجلة" desc="يبحث في العناوين والملخصات والوسوم والنصوص. يتجاهل التشكيل والهمزات.">
       <div className="search-ar mt-6 max-w-xl"><SearchField label="كلمة البحث" value={q} onValueChange={setQ} placeholder="مثال: المحرر، النشر…" autoFocus /></div>

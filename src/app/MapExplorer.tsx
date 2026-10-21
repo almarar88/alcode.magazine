@@ -5,7 +5,7 @@ import { motion, useReducedMotion } from 'motion/react';
 import { Minus, Plus, RotateCcw, MapPin, ExternalLink } from 'lucide-react';
 import { Link } from './router';
 import { photos, asset, tagSlug } from './data';
-export const PLACES = ['الكويت', 'البصرة', 'بوشهر', 'البحرين', 'لنجة', 'أبوظبي', 'صير بني ياس', 'رأس الخيمة', 'الذيد', 'البريمي', 'صحار', 'مسقط', 'مطرح', 'نزوى', 'هرمز', 'غمرون', 'بندر عباس'];
+export const PLACES = ['الكويت', 'البصرة', 'بوشهر', 'البحرين', 'لنجة', 'أبوظبي', 'صير بني ياس', 'رأس الخيمة', 'الذيد', 'البريمي', 'صحار', 'مسقط', 'مطرح', 'نزوى', 'هرمز', 'غمرون', 'جمرون', 'بندر عباس', 'قشم', 'خارك', 'القطيف', 'دلما', 'ليوا'];
 export function MapExplorer({ slug = 'arabia-map-1771' }: { slug?: string }) {
   const m = photos.find(p => p.slug === slug)!;
   const [z, setZ] = useState(1); const [pos, setPos] = useState({ x: 0, y: 0 });

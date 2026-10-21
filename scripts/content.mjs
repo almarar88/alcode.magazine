@@ -6,6 +6,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const dir = path.join(root, 'content');
 const allCats = JSON.parse(fs.readFileSync(path.join(dir, 'categories.json'), 'utf8'));
 const REQUIRED = ['title', 'author', 'category', 'date', 'excerpt'];
+const num = s => { const m = /^(\d+)-/.exec(s); return m ? +m[1] : Infinity; };
 const posts = fs.readdirSync(dir).filter(f => /\.mdx?$/.test(f)).map(f => {
   const { data, content } = matter(fs.readFileSync(path.join(dir, f), 'utf8'));
   for (const k of REQUIRED) if (!data[k]) throw new Error(`${f}: missing frontmatter "${k}"`);
@@ -17,7 +18,7 @@ const posts = fs.readdirSync(dir).filter(f => /\.mdx?$/.test(f)).map(f => {
   return { slug: f.replace(/\.mdx?$/, ''), title: data.title, author: data.author, category: cat.name, categorySlug: cat.slug,
     date, cover: data.cover || '', excerpt: data.excerpt, tags: (data.tags || []).map(String), sample: !!data.sample, book: data.book || '', coverCaption: data.coverCaption || '', era: data.era || '', eraSort: data.eraSort || 0,
     words, minutes: Math.max(1, Math.round(words / 200)), body: content.trim() };
-}).filter(Boolean).sort((a, b) => b.date.localeCompare(a.date));
+}).filter(Boolean).sort((a, b) => b.date.localeCompare(a.date) || num(b.slug) - num(a.slug));  // newest first; same day → higher article number (unnumbered = newest)
 // Related: shared tags (×2) + same category (×1)
 for (const p of posts) p.related = posts.filter(o => o !== p).map(o => ({ s: o.slug, n: o.tags.filter(t => p.tags.includes(t)).length * 2 + (o.category === p.category ? 1 : 0) }))
   .sort((a, b) => b.n - a.n).slice(0, 3).map(o => o.s);
