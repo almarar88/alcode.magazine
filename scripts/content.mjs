@@ -38,7 +38,7 @@ for (const p of posts) {
   const sr = series.find(x => x.items.includes(p.slug));
   p.series = sr ? { slug: sr.slug, title: sr.title, index: sr.items.indexOf(p.slug), items: sr.items } : null;
   // traveler / book page
-  const tr = travelers.find(t => t.name === p.author) || travelers.find(t => t.book === p.book); p.traveler = tr ? tr.slug : '';
+  const tr = travelers.find(t => t.name === p.author || (t.authors || []).includes(p.author)) || travelers.find(t => t.book === p.book); p.traveler = tr ? tr.slug : '';
   // journey: places named in the prose, in order of first mention, that fall on the Gulf crop of the 1771 map
   const txt = prose(p.body); const hits = [];
   for (const [name, c] of Object.entries(gaz)) { const alt = name.startsWith('ال') ? `|لل${name.slice(2)}` : ''; const m = new RegExp(`(?:^|[^\\p{L}])(?:[وفبك]?${name}${alt})(?![\\p{L}])`, 'u').exec(txt); if (!m) continue; const i = m.index;

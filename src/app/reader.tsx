@@ -47,7 +47,7 @@ export function GlossaryList({ items }: { items: G[] }) {
   const seen = new Set<string>(); const uniq = items.filter(e => !seen.has(e.term) && seen.add(e.term));
   return <section aria-labelledby="gl" className="mt-12 rounded-[22px] border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6">
     <h2 id="gl" className="text-xl">مفردات من هذا المقال</h2>
-    <p className="mt-1 text-sm text-[var(--text-muted)]">معانيها كما يشرحها الكتاب أو محققه في النص نفسه. اضغط على الكلمة المسطّرة في المقال لترى معناها في موضعها.</p>
+    <p className="mt-1 text-sm text-[var(--text-muted)]">معانيها كما تُشرح في النص نفسه. اضغط على الكلمة المسطّرة في المقال لترى معناها في موضعها.</p>
     <dl className="mt-4 grid gap-3 sm:grid-cols-2">{uniq.map((e, i) => <motion.div key={e.term} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * .04 }} className="rounded-xl border border-[var(--border)] p-3">
       <dt className="font-bold text-[var(--accent)]">«{e.term}»</dt><dd className="mt-1 text-[var(--text-secondary)]">{e.meaning}</dd><dd className="mt-1 text-xs text-[var(--text-muted)]">{e.source}</dd></motion.div>)}</dl>
   </section>;
