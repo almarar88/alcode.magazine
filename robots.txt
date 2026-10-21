@@ -1,4 +1,4 @@
 # Demo build: not for indexing
 User-agent: *
 Disallow: /
-Sitemap: https://almarar88.github.io/alcode.magazine/sitemap.xml
+Sitemap: https://blog.alcode.ae/sitemap.xml
