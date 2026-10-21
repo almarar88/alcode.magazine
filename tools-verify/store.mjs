@@ -24,9 +24,9 @@ await pg.click('button[aria-label^="نظرة سريعة"]'); await new Promise(r
 ok(await pg.$eval('.quicklook', e => !!e.closest('li.col-span-full') && !document.querySelector('[role=dialog]') && e.textContent.includes('شحن 25')), 'quick look opens inline with price + shipping');
 ok(await pg.evaluate(() => document.activeElement?.tagName === 'H3'), 'quick look focuses its heading');
 await pg.$eval('button[aria-label="إغلاق النظرة السريعة"]', e => e.click()); await new Promise(r => setTimeout(r, 600)); ok(!(await pg.$('.quicklook')), 'quick look closes');
-await pg.click('button[aria-pressed][class*="rounded-lg"]:nth-child(2)'); await new Promise(r => setTimeout(r, 900)); ok(await pg.$eval('ul[data-view]', u => u.dataset.view) === 'list', 'list view');
+await pg.$eval('button[aria-pressed][class*="rounded-lg"]:nth-child(2)', e => e.click()); await new Promise(r => setTimeout(r, 900)); ok(await pg.$eval('ul[data-view]', u => u.dataset.view) === 'list', 'list view');
 ok(await pg.evaluate(() => localStorage.getItem('alcode-view')) === '"list"', 'view persisted');
-await pg.click('button[aria-pressed][class*="rounded-lg"]:nth-child(1)'); await new Promise(r => setTimeout(r, 900));
+await pg.$eval('button[aria-pressed][class*="rounded-lg"]:nth-child(1)', e => e.click()); await new Promise(r => setTimeout(r, 900));
 // add first two cards to cart
 const addBtns = await pg.$$('main article button[aria-label^="أضف «"][aria-label$="السلة"]'); await addBtns[0].click(); await addBtns[1].click(); await addBtns[1].click();
 await pg.goto(B + 'cart/', { waitUntil: 'networkidle0' });

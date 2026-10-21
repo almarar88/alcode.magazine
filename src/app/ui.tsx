@@ -73,7 +73,7 @@ export function BookCard({ b, eager = false, list = false, onQuick, quickOpen = 
   return <article className={`book-card group relative h-full ${list ? 'grid grid-cols-[96px_1fr] items-center gap-4 sm:grid-cols-[120px_1fr_auto]' : 'flex flex-col'}`}>
     <div className="relative">
       <Link to={`book/${b.handle}/`} className="block rounded-2xl" aria-label={b.title} tabIndex={-1}><Cover b={b} eager={eager} float={!list} /></Link>
-      {!list && <div className="quick absolute inset-x-0 bottom-1 flex justify-center gap-2">
+      {!list && <div className="quick mt-2 flex justify-center gap-2">
         <AddButton b={b} icon /><WishButton b={b} compact />
         {onQuick && <button type="button" onClick={onQuick} aria-expanded={quickOpen} aria-label={`نظرة سريعة على «${b.title}»`} className="tool-btn quick-btn"><Eye size={18} aria-hidden="true" /></button>}
       </div>}
@@ -148,7 +148,7 @@ export function Carousel({ items, label }: { items: Book[]; label: string }) {
   useEffect(() => { upd(); const el = ref.current; el?.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd); return () => { el?.removeEventListener('scroll', upd); removeEventListener('resize', upd); }; }, []);
   const go = (d: 1 | -1) => { const el = ref.current; if (!el) return; el.scrollBy({ left: -d * el.clientWidth * .85, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
   return <div className="relative">
-    <ul ref={ref} aria-label={label} className="carousel flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 sm:gap-6">
+    <ul ref={ref} aria-label={label} className="carousel -mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 pb-4 pt-4 sm:gap-6">
       {items.map((b, i) => <li key={b.handle} className="w-[44%] shrink-0 snap-start sm:w-[30%] md:w-[23%] lg:w-[18.5%]"><BookCard b={b} eager={i < 2} /></li>)}
     </ul>
     <div className="mt-1 flex justify-end gap-2">
