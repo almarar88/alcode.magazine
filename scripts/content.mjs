@@ -4,11 +4,15 @@ import fs from 'node:fs'; import path from 'node:path';
 import { SITE, url } from './site.mjs'; import { INT, FLAGS } from './integrations.mjs';
 const root = path.resolve(import.meta.dirname, '..');
 const cat = JSON.parse(fs.readFileSync(path.join(root, 'content/catalog.json'), 'utf8'));
-const books = cat.books.map(b => ({ ...b, price: Number(b.variants[0].price), available: b.variants.some(v => v.available) }));
+// Transparent cut-outs (scripts/cutout.py) are used when present and not rejected after visual review; originals stay as fallback.
+const reject = new Set(fs.existsSync(path.join(root, 'content/cut-reject.json')) ? JSON.parse(fs.readFileSync(path.join(root, 'content/cut-reject.json'), 'utf8')) : []);
+const withCut = im => { const n = path.basename(im.src, '.webp'); return !reject.has(n) && fs.existsSync(path.join(root, `public/books/cut/${n}.webp`)) ? { ...im, cut: `books/cut/${n}.webp`, cutSm: `books/cut/${n}-sm.webp` } : im; };
+const inside = JSON.parse(fs.readFileSync(path.join(root, 'content/inside.json'), 'utf8'));
+const books = cat.books.map(b => ({ ...b, images: b.images.map(withCut), price: Number(b.variants[0].price), available: b.variants.some(v => v.available) }));
 const collections = cat.collections.map(c => ({ ...c, count: books.filter(b => b.collections.includes(c.handle)).length })).filter(c => c.count);
 const authors = [...new Set(books.map(b => b.author).filter(Boolean))];
 fs.mkdirSync(path.join(root, 'src/generated'), { recursive: true });
-fs.writeFileSync(path.join(root, 'src/generated/store.json'), JSON.stringify({ shop: cat.source, books, collections, featured: cat.featured, authors, integrations: { analytics: INT.analytics, flags: FLAGS } }));
+fs.writeFileSync(path.join(root, 'src/generated/store.json'), JSON.stringify({ shop: cat.source, books, collections, featured: cat.featured, authors, inside, integrations: { analytics: INT.analytics, flags: FLAGS } }));
 export function routesList() {
   const first = b => b.description[0] || '';
   return [

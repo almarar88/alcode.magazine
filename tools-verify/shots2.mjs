@@ -1,0 +1,18 @@
+import puppeteer from 'puppeteer-core';
+const B = process.env.B || 'http://127.0.0.1:4173/', D = '/workspace/store-shots2';
+const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox'] });
+const prep = async (pg, keep) => { if (!keep) await pg.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 500) { scrollTo(0, y); await new Promise(r => setTimeout(r, 120)); } scrollTo(0, 0); }); await pg.$$eval('img', a => a.forEach(i => i.loading = 'eager')); await new Promise(r => setTimeout(r, 2500)); };
+const shot = async (name, w, h, path, act, full = true) => { const pg = await b.newPage(); await pg.setViewport({ width: w, height: h }); await pg.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
+  await pg.goto(B + path, { waitUntil: 'networkidle0' }); if (act) await act(pg); await prep(pg, !!act && !full); await pg.screenshot({ path: `${D}/${name}.png`, fullPage: full }); await pg.close(); };
+await shot('home-1440', 1440, 900, '');
+await shot('home-hero-1440', 1440, 900, '', null, false);
+await shot('catalog-grid-1440', 1440, 900, 'books/');
+await shot('catalog-list-1440', 1440, 900, 'books/', async pg => { await pg.evaluate(() => localStorage.setItem('alcode-view', '"list"')); await pg.reload({ waitUntil: 'networkidle0' }); });
+await shot('quicklook-1440', 1440, 1100, 'books/', async pg => { await pg.evaluate(() => localStorage.setItem('alcode-view', '"grid"')); await pg.reload({ waitUntil: 'networkidle0' }); await pg.$eval('button[aria-label^="نظرة سريعة"]', e => e.click()); await new Promise(r => setTimeout(r, 800)); await pg.evaluate(() => { const q = document.querySelector('.quicklook').closest('li').previousElementSibling; scrollTo(0, q.getBoundingClientRect().top + scrollY - 90); }); }, false);
+await shot('book-zoom-1440', 1440, 900, 'book/' + encodeURIComponent('رحلة-مايلز') + '/', async pg => { const z = await pg.$('.zoom'); const r = await z.boundingBox(); await pg.mouse.click(r.x + r.width * .5, r.y + r.height * .35); }, false);
+await shot('home-mobile-390', 390, 844, '');
+await shot('catalog-mobile-390', 390, 844, 'books/');
+await shot('quicklook-mobile-390', 390, 844, 'books/', async pg => { await pg.$eval('button[aria-label^="نظرة سريعة"]', e => e.click()); await new Promise(r => setTimeout(r, 800)); }, false);
+await shot('catalog-fold-673', 673, 841, 'books/', null, false);
+await shot('home-ipad-820', 820, 1180, '', null, false);
+await b.close();

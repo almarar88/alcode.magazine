@@ -8,6 +8,7 @@ export default function Cart() {
   const rows = lines.map(l => { const b = byHandle(l.handle); const v = b?.variants.find(x => x.id === l.id); return b && v ? { l, b, v } : null; }).filter(Boolean) as any[];
   const total = rows.reduce((s, r) => s + Number(r.v.price) * r.l.qty, 0);
   const ok = rows.filter(r => r.v.available);
+  const SHIP = 25; const ship = rows.length ? SHIP : 0;
   return <main id="main">
     <PageHead kicker="المتجر" title="سلة التسوق" />
     <div className="mx-auto max-w-[1100px] px-4 pt-8 sm:px-6">
@@ -30,8 +31,8 @@ export default function Cart() {
         </li>)}</ul>
         <aside aria-label="ملخص الطلب" className="h-fit rounded-3xl border border-[var(--border-strong)] bg-[var(--card)] p-6 lg:sticky lg:top-24">
           <h2 className="text-xl">ملخص الطلب</h2>
-          <dl className="mt-4 grid grid-cols-[1fr_auto] gap-y-2"><dt>عدد النسخ</dt><dd>{rows.reduce((s, r) => s + r.l.qty, 0)}</dd><dt className="font-bold">المجموع</dt><dd className="text-xl font-bold">{fmtPrice(total)}</dd></dl>
-          <p className="mt-3 text-sm text-[var(--text-muted)]">تُحسب رسوم الشحن والضرائب (إن وُجدت) في صفحة الدفع على متجر الكود.</p>
+          <dl className="mt-4 grid grid-cols-[1fr_auto] gap-y-2"><dt>عدد النسخ</dt><dd>{rows.reduce((s, r) => s + r.l.qty, 0)}</dd><dt>المجموع الفرعي</dt><dd data-testid="subtotal">{fmtPrice(total)}</dd><dt>الشحن</dt><dd data-testid="shipping">{fmtPrice(ship)}</dd><dt className="border-t border-[var(--border)] pt-2 font-bold">المجموع</dt><dd data-testid="total" className="border-t border-[var(--border)] pt-2 text-xl font-bold">{fmtPrice(total + ship)}</dd></dl>
+          <p className="mt-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-subtle)] p-3 text-[.95rem] font-semibold text-[var(--text-primary)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب، والمبلغ النهائي الذي تدفعه هو المجموع أعلاه.</p>
           {ok.length > 0 && <a href={permalink(ok.map(r => ({ id: r.l.id, qty: r.l.qty })))} className="store-btn mt-5 w-full justify-center !py-3 text-lg" rel="noopener"><Lock size={18} aria-hidden="true" />إتمام الشراء</a>}
           <p className="mt-3 text-sm text-[var(--text-muted)]">ستنتقل إلى سلة متجر الكود الرسمي (Shopify) لإتمام الدفع بأمان.</p>
           <button type="button" className="ghost-btn mt-4 w-full justify-center" onClick={clear}>إفراغ السلة</button>

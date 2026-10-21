@@ -1,8 +1,20 @@
 import { useState } from 'react';
+import { ZoomIn } from 'lucide-react';
 import { Zap, ExternalLink } from 'lucide-react';
 import { Link } from '../router';
 import { byHandle, fmtPrice, related, variantOf, permalink, collectionTitle, SHOP, asset } from '../data';
 import { Cover, AddButton, WishButton, Availability, Grid } from '../ui';
+import { type Book } from '../data';
+
+function Zoom({ b, i }: { b: Book; i: number }) {
+  const im = b.images[i] as any; const [on, setOn] = useState(false); const [o, setO] = useState('50% 50%');
+  const pos = (e: React.PointerEvent<HTMLButtonElement>) => { const r = e.currentTarget.getBoundingClientRect(); setO(`${((e.clientX - r.left) / r.width * 100).toFixed(1)}% ${((e.clientY - r.top) / r.height * 100).toFixed(1)}%`); };
+  return <button type="button" aria-pressed={on} aria-label={on ? 'تصغير صورة الغلاف' : 'تكبير صورة الغلاف'} onClick={e => { pos(e as any); setOn(x => !x); }} onPointerMove={e => on && pos(e)} onPointerLeave={() => setOn(false)}
+    className={`zoom relative block aspect-[4/5] w-full rounded-2xl ${on ? 'on bg-[var(--surface-raised)]' : ''}`}>
+    <img src={asset(on ? im.src : (im.cut || im.src))} alt={im.alt || b.title} width={im.w} height={im.h} fetchPriority="high" style={{ transformOrigin: o }} className={`book-img h-full w-full object-contain ${im.cut && !on ? 'is-cut' : ''}`} />
+    <span className="pointer-events-none absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full bg-[var(--card)] px-2.5 py-1 text-sm font-semibold text-[var(--text-secondary)] shadow"><ZoomIn size={15} aria-hidden="true" />{on ? 'اضغط للتصغير' : 'اضغط للتكبير'}</span>
+  </button>;
+}
 import NotFound from './NotFound';
 export default function BookPage({ handle }: { handle: string }) {
   const b = byHandle(handle); const [i, setI] = useState(0);
@@ -12,21 +24,21 @@ export default function BookPage({ handle }: { handle: string }) {
     <nav aria-label="مسار التنقل" className="text-sm text-[var(--text-muted)]"><ol className="flex flex-wrap items-center gap-1.5"><li><Link to="" className="hover:text-[var(--accent)]">الرئيسية</Link></li><li aria-hidden="true">/</li><li><Link to="books/" className="hover:text-[var(--accent)]">كل الكتب</Link></li>{b.collections[0] && <><li aria-hidden="true">/</li><li><Link to={`collection/${b.collections[0]}/`} className="hover:text-[var(--accent)]">{collectionTitle(b.collections[0])}</Link></li></>}</ol></nav>
     <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-12">
       <div>
-        <Cover b={b} i={i} size="lg" eager />
+        <Zoom b={b} i={i} />
         {b.images.length > 1 && <ul className="mt-3 flex flex-wrap gap-2" aria-label="صور الكتاب">{b.images.map((im, k) => <li key={im.src}>
           <button type="button" onClick={() => setI(k)} aria-pressed={i === k} aria-label={`الصورة ${k + 1} من ${b.images.length}`} className={`block w-20 overflow-hidden rounded-xl border-2 bg-[var(--surface-raised)] ${i === k ? 'border-[var(--accent)]' : 'border-[var(--border)]'}`}>
-            <img src={asset(im.sm)} alt="" width={im.w} height={im.h} className="aspect-[4/5] w-full object-contain" loading="lazy" /></button></li>)}</ul>}
+            <img src={asset((im as any).cutSm || im.sm)} alt="" width={im.w} height={im.h} className="aspect-[4/5] w-full object-contain" loading="lazy" /></button></li>)}</ul>}
       </div>
       <div>
         <h1 className="text-3xl leading-snug sm:text-4xl">{b.title}</h1>
         <p className="mt-2 text-lg text-[var(--text-secondary)]">{b.author}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-3xl font-bold">{fmtPrice(b.price)}</span>{v.compare && Number(v.compare) > b.price && <s className="text-[var(--text-muted)]">{fmtPrice(v.compare)}</s>}<Availability b={b} /></div>
+        <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-3xl font-bold">{fmtPrice(b.price)}</span><span className="font-semibold text-[var(--text-secondary)]">+ شحن 25 د.إ.</span>{v.compare && Number(v.compare) > b.price && <s className="text-[var(--text-muted)]">{fmtPrice(v.compare)}</s>}<Availability b={b} /></div>
         <div className="mt-6 flex flex-wrap gap-3">
           <AddButton b={b} />
-          {b.available && <a href={permalink([{ id: v.id, qty: 1 }])} className="store-btn !px-5 !py-3" rel="noopener"><Zap size={18} aria-hidden="true" />اشترِ الآن</a>}
+          {b.available && <a href={permalink([{ id: v.id, qty: 1 }])} className="store-btn !px-5 !py-3" rel="noopener"><Zap size={18} aria-hidden="true" />اشترِ الآن <span className="text-sm font-semibold">(+ شحن 25 د.إ.)</span></a>}
           <WishButton b={b} />
         </div>
-        <p className="mt-3 text-sm text-[var(--text-muted)]">يتم الدفع والشحن على متجر الكود الرسمي (alcode.ae).</p>
+        <p className="mt-3 text-sm text-[var(--text-muted)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب. يتم الدفع على متجر الكود الرسمي (alcode.ae).</p>
         <div className="desc-ar mt-8">{b.description.map((p, k) => <p key={k}>{p}</p>)}</div>
         <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
           <dt className="font-semibold text-[var(--text-muted)]">المؤلف</dt><dd>{b.author}</dd>

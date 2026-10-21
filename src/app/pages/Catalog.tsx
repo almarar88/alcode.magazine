@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { books, collections, collectionTitle, type Book } from '../data';
-import { Grid, PageHead } from '../ui';
+import { Grid, PageHead, ViewToggle, useView } from '../ui';
+import { Link } from '../router';
 import { navigate } from '../router';
 const norm = (s: string) => s.toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
 const SORTS = [{ v: 'featured', l: 'الترتيب الافتراضي' }, { v: 'new', l: 'الأحدث' }, { v: 'price-asc', l: 'السعر: من الأقل' }, { v: 'price-desc', l: 'السعر: من الأعلى' }, { v: 'title', l: 'العنوان (أ–ي)' }];
 export default function Catalog({ collection }: { collection?: string }) {
-  const [q, setQ] = useState(''); const [c, setC] = useState(collection || ''); const [sort, setSort] = useState('featured'); const [stock, setStock] = useState(false);
+  const [q, setQ] = useState(''); const [c, setC] = useState(collection || ''); const [sort, setSort] = useState('featured'); const [stock, setStock] = useState(false); const [view, setView] = useView();
   useEffect(() => { const p = new URLSearchParams(location.search); setQ(p.get('q') || ''); if (!collection) setC(p.get('c') || ''); setSort(p.get('sort') || 'featured'); setStock(p.get('stock') === '1'); }, [collection]);
   useEffect(() => { const p = new URLSearchParams(); if (q) p.set('q', q); if (c && !collection) p.set('c', c); if (sort !== 'featured') p.set('sort', sort); if (stock) p.set('stock', '1'); const s = p.toString(); history.replaceState(null, '', location.pathname + (s ? '?' + s : '')); }, [q, c, sort, stock]);
   const items = useMemo(() => {
@@ -29,8 +30,11 @@ export default function Catalog({ collection }: { collection?: string }) {
         <div><label htmlFor="s" className="field-label">الترتيب</label><select id="s" value={sort} onChange={e => setSort(e.target.value)} className="field-input">{SORTS.map(x => <option key={x.v} value={x.v}>{x.l}</option>)}</select></div>
         <label className="flex items-center gap-2 py-3 font-semibold"><input type="checkbox" checked={stock} onChange={e => setStock(e.target.checked)} className="size-5 accent-[var(--accent)]" />المتوفر فقط</label>
       </form>
-      <p className="mt-5 text-[var(--text-muted)]" aria-live="polite">{items.length ? `${items.length} ${items.length === 1 ? 'كتاب' : items.length <= 10 ? 'كتب' : 'كتابًا'}` : 'لا توجد كتب مطابقة. جرّب كلمة أخرى أو تصنيفًا آخر.'}</p>
-      <div className="mt-4"><Grid items={items} eager={4} /></div>
+      <div role="group" aria-label="التصنيفات" className="mt-4 flex flex-wrap gap-2">{collection
+        ? <><Link to="books/" className="cat-chip">كل الكتب</Link>{collections.map(x => <Link key={x.handle} to={`collection/${x.handle}/`} aria-current={x.handle === collection ? 'page' : undefined} className="cat-chip">{x.title} ({x.count})</Link>)}</>
+        : <><button type="button" aria-pressed={!c} onClick={() => setC('')} className="cat-chip">الكل ({books.length})</button>{collections.map(x => <button key={x.handle} type="button" aria-pressed={c === x.handle} onClick={() => setC(c === x.handle ? '' : x.handle)} className="cat-chip">{x.title} ({x.count})</button>)}</>}</div>
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><p className="text-[var(--text-muted)]" aria-live="polite">{items.length ? `${items.length} ${items.length === 1 ? 'كتاب' : items.length <= 10 ? 'كتب' : 'كتابًا'}` : 'لا توجد كتب مطابقة. جرّب كلمة أخرى أو تصنيفًا آخر.'}</p><ViewToggle view={view} setView={setView} /></div>
+      <div className="mt-4"><Grid items={items} eager={4} view={view} /></div>
     </div>
   </main>;
 }

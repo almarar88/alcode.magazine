@@ -1,0 +1,154 @@
+[
+ {
+  "src": "inside/01-zubara.webp",
+  "sm": "inside/01-zubara-sm.webp",
+  "w": 1105,
+  "h": 1000,
+  "caption": "أطلال الزبارة",
+  "handle": "الزبارة-التاريخ-والحضارة-1766-1938م"
+ },
+ {
+  "src": "inside/02-zubara.webp",
+  "sm": "inside/02-zubara-sm.webp",
+  "w": 1172,
+  "h": 729,
+  "caption": "ساحل الزبارة من الجو",
+  "handle": "الزبارة-التاريخ-والحضارة-1766-1938م"
+ },
+ {
+  "src": "inside/03-zubara.webp",
+  "sm": "inside/03-zubara-sm.webp",
+  "w": 1181,
+  "h": 936,
+  "caption": "حصن الزبارة",
+  "handle": "الزبارة-التاريخ-والحضارة-1766-1938م"
+ },
+ {
+  "src": "inside/04-zubara.webp",
+  "sm": "inside/04-zubara-sm.webp",
+  "w": 594,
+  "h": 1000,
+  "caption": "برج في الزبارة",
+  "handle": "الزبارة-التاريخ-والحضارة-1766-1938م"
+ },
+ {
+  "src": "inside/05-zubara.webp",
+  "sm": "inside/05-zubara-sm.webp",
+  "w": 834,
+  "h": 1000,
+  "caption": "الحصن من الأعلى",
+  "handle": "الزبارة-التاريخ-والحضارة-1766-1938م"
+ },
+ {
+  "src": "inside/06-qasr_alhosn.webp",
+  "sm": "inside/06-qasr_alhosn-sm.webp",
+  "w": 1219,
+  "h": 726,
+  "caption": "قصر الحصن",
+  "handle": "قصر-الحصن-النشأة-والتاريخ-1761-1985م"
+ },
+ {
+  "src": "inside/07-qasr_alhosn.webp",
+  "sm": "inside/07-qasr_alhosn-sm.webp",
+  "w": 1205,
+  "h": 881,
+  "caption": "عند أسوار الحصن",
+  "handle": "قصر-الحصن-النشأة-والتاريخ-1761-1985م"
+ },
+ {
+  "src": "inside/08-qasr_alhosn.webp",
+  "sm": "inside/08-qasr_alhosn-sm.webp",
+  "w": 764,
+  "h": 1000,
+  "caption": "صورة قديمة في الحصن",
+  "handle": "قصر-الحصن-النشأة-والتاريخ-1761-1985م"
+ },
+ {
+  "src": "inside/09-qasr_alhosn.webp",
+  "sm": "inside/09-qasr_alhosn-sm.webp",
+  "w": 1205,
+  "h": 904,
+  "caption": "برج قصر الحصن",
+  "handle": "قصر-الحصن-النشأة-والتاريخ-1761-1985م"
+ },
+ {
+  "src": "inside/10-qasr_alhosn.webp",
+  "sm": "inside/10-qasr_alhosn-sm.webp",
+  "w": 1008,
+  "h": 734,
+  "caption": "فناء القصر",
+  "handle": "قصر-الحصن-النشأة-والتاريخ-1761-1985م"
+ },
+ {
+  "src": "inside/11-dhafra_rahhala.webp",
+  "sm": "inside/11-dhafra_rahhala-sm.webp",
+  "w": 1332,
+  "h": 1000,
+  "caption": "واحة في ليوا",
+  "handle": "الظفرة-في-كتابات-الرحالة-والمؤرخين"
+ },
+ {
+  "src": "inside/12-dhafra_rahhala.webp",
+  "sm": "inside/12-dhafra_rahhala-sm.webp",
+  "w": 1018,
+  "h": 1000,
+  "caption": "رجل وجمل على الساحل",
+  "handle": "الظفرة-في-كتابات-الرحالة-والمؤرخين"
+ },
+ {
+  "src": "inside/13-dhafra_rahhala.webp",
+  "sm": "inside/13-dhafra_rahhala-sm.webp",
+  "w": 1181,
+  "h": 1000,
+  "caption": "صورة جماعية قديمة",
+  "handle": "الظفرة-في-كتابات-الرحالة-والمؤرخين"
+ },
+ {
+  "src": "inside/14-dhafra_rahhala.webp",
+  "sm": "inside/14-dhafra_rahhala-sm.webp",
+  "w": 1053,
+  "h": 1000,
+  "caption": "خيمة في الصحراء",
+  "handle": "الظفرة-في-كتابات-الرحالة-والمؤرخين"
+ },
+ {
+  "src": "inside/15-dhafra_rahhala.webp",
+  "sm": "inside/15-dhafra_rahhala-sm.webp",
+  "w": 1258,
+  "h": 1000,
+  "caption": "مخطوطة",
+  "handle": "الظفرة-في-كتابات-الرحالة-والمؤرخين"
+ },
+ {
+  "src": "inside/16-mukhtasar_dhafra.webp",
+  "sm": "inside/16-mukhtasar_dhafra-sm.webp",
+  "w": 1062,
+  "h": 1000,
+  "caption": "قافلة إبل",
+  "handle": "مختصر-تاريخ-الظفرة-جغرافيتها-مشيختها-سكانها"
+ },
+ {
+  "src": "inside/17-mukhtasar_dhafra.webp",
+  "sm": "inside/17-mukhtasar_dhafra-sm.webp",
+  "w": 1217,
+  "h": 813,
+  "caption": "حصن في الظفرة",
+  "handle": "مختصر-تاريخ-الظفرة-جغرافيتها-مشيختها-سكانها"
+ },
+ {
+  "src": "inside/18-irtihal.webp",
+  "sm": "inside/18-irtihal-sm.webp",
+  "w": 1301,
+  "h": 976,
+  "caption": "واحات أبوظبي من الجو",
+  "handle": "الارتحال-من-الظفرة-إلى-جزيرة-أبوظبي-1761-1795م"
+ },
+ {
+  "src": "inside/19-irtihal.webp",
+  "sm": "inside/19-irtihal-sm.webp",
+  "w": 756,
+  "h": 646,
+  "caption": "وثيقة مخطوطة",
+  "handle": "الارتحال-من-الظفرة-إلى-جزيرة-أبوظبي-1761-1795م"
+ }
+]

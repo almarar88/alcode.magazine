@@ -8,19 +8,31 @@ const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) process
 const cards = () => pg.$$eval('main article', a => a.length);
 await pg.goto(B + 'books/', { waitUntil: 'networkidle0' });
 const all = await cards(); ok(all === 26, 'catalog shows all books: ' + all);
-await pg.type('#q', 'الكويت'); await new Promise(r => setTimeout(r, 300)); const k = await cards(); ok(k > 0 && k < all, 'search الكويت → ' + k); ok((await pg.url()).includes('q='), 'search in URL');
+await pg.type('#q', 'الكويت'); await new Promise(r => setTimeout(r, 900)); const k = await cards(); ok(k > 0 && k < all, 'search الكويت → ' + k); ok((await pg.url()).includes('q='), 'search in URL');
 await pg.click('#q', { clickCount: 3 }); await pg.keyboard.press('Backspace');
-await pg.select('#c', 'الشعر-والدواوين'); await new Promise(r => setTimeout(r, 300)); ok(await cards() === 4, 'filter poetry → ' + await cards());
-await pg.select('#c', ''); await pg.select('#s', 'price-asc'); await new Promise(r => setTimeout(r, 300));
+await pg.select('#c', 'الشعر-والدواوين'); await new Promise(r => setTimeout(r, 900)); ok(await cards() === 4, 'filter poetry → ' + await cards());
+await pg.select('#c', ''); await pg.select('#s', 'price-asc'); await new Promise(r => setTimeout(r, 900));
 const prices = await pg.$$eval('main article .text-lg.font-bold', a => a.map(x => parseFloat(x.textContent.match(/[\d.]+/)[0])));
 ok(prices.every((p, i) => !i || prices[i - 1] <= p) && prices.length === 26, 'sort price asc ' + prices.slice(0, 3) + '…' + prices.slice(-1));
-await pg.select('#s', 'price-desc'); await new Promise(r => setTimeout(r, 300));
+await pg.select('#s', 'price-desc'); await new Promise(r => setTimeout(r, 900));
 const pd = await pg.$$eval('main article .text-lg.font-bold', a => a.map(x => parseFloat(x.textContent.match(/[\d.]+/)[0]))); ok(pd.every((p, i) => !i || pd[i - 1] >= p), 'sort price desc');
 await pg.select('#s', 'new'); await new Promise(r => setTimeout(r, 200));
+// chips, view toggle, inline quick look (no dialog)
+await pg.click('button.cat-chip:nth-of-type(2)'); await new Promise(r => setTimeout(r, 900)); const ch = await cards(); ok(ch > 0 && ch < 26, 'category chip filters → ' + ch);
+await pg.click('button.cat-chip:nth-of-type(1)'); await new Promise(r => setTimeout(r, 900)); ok(await cards() === 26, 'chip «الكل» resets');
+await pg.click('button[aria-label^="نظرة سريعة"]'); await new Promise(r => setTimeout(r, 600));
+ok(await pg.$eval('.quicklook', e => !!e.closest('li.col-span-full') && !document.querySelector('[role=dialog]') && e.textContent.includes('شحن 25')), 'quick look opens inline with price + shipping');
+ok(await pg.evaluate(() => document.activeElement?.tagName === 'H3'), 'quick look focuses its heading');
+await pg.$eval('button[aria-label="إغلاق النظرة السريعة"]', e => e.click()); await new Promise(r => setTimeout(r, 600)); ok(!(await pg.$('.quicklook')), 'quick look closes');
+await pg.click('button[aria-pressed][class*="rounded-lg"]:nth-child(2)'); await new Promise(r => setTimeout(r, 900)); ok(await pg.$eval('ul[data-view]', u => u.dataset.view) === 'list', 'list view');
+ok(await pg.evaluate(() => localStorage.getItem('alcode-view')) === '"list"', 'view persisted');
+await pg.click('button[aria-pressed][class*="rounded-lg"]:nth-child(1)'); await new Promise(r => setTimeout(r, 900));
 // add first two cards to cart
-const addBtns = await pg.$$('main article button.ink-btn'); await addBtns[0].click(); await addBtns[1].click(); await addBtns[1].click();
+const addBtns = await pg.$$('main article button[aria-label^="أضف «"][aria-label$="السلة"]'); await addBtns[0].click(); await addBtns[1].click(); await addBtns[1].click();
 await pg.goto(B + 'cart/', { waitUntil: 'networkidle0' });
 const items = await pg.$$eval('main li h2', a => a.length); ok(items === 2, 'cart has 2 lines');
+const num = async s => parseFloat((await pg.$eval(`[data-testid=${s}]`, e => e.textContent)).match(/[\d.]+/)[0]);
+const sub = await num('subtotal'), sh = await num('shipping'), tot = await num('total'); ok(sh === 25 && tot === sub + 25, `shipping 25: ${sub} + ${sh} = ${tot}`);
 const href = await pg.$eval('a.store-btn', a => a.href); ok(/^https:\/\/alcode\.ae\/cart\/\d+:1,\d+:2$/.test(href), 'checkout permalink ' + href);
 await pg.click('button[aria-label="زيادة الكمية"]'); await new Promise(r => setTimeout(r, 200));
 const href2 = await pg.$eval('a.store-btn', a => a.href); ok(/\/cart\/\d+:2,\d+:2$/.test(href2), 'qty + updates permalink ' + href2);
