@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths-ignore: ['tools-verify/**', 'screens/**', 'incoming_articles/**', 'supabase/**']
   workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'   # hourly: picks up integrations that became ready (e.g. Supabase schema) without a code push
 permissions:
   contents: write
 concurrency:

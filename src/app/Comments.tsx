@@ -10,14 +10,16 @@ export function Comments({ slug }: { slug: string }) {
   const [body, setBody] = useState('');
   const [msg, setMsg] = useState('');
   const [busy, setBusy] = useState(false);
+  const [broken, setBroken] = useState(false);
 
   const load = async () => {
     if (!sb) return;
-    const { data } = await sb.from('comments').select('*').eq('article_slug', slug).order('created_at', { ascending: true });
+    const { data, error } = await sb.from('comments').select('*').eq('article_slug', slug).order('created_at', { ascending: true });
+    if (error) { setBroken(true); return; }
     setList((data as Comment[]) || []);
   };
   useEffect(() => { load(); }, [sb, slug]);
-  if (!FLAGS.accounts) return null;
+  if (!FLAGS.accounts || broken) return null;
 
   const post = async (e: React.FormEvent) => {
     e.preventDefault(); if (!sb || !user) return; setBusy(true); setMsg('');

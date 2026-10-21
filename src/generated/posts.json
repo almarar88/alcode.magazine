@@ -1478,8 +1478,8 @@
   },
   "accounts": {
    "provider": "supabase",
-   "url": "",
-   "anonKey": "",
+   "url": "https://olkhmscftouksbgjmtjt.supabase.co",
+   "anonKey": "sb_publishable_T4frPbNe2r44z8Uhp7rt9A_VWI8waxi",
    "google": false
   },
   "flags": {

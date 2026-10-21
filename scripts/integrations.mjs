@@ -12,4 +12,13 @@ cfg.verification.google = pick(e.GOOGLE_SITE_VERIFICATION, cfg.verification.goog
 cfg.verification.bing = pick(e.BING_SITE_VERIFICATION, cfg.verification.bing);
 delete cfg._comment;
 export const INT = cfg;
-export const FLAGS = { accounts: !!(cfg.accounts.url && cfg.accounts.anonKey), newsletter: !!cfg.newsletter.username, contact: !!cfg.contact.accessKey, analytics: !!cfg.analytics.code };
+// Accounts stay hidden until the database schema (supabase/migrations/0001_init.sql) exists, so no broken UI ships.
+async function schemaReady() {
+  if (!cfg.accounts.url || !cfg.accounts.anonKey) return false;
+  try {
+    const r = await fetch(`${cfg.accounts.url}/rest/v1/feed?select=id&limit=1`, { headers: { apikey: cfg.accounts.anonKey }, signal: AbortSignal.timeout(10000) });
+    const ok = r.ok; if (!globalThis.__sbLogged) { globalThis.__sbLogged = 1; console.log(`accounts: schema ${ok ? 'present' : 'missing (HTTP ' + r.status + ')'}; accounts ${ok ? 'ON' : 'hidden'}`); }
+    return ok;
+  } catch (e) { console.log('accounts: probe failed, hidden', String(e)); return false; }
+}
+export const FLAGS = { accounts: await schemaReady(), newsletter: !!cfg.newsletter.username, contact: !!cfg.contact.accessKey, analytics: !!cfg.analytics.code };
