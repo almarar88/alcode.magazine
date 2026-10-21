@@ -3,7 +3,8 @@ export type Book = (typeof data.books)[number];
 export const books = data.books as Book[];
 export const collections = data.collections;
 export const featured = data.featured as string[];
-export const SHOP = data.shop as string; // https://alcode.ae (real Shopify store; checkout happens there)
+import { SHOP_ORIGIN } from './config';
+export const SHOP = SHOP_ORIGIN; // Shopify storefront (checkout happens there); set in config.ts
 export const BASE = import.meta.env.BASE_URL;
 export const asset = (p: string) => (/^https?:/.test(p) ? p : BASE + p.replace(/^\//, ''));
 export const byHandle = (h: string) => books.find(b => b.handle === h);

@@ -33,14 +33,14 @@ await pg.goto(B + 'cart/', { waitUntil: 'networkidle0' });
 const items = await pg.$$eval('main li h2', a => a.length); ok(items === 2, 'cart has 2 lines');
 const num = async s => parseFloat((await pg.$eval(`[data-testid=${s}]`, e => e.textContent)).match(/[\d.]+/)[0]);
 const sub = await num('subtotal'), sh = await num('shipping'), tot = await num('total'); ok(sh === 25 && tot === sub + 25, `shipping 25: ${sub} + ${sh} = ${tot}`);
-const href = await pg.$eval('a.store-btn', a => a.href); ok(/^https:\/\/alcode\.ae\/cart\/\d+:1,\d+:2$/.test(href), 'checkout permalink ' + href);
+const SHOPRE = (process.env.SHOP || 'https://8sq2wc-ye.myshopify.com').replace(/\./g, '\\.'); const href = await pg.$eval('a.store-btn', a => a.href); ok(new RegExp('^' + SHOPRE + '/cart/\\d+:1,\\d+:2$').test(href), 'checkout permalink ' + href);
 await pg.click('button[aria-label="زيادة الكمية"]'); await new Promise(r => setTimeout(r, 200));
 const href2 = await pg.$eval('a.store-btn', a => a.href); ok(/\/cart\/\d+:2,\d+:2$/.test(href2), 'qty + updates permalink ' + href2);
 await pg.click('button[aria-label^="حذف"]'); await new Promise(r => setTimeout(r, 200)); ok(await pg.$$eval('main li h2', a => a.length) === 1, 'remove line');
 const badge = await pg.$eval('header a[href$="/cart/"]', a => a.getAttribute('aria-label')); ok(/2/.test(badge), 'header badge ' + badge);
 // book page: buy now + wishlist + gallery
 await pg.goto(B + 'book/' + encodeURIComponent('رحلة-مايلز') + '/', { waitUntil: 'networkidle0' });
-const bn = await pg.$eval('main a.store-btn', a => a.href); ok(/^https:\/\/alcode\.ae\/cart\/\d+:1$/.test(bn), 'buy now ' + bn);
+const bn = await pg.$eval('main a.store-btn', a => a.href); ok(new RegExp('^' + SHOPRE + '/cart/\\d+:1$').test(bn), 'buy now ' + bn);
 const thumbs = await pg.$$('ul[aria-label="صور الكتاب"] button'); ok(thumbs.length === 3, 'gallery thumbs ' + thumbs.length);
 const s1 = await pg.$eval('main img', i => i.src); await thumbs[1].click(); await new Promise(r => setTimeout(r, 200)); ok(s1 !== await pg.$eval('main img', i => i.src), 'gallery switches image');
 await pg.click('main button[aria-pressed="false"][aria-label*="الأمنيات"]'); await pg.goto(B + 'wishlist/', { waitUntil: 'networkidle0' }); ok(await cards() === 1, 'wishlist persisted');

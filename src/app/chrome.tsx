@@ -81,7 +81,7 @@ export function Footer() {
         <div><h2 className="text-base text-[#f6efe1]">التصنيفات</h2><ul className="mt-3 space-y-1.5"><L to="books/">كل الكتب</L>{collections.map(c => <L key={c.handle} to={`collection/${c.handle}/`}>{c.title}</L>)}</ul></div>
         <div><h2 className="text-base text-[#f6efe1]">المتجر</h2><ul className="mt-3 space-y-1.5">
           <L to="cart/">سلة التسوق</L><L to="wishlist/">قائمة الأمنيات</L><L to="author/">عن المؤلف</L><L to="about/">عن المتجر</L><L to="contact/">تواصل معنا</L><L to="privacy/">سياسة الخصوصية</L><L to="terms/">شروط الاستخدام</L>
-          <li><a href={SHOP} target="_blank" rel="noopener" className="inline-flex items-center gap-1.5 text-[#e0d4bb] hover:text-[#e2b866]"><span className="ulink">alcode.ae</span><ExternalLink size={14} aria-hidden="true" /></a></li>
+          <li><a href={SHOP} target="_blank" rel="noopener" className="inline-flex items-center gap-1.5 text-[#e0d4bb] hover:text-[#e2b866]"><span className="ulink">متجر الكود الرسمي</span><ExternalLink size={14} aria-hidden="true" /></a></li>
         </ul></div>
       </div>
       <div className="border-t border-white/10"><p className="mx-auto max-w-[1320px] px-4 py-4 text-sm text-[#e0d4bb] sm:px-6">© مؤسسة الكود لنشر الكتب · بيانات الكتب والأسعار من متجر الكود الرسمي alcode.ae</p></div>
