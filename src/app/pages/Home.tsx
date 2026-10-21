@@ -5,6 +5,7 @@ import data from '../../generated/store.json';
 import { books, collections, featured, newest, byHandle, fmtPrice, asset, type Book } from '../data';
 import { Carousel, Cover, AddButton } from '../ui';
 import { LogoMark } from '../art';
+import { AuthorTeaser } from './Author';
 type Inside = { src: string; sm: string; w: number; h: number; caption: string; handle: string };
 const inside = (data as any).inside as Inside[];
 const slides = inside.filter(i => i.w >= 1000 && i.w / i.h > 1.1); // wide, sharp ones for the full-bleed hero
@@ -66,6 +67,7 @@ export default function Home() {
       <h2 id="cats" className="text-2xl sm:text-3xl">التصنيفات</h2>
       <ul className="mt-5 flex flex-wrap gap-2">{collections.map(c => <li key={c.handle}><Link to={`collection/${c.handle}/`} className="cat-chip !px-5 !py-2.5 text-lg">{c.title} <span className="ms-2 text-sm text-[var(--text-muted)]">{c.count}</span></Link></li>)}</ul>
     </section>
+    <AuthorTeaser />
     <section aria-labelledby="new" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
       <div className="flex items-end justify-between gap-3"><h2 id="new" className="text-2xl sm:text-3xl">وصل حديثًا</h2><Link to="books/?sort=new" className="font-semibold text-[var(--accent)] hover:underline">عرض الكل</Link></div>
       <div className="mt-5"><Carousel items={nw} label="وصل حديثًا" /></div>

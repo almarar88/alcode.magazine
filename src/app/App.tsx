@@ -8,9 +8,10 @@ import BookPage from './pages/Book';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import NotFound from './pages/NotFound';
+import Author from './pages/Author';
 import { About, Contact, Privacy, Terms } from './pages/Static';
 const SITE = 'متجر الكود للكتب';
-const TITLES: Record<string, string> = { books: 'كل الكتب', cart: 'سلة التسوق', wishlist: 'قائمة الأمنيات', about: 'عن المتجر', contact: 'تواصل معنا', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام' };
+const TITLES: Record<string, string> = { books: 'كل الكتب', author: 'عن المؤلف علي أحمد الكندي المرر', cart: 'سلة التسوق', wishlist: 'قائمة الأمنيات', about: 'عن المتجر', contact: 'تواصل معنا', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام' };
 function route(path: string) {
   const [a, b] = path.split('/');
   switch (a) {
@@ -18,6 +19,7 @@ function route(path: string) {
     case 'books': return <Catalog />;
     case 'collection': return collections.some(c => c.handle === b) ? <Catalog key={b} collection={b} /> : <NotFound />;
     case 'book': return <BookPage handle={b} />;
+    case 'author': return <Author />;
     case 'cart': return <Cart />;
     case 'wishlist': return <Wishlist />;
     case 'about': return <About />;

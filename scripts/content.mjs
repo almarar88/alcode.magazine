@@ -20,6 +20,7 @@ export function routesList() {
     { path: 'books/', title: 'كل الكتب', desc: `جميع إصدارات مؤسسة الكود (${books.length} كتابًا) مع البحث والتصنيف والترتيب بالسعر والأحدث.` },
     ...collections.map(c => ({ path: `collection/${c.handle}/`, title: c.title, desc: c.description[0] || c.title })),
     ...books.map(b => ({ path: `book/${b.handle}/`, title: b.title, desc: `${first(b)} السعر ${b.price} درهم.`.trim(), image: b.images[0]?.src, kind: 'product' })),
+    { path: 'author/', title: 'عن المؤلف: علي أحمد الكندي المرر', desc: 'شاعر وباحث في التاريخ والأدب والتراث المحلي: نبذة تعريفية، المسيرة، التأهيل العلمي، المؤلفات والجوائز، وكتبه في متجر الكود.', image: 'author/ali-alkindi-720.webp' },
     { path: 'cart/', title: 'سلة التسوق', desc: 'سلة مشترياتك من متجر الكود.' },
     { path: 'wishlist/', title: 'قائمة الأمنيات', desc: 'الكتب التي حفظتها في متصفحك.' },
     { path: 'about/', title: 'عن المتجر', desc: SITE.description },
