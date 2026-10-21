@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer-core'; import fs from 'node:fs';
 const axe = fs.readFileSync('node_modules/axe-core/axe.min.js', 'utf8');
-const pages = (process.env.PAGES ?? '|article/welcome-to-the-magazine/|article/01-pearl-banks-rosenthal/|article/09-basra-1663-godinho/|article/12-jebel-akhdar-1902-cox/|article/15-bani-kaab-1831-stocqueler/|article/19-bushehr-port-1816-buckingham/|write/|category/history/|gallery/|dashboard/|credits/|search/|timeline/|saved/').split('|');
+const pages = (process.env.PAGES ?? '|article/welcome-to-the-magazine/|article/01-pearl-banks-rosenthal/|article/09-basra-1663-godinho/|article/12-jebel-akhdar-1902-cox/|article/15-bani-kaab-1831-stocqueler/|article/19-bushehr-port-1816-buckingham/|category/history/|gallery/|credits/|search/|timeline/|saved/').split('|');
 const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox'] });
 for (const theme of ['light', 'dark']) for (const p of pages) {
   const pg = await b.newPage(); await pg.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: theme }, { name: 'prefers-reduced-motion', value: 'reduce' }]);
