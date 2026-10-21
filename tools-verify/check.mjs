@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer-core';
 const BASE = process.env.BASE || 'http://127.0.0.1:4173/';
-const pages = (process.env.PAGES || '|article/11-gulf-trade-1863-pelly/|article/22-sharjah-rak-1816-buckingham/|article/27-famous-pearls-rosenthal/|article/19-bushehr-port-1816-buckingham/|article/01-pearl-banks-rosenthal/|category/history/|category/economy-trade/|gallery/|credits/|search/|saved/|timeline/|tag/الكويت/|about/|travelers/|traveler/kaempfer/|article/07-lower-gulf-islands-buckingham/|article/23-muscat-1816-buckingham/').split('|');
+const pages = (process.env.PAGES || process.env.STOREPAGES || '').split('|');
 const widths = (process.env.W || '390,673,820,1440').split(',').map(Number);
 const shots = process.env.SHOTS;
 const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox', '--disable-gpu'] });

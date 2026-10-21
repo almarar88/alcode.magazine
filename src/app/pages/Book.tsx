@@ -1,0 +1,41 @@
+import { useState } from 'react';
+import { Zap, ExternalLink } from 'lucide-react';
+import { Link } from '../router';
+import { byHandle, fmtPrice, related, variantOf, permalink, collectionTitle, SHOP, asset } from '../data';
+import { Cover, AddButton, WishButton, Availability, Grid } from '../ui';
+import NotFound from './NotFound';
+export default function BookPage({ handle }: { handle: string }) {
+  const b = byHandle(handle); const [i, setI] = useState(0);
+  if (!b) return <NotFound />;
+  const v = variantOf(b);
+  return <main id="main" className="mx-auto max-w-[1320px] px-4 pt-6 sm:px-6">
+    <nav aria-label="مسار التنقل" className="text-sm text-[var(--text-muted)]"><ol className="flex flex-wrap items-center gap-1.5"><li><Link to="" className="hover:text-[var(--accent)]">الرئيسية</Link></li><li aria-hidden="true">/</li><li><Link to="books/" className="hover:text-[var(--accent)]">كل الكتب</Link></li>{b.collections[0] && <><li aria-hidden="true">/</li><li><Link to={`collection/${b.collections[0]}/`} className="hover:text-[var(--accent)]">{collectionTitle(b.collections[0])}</Link></li></>}</ol></nav>
+    <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-12">
+      <div>
+        <Cover b={b} i={i} size="lg" eager />
+        {b.images.length > 1 && <ul className="mt-3 flex flex-wrap gap-2" aria-label="صور الكتاب">{b.images.map((im, k) => <li key={im.src}>
+          <button type="button" onClick={() => setI(k)} aria-pressed={i === k} aria-label={`الصورة ${k + 1} من ${b.images.length}`} className={`block w-20 overflow-hidden rounded-xl border-2 bg-[var(--surface-raised)] ${i === k ? 'border-[var(--accent)]' : 'border-[var(--border)]'}`}>
+            <img src={asset(im.sm)} alt="" width={im.w} height={im.h} className="aspect-[4/5] w-full object-contain" loading="lazy" /></button></li>)}</ul>}
+      </div>
+      <div>
+        <h1 className="text-3xl leading-snug sm:text-4xl">{b.title}</h1>
+        <p className="mt-2 text-lg text-[var(--text-secondary)]">{b.author}</p>
+        <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-3xl font-bold">{fmtPrice(b.price)}</span>{v.compare && Number(v.compare) > b.price && <s className="text-[var(--text-muted)]">{fmtPrice(v.compare)}</s>}<Availability b={b} /></div>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <AddButton b={b} />
+          {b.available && <a href={permalink([{ id: v.id, qty: 1 }])} className="store-btn !px-5 !py-3" rel="noopener"><Zap size={18} aria-hidden="true" />اشترِ الآن</a>}
+          <WishButton b={b} />
+        </div>
+        <p className="mt-3 text-sm text-[var(--text-muted)]">يتم الدفع والشحن على متجر الكود الرسمي (alcode.ae).</p>
+        <div className="desc-ar mt-8">{b.description.map((p, k) => <p key={k}>{p}</p>)}</div>
+        <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
+          <dt className="font-semibold text-[var(--text-muted)]">المؤلف</dt><dd>{b.author}</dd>
+          {b.collections.length > 0 && <><dt className="font-semibold text-[var(--text-muted)]">التصنيف</dt><dd className="flex flex-wrap gap-2">{b.collections.map(c => <Link key={c} to={`collection/${c}/`} className="chip">{collectionTitle(c)}</Link>)}</dd></>}
+          {b.tags.length > 0 && <><dt className="font-semibold text-[var(--text-muted)]">الوسوم</dt><dd>{b.tags.join('، ')}</dd></>}
+        </dl>
+        <a href={`${SHOP}/products/${encodeURIComponent(b.handle)}`} target="_blank" rel="noopener" className="mt-4 inline-flex items-center gap-1.5 font-semibold text-[var(--accent)] hover:underline">صفحة الكتاب في متجر الكود<ExternalLink size={15} aria-hidden="true" /></a>
+      </div>
+    </div>
+    <section aria-labelledby="rel" className="pt-16"><h2 id="rel" className="text-2xl sm:text-3xl">كتب ذات صلة</h2><div className="mt-5"><Grid items={related(b)} /></div></section>
+  </main>;
+}

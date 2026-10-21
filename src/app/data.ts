@@ -1,19 +1,21 @@
-import data from '../generated/posts.json';
-export type Post = (typeof data.posts)[number];
-export const posts = data.posts as Post[];
-export const categories = data.categories;
-export const tags = data.tags;
-export const BASE = import.meta.env.BASE_URL; // "/"
-export const SITE_URL = location.origin + BASE;
+import data from '../generated/store.json';
+export type Book = (typeof data.books)[number];
+export const books = data.books as Book[];
+export const collections = data.collections;
+export const featured = data.featured as string[];
+export const SHOP = data.shop as string; // https://alcode.ae (real Shopify store; checkout happens there)
+export const BASE = import.meta.env.BASE_URL;
 export const asset = (p: string) => (/^https?:/.test(p) ? p : BASE + p.replace(/^\//, ''));
-export const tagSlug = (t: string) => t.trim().replace(/\s+/g, '-');
-export const bySlug = (s: string) => posts.find(p => p.slug === s);
-const fmt = new Intl.DateTimeFormat('ar-AE-u-nu-arab', { day: 'numeric', month: 'long', year: 'numeric' });
-export const fmtDate = (d: string) => { try { return fmt.format(new Date(d + 'T12:00:00')); } catch { return d; } };
-export const arNum = (n: number) => n.toLocaleString('ar-AE-u-nu-arab');
-export const minutesLabel = (m: number) => m === 1 ? 'دقيقة واحدة' : m === 2 ? 'دقيقتان' : m <= 10 ? `${arNum(m)} دقائق` : `${arNum(m)} دقيقة`;
-export function readingMinutes(md: string) { const w = md.replace(/```[\s\S]*?```/g, ' ').replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length; return { words: w, minutes: Math.max(1, Math.round(w / 200)) }; }
-export const photos = data.photos;
-export type Photo = (typeof data.photos)[number];
-export const travelers = (data as any).travelers as { slug: string; name: string; book: string; bio: { text: string; slug: string }[]; posts: string[]; images: { src: string; alt: string; cap: string; slug: string }[] }[];
-export const travelerOf = (p: Post) => travelers.find(t => t.slug === p.traveler);
+export const byHandle = (h: string) => books.find(b => b.handle === h);
+export const variantOf = (b: Book) => b.variants.find(v => v.available) || b.variants[0];
+const money = new Intl.NumberFormat('ar-AE-u-nu-latn', { style: 'currency', currency: 'AED', numberingSystem: 'latn', minimumFractionDigits: 0, maximumFractionDigits: 2 } as any);
+export const fmtPrice = (n: number | string) => money.format(Number(n));
+export const arNum = (n: number) => n.toLocaleString('ar-AE-u-nu-latn');
+export const collectionTitle = (h: string) => collections.find(c => c.handle === h)?.title || h;
+export const newest = () => [...books].sort((a, b) => b.published.localeCompare(a.published));
+/** Shopify cart permalink: /cart/VARIANT:QTY,VARIANT:QTY → opens the real Shopify cart/checkout. */
+export const permalink = (items: { id: number; qty: number }[]) => `${SHOP}/cart/${items.map(i => `${i.id}:${i.qty}`).join(',')}`;
+export function related(b: Book, n = 4) {
+  const score = (x: Book) => x.collections.filter(c => b.collections.includes(c)).length * 2 + x.tags.filter(t => b.tags.includes(t)).length;
+  return books.filter(x => x.handle !== b.handle).map(x => [score(x), x] as const).sort((a, c) => c[0] - a[0]).slice(0, n).map(x => x[1]);
+}

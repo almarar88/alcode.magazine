@@ -1,25 +1,4 @@
 {
-  "_comment": "Third-party integrations. Each feature stays hidden until its value is filled (here, or via the build-time env var noted in scripts/integrations.mjs). Only public values belong here.",
-  "newsletter": {
-    "provider": "buttondown",
-    "username": ""
-  },
-  "contact": {
-    "provider": "web3forms",
-    "accessKey": ""
-  },
-  "analytics": {
-    "provider": "goatcounter",
-    "code": "alcode"
-  },
-  "verification": {
-    "google": "",
-    "bing": ""
-  },
-  "accounts": {
-    "provider": "supabase",
-    "url": "",
-    "anonKey": "",
-    "google": false
-  }
+  "analytics": { "provider": "goatcounter", "code": "alcode" },
+  "verification": { "google": "", "bing": "" }
 }

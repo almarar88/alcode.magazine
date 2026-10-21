@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /studio/
-Disallow: /account/
+Disallow: /cart/
+Disallow: /wishlist/
 
 Sitemap: https://blog.alcode.ae/sitemap.xml
