@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ShareButtons, useRecent } from '../extras';
+import { Book3D, BuyRow, Bundle } from '../extras2';
 import { ZoomIn } from 'lucide-react';
 import { Zap, ExternalLink } from 'lucide-react';
 import { Link } from '../router';
@@ -28,6 +29,7 @@ export default function BookPage({ handle }: { handle: string }) {
     <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-12">
       <div>
         <Zoom b={b} i={i} />
+        <div className="mt-6 hidden sm:block no-print"><Book3D b={b} /></div>
         {b.images.length > 1 && <ul className="mt-3 flex flex-wrap gap-2" aria-label="صور الكتاب">{b.images.map((im, k) => <li key={im.src}>
           <button type="button" onClick={() => setI(k)} aria-pressed={i === k} aria-label={`الصورة ${k + 1} من ${b.images.length}`} className={`block w-20 overflow-hidden rounded-xl border-2 bg-[var(--surface-raised)] ${i === k ? 'border-[var(--accent)]' : 'border-[var(--border)]'}`}>
             <img src={asset((im as any).cutSm || im.sm)} alt="" width={im.w} height={im.h} className="aspect-[4/5] w-full object-contain" loading="lazy" /></button></li>)}</ul>}
@@ -36,13 +38,11 @@ export default function BookPage({ handle }: { handle: string }) {
         <h1 className="text-3xl leading-snug sm:text-4xl">{b.title}</h1>
         <p className="mt-2 text-lg text-[var(--text-secondary)]">{b.author}</p>
         <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-3xl font-bold">{fmtPrice(b.price)}</span><span className="font-semibold text-[var(--text-secondary)]">+ شحن 25 د.إ.</span>{v.compare && Number(v.compare) > b.price && <s className="text-[var(--text-muted)]">{fmtPrice(v.compare)}</s>}<Availability b={b} /></div>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <AddButton b={b} />
-          {b.available && <a href={permalink([{ id: v.id, qty: 1 }])} className="store-btn !px-5 !py-3" rel="noopener"><Zap size={18} aria-hidden="true" />اشترِ الآن <span className="text-sm font-semibold">(+ شحن 25 د.إ.)</span></a>}
-          <WishButton b={b} />
-        </div>
+        <BuyRow b={b} />
+        <div className="mt-3 flex flex-wrap gap-3">{!b.available && <AddButton b={b} />}<WishButton b={b} /></div>
         <ShareButtons b={b} />
         <p className="mt-3 text-sm text-[var(--text-muted)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب. يتم الدفع على متجر الكود الرسمي (alcode.ae).</p>
+        <div className="print-only mt-4 text-sm">{`السعر ${b.price} د.إ. + شحن 25 د.إ. · ${typeof location !== 'undefined' ? location.href : ''}`}</div>
         <div className="desc-ar mt-8">{b.description.map((p, k) => <p key={k}>{p}</p>)}</div>
         <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
           <dt className="font-semibold text-[var(--text-muted)]">المؤلف</dt><dd>{b.author}</dd>
@@ -52,6 +52,7 @@ export default function BookPage({ handle }: { handle: string }) {
         <a href={`${SHOP}/products/${encodeURIComponent(b.handle)}`} target="_blank" rel="noopener" className="mt-4 inline-flex items-center gap-1.5 font-semibold text-[var(--accent)] hover:underline">صفحة الكتاب في متجر الكود<ExternalLink size={15} aria-hidden="true" /></a>
       </div>
     </div>
+    <Bundle b={b} />
     <RecentRow exclude={b.handle} />
     <section aria-labelledby="rel" className="pt-16"><h2 id="rel" className="text-2xl sm:text-3xl">كتب ذات صلة</h2><div className="mt-5"><Grid items={related(b)} /></div></section>
   </main>;

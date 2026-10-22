@@ -272,3 +272,27 @@ textarea.field-input { font-family: var(--font-body); font-size: .95rem; line-he
 @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 .page-in { animation: pageIn .4s cubic-bezier(.2,.8,.2,1) both; }
 @media (prefers-reduced-motion: reduce) { .panel-in, .page-in { animation: none; } }
+/* batch 2 */
+.to-top { opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity .25s, transform .25s; }
+.to-top.on { opacity: 1; transform: none; pointer-events: auto; }
+.buy-bar { transform: translateY(110%); transition: transform .3s cubic-bezier(.2,.8,.2,1); padding-bottom: max(.5rem, env(safe-area-inset-bottom)); }
+.buy-bar.on { transform: none; }
+@keyframes skel { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+.skel { background: linear-gradient(90deg, var(--surface-raised) 25%, var(--muted) 50%, var(--surface-raised) 75%); background-size: 200% 100%; animation: skel 1.2s linear infinite; }
+.empty-art { color: var(--text-muted); }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+.empty-books { animation: bob 3s ease-in-out infinite; transform-box: fill-box; }
+.book3d-wrap { perspective: 1100px; width: 200px; }
+.book3d { position: relative; display: block; width: 200px; transform-style: preserve-3d; transform: rotateY(-18deg); transition: transform .7s cubic-bezier(.2,.8,.2,1); }
+.book3d-wrap:hover .book3d, .book3d.turn { transform: rotateY(62deg); }
+.book3d-front { display: block; width: 100%; height: auto; border-radius: 2px 6px 6px 2px; box-shadow: 0 18px 30px -16px rgb(0 0 0 / .5); }
+.book3d-spine { position: absolute; top: 0; bottom: 0; right: 100%; width: 34px; transform-origin: right center; transform: rotateY(-90deg); background: linear-gradient(90deg, #3a2a18, #6b4a26 50%, #3a2a18); color: #f6efe1; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 10px 2px; font-size: .62rem; font-weight: 700; writing-mode: vertical-rl; text-align: center; border-radius: 3px 0 0 3px; }
+.book3d-pages { position: absolute; top: 3px; bottom: 3px; left: 100%; width: 30px; transform-origin: left center; transform: rotateY(90deg); background: repeating-linear-gradient(90deg, #f3ead8 0 2px, #d9ccb2 2px 3px); }
+.print-only { display: none; }
+@media print {
+  header, footer, .no-print, .to-top, .buy-bar, #minicart, #hsearch, .quick, .carousel, #recent, #bundle, section[aria-labelledby="rel"], section[aria-labelledby="bundle"], section[aria-labelledby="recent"], .store-btn, .ink-btn, .ghost-btn, .zoom span { display: none !important; }
+  body { background: #fff !important; color: #000 !important; } .print-only { display: block; } .book-img { filter: none !important; } main { padding: 0 !important; }
+  a { color: #000 !important; text-decoration: none; }
+}
+@media (prefers-reduced-motion: reduce) { .skel, .empty-books { animation: none; } .book3d, .buy-bar, .to-top { transition: none; } }
+@media (max-width: 767px) { .to-top { bottom: 5.5rem; } }

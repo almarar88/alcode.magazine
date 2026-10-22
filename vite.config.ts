@@ -17,7 +17,7 @@ export default defineConfig({
       navigationPreload: false,
       runtimeCaching: [
         { urlPattern: ({ request }) => request.mode === 'navigate', handler: 'NetworkFirst', options: { cacheName: 'pages', networkTimeoutSeconds: 4, expiration: { maxEntries: 80 } } },
-        { urlPattern: ({ url }) => /\/(books|brand)\//.test(url.pathname), handler: 'CacheFirst', options: { cacheName: 'images', expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 60 } } },
+        { urlPattern: ({ url }) => /\/(books|brand|inside|author)\//.test(url.pathname), handler: 'CacheFirst', options: { cacheName: 'images', expiration: { maxEntries: 300, maxAgeSeconds: 60 * 60 * 24 * 60 } } },
         { urlPattern: ({ url }) => /\.(xml|json)$/.test(url.pathname), handler: 'StaleWhileRevalidate', options: { cacheName: 'data' } },
       ],
     },

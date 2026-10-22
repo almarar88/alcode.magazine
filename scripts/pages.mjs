@@ -20,6 +20,7 @@ for (const r of routesList()) {
   let html = tpl.replace(/<title>.*?<\/title>/, `<title>${esc(t)}</title>`)
     .replace(/(<meta name="description" content=")[^"]*/, `$1${esc(r.desc)}`)
     .replace('<!--og-->', `<link rel="canonical" href="${encodeURI(url(r.path))}"><meta property="og:title" content="${esc(t)}"><meta property="og:description" content="${esc(r.desc)}"><meta property="og:type" content="${r.kind === 'product' ? 'product' : 'website'}"><meta property="og:url" content="${encodeURI(url(r.path))}"><meta property="og:image" content="${url(r.image || 'brand/og-default.png')}"><meta property="og:site_name" content="${esc(SITE.title)}"><meta property="og:locale" content="ar_AE"><meta name="twitter:card" content="summary_large_image">`);
+  if (r.ld) html = html.replace('</head>', `<script type="application/ld+json">${JSON.stringify(r.ld).replace(/</g, '\\u003c')}</script></head>`);
   setRoute(SITE.base + r.path); let body = '';
   try { body = await render(); } catch (e) { console.warn('prerender failed for /' + r.path, e.message); }
   body = body.replace(/<link rel="preload" as="image"(?![^>]*fetchPriority)[^>]*>/g, "");

@@ -6,7 +6,7 @@ const root = path.resolve(import.meta.dirname, '..');
 const cat = JSON.parse(fs.readFileSync(path.join(root, 'content/catalog.json'), 'utf8'));
 // Transparent cut-outs (scripts/cutout.py) are used when present and not rejected after visual review; originals stay as fallback.
 const reject = new Set(fs.existsSync(path.join(root, 'content/cut-reject.json')) ? JSON.parse(fs.readFileSync(path.join(root, 'content/cut-reject.json'), 'utf8')) : []);
-const withCut = im => { const n = path.basename(im.src, '.webp'); return !reject.has(n) && fs.existsSync(path.join(root, `public/books/cut/${n}.webp`)) ? { ...im, cut: `books/cut/${n}.webp`, cutSm: `books/cut/${n}-sm.webp` } : im; };
+const withCut = im => { const n = path.basename(im.src, '.webp'); return !reject.has(n) && fs.existsSync(path.join(root, `public/books/cut/${n}.webp`)) ? { ...im, cut: `books/cut/${n}.webp`, cutSm: `books/cut/${n}-sm.webp`, flat: n.startsWith('15786') } : im; };
 const inside = JSON.parse(fs.readFileSync(path.join(root, 'content/inside.json'), 'utf8'));
 const books = cat.books.map(b => ({ ...b, images: b.images.map(withCut), price: Number(b.variants[0].price), available: b.variants.some(v => v.available) }));
 const collections = cat.collections.map(c => ({ ...c, count: books.filter(b => b.collections.includes(c.handle)).length })).filter(c => c.count);
@@ -19,7 +19,11 @@ export function routesList() {
     { path: '', title: SITE.title, desc: SITE.description },
     { path: 'books/', title: 'كل الكتب', desc: `جميع إصدارات مؤسسة الكود (${books.length} كتابًا) مع البحث والتصنيف والترتيب بالسعر والأحدث.` },
     ...collections.map(c => ({ path: `collection/${c.handle}/`, title: c.title, desc: c.description[0] || c.title })),
-    ...books.map(b => ({ path: `book/${b.handle}/`, title: b.title, desc: `${first(b)} السعر ${b.price} درهم.`.trim(), image: b.images[0]?.src, kind: 'product' })),
+    ...books.map(b => ({ path: `book/${b.handle}/`, title: b.title, desc: `${first(b)} السعر ${b.price} درهم.`.trim(), image: b.images[0]?.src, kind: 'product',
+      // structured data only from catalog fields
+      ld: { '@context': 'https://schema.org', '@type': ['Book', 'Product'], name: b.title, author: { '@type': 'Person', name: b.author }, inLanguage: 'ar', image: url(b.images[0]?.src || ''), description: first(b),
+        publisher: { '@type': 'Organization', name: 'مؤسسة الكود لنشر الكتب' }, url: url(`book/${b.handle}/`),
+        offers: { '@type': 'Offer', price: String(b.price), priceCurrency: 'AED', availability: b.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: url(`book/${b.handle}/`) } } })),
     { path: 'author/', title: 'عن المؤلف: علي أحمد الكندي المرر', desc: 'شاعر وباحث في التاريخ والأدب والتراث المحلي: نبذة تعريفية، المسيرة، التأهيل العلمي، المؤلفات والجوائز، وكتبه في متجر الكود.', image: 'author/ali-alkindi-720.webp' },
     { path: 'cart/', title: 'سلة التسوق', desc: 'سلة مشترياتك من متجر الكود.' },
     { path: 'wishlist/', title: 'قائمة الأمنيات', desc: 'الكتب التي حفظتها في متصفحك.' },

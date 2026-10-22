@@ -6,6 +6,7 @@ import { collections, SHOP } from './data';
 import { LogoMark } from './art';
 import { useCart } from './store';
 import { HeaderSearch, MiniCart } from './extras';
+import { useSlashSearch } from './extras2';
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -42,12 +43,13 @@ export function Header({ path }: { path: string }) {
   const [theme, setTheme] = useTheme();
   const [open, setOpen] = useState(false); const [sOpen, setS] = useState(false); const [cOpen, setC] = useState(false);
   useEffect(() => { setOpen(false); setS(false); setC(false); }, [path]);
+  useSlashSearch(() => { setS(true); setC(false); });
   const cur = (to: string) => (to === '' ? path === '' : (path + '/').startsWith(to));
   return <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--background)]">
     <div className="mx-auto flex max-w-[1320px] items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
       <Link to="" aria-label="متجر الكود — الرئيسية" className="shrink-0 rounded-xl"><Logo /></Link>
       <div className="ms-auto flex items-center gap-0.5 sm:gap-1.5">
-        <Link to="books/" aria-label="ابحث في الكتب" aria-expanded={sOpen} aria-controls="hsearch" onClick={e => { e.preventDefault(); setS(v => !v); setC(false); }} className="tool-btn"><Search size={20} /></Link>
+        <Link to="books/" aria-label="ابحث في الكتب (اختصار: /)" aria-keyshortcuts="/" aria-expanded={sOpen} aria-controls="hsearch" onClick={e => { e.preventDefault(); setS(v => !v); setC(false); }} className="tool-btn"><Search size={20} /></Link>
         <Link to="wishlist/" aria-label="قائمة الأمنيات" className="tool-btn"><Heart size={20} /></Link>
         <CartBadge open={cOpen} toggle={() => { setC(v => !v); setS(false); }} />
         <ThemeSwitch theme={theme} iconOnly variant="eclipse" label={theme === 'dark' ? 'التبديل إلى الوضع الفاتح' : 'التبديل إلى الوضع الداكن'} onThemeChange={t => setTheme(t)} />

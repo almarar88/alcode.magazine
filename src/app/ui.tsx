@@ -28,12 +28,14 @@ function useTilt<T extends HTMLElement>() {
 
 /** Book image without a box: transparent cut-out on the page with a soft drop shadow; original image as fallback. */
 export function Cover({ b, i = 0, size = 'sm', eager = false, className = '', float = false }: { b: Book; i?: number; size?: 'sm' | 'lg'; eager?: boolean; className?: string; float?: boolean }) {
-  const im = imgOf(b, i); const tilt = useTilt<HTMLDivElement>();
+  const im = imgOf(b, i); const tilt = useTilt<HTMLDivElement>(); const [loaded, setLoaded] = useState(true); const ir = useRef<HTMLImageElement>(null);
+  useEffect(() => { const el = ir.current; if (el && !el.complete) setLoaded(false); }, [b.handle, i, size]);
   if (!im) return <div className={`aspect-[4/5] ${className}`} />;
   const cut = size === 'sm' ? im.cutSm : im.cut; const src = cut || (size === 'sm' ? im.sm : im.src);
   return <div ref={tilt} className={`tilt grid aspect-[4/5] place-items-center ${className}`}>
-    <div className={`tilt-in grid h-full w-full place-items-center ${float ? 'float' : ''}`} style={float ? { animationDelay: `${(b.handle.length % 7) * -.6}s` } : undefined}>
-      <img src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" {...(eager ? { fetchPriority: 'high' } : {})}
+    <div className={`tilt-in relative grid h-full w-full place-items-center ${float ? 'float' : ''}`} style={float ? { animationDelay: `${(b.handle.length % 7) * -.6}s` } : undefined}>
+      {!loaded && <span className="skel absolute inset-[8%] rounded-xl" aria-hidden="true" />}
+      <img ref={ir} onLoad={() => setLoaded(true)} onError={() => setLoaded(true)} src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" {...(eager ? { fetchPriority: 'high' } : {})}
         className={`book-img max-h-full max-w-full object-contain ${cut ? 'is-cut' : 'rounded-xl'}`} />
     </div>
   </div>;

@@ -1,3 +1,4 @@
+import { EmptyArt } from '../extras2';
 import { Minus, Plus, Trash2, Lock } from 'lucide-react';
 import { Link } from '../router';
 import { byHandle, fmtPrice, permalink } from '../data';
@@ -12,7 +13,7 @@ export default function Cart() {
   return <main id="main">
     <PageHead kicker="المتجر" title="سلة التسوق" />
     <div className="mx-auto max-w-[1100px] px-4 pt-8 sm:px-6">
-      {rows.length === 0 ? <div className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-8 text-center"><p className="text-lg">سلتك فارغة.</p><Link to="books/" className="ink-btn mt-5">تصفّح الكتب</Link></div> :
+      {rows.length === 0 ? <div className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-8 text-center"><EmptyArt kind="cart" /><p className="mt-4 text-lg">سلتك فارغة.</p><Link to="books/" className="ink-btn mt-5">تصفّح الكتب</Link></div> :
       <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
         <ul className="grid gap-3" aria-label="الكتب في السلة">{rows.map(({ l, b, v }) => <li key={l.id} className="grid grid-cols-[84px_1fr] gap-4 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-3 sm:grid-cols-[100px_1fr]">
           <Link to={`book/${b.handle}/`} aria-label={b.title}><Cover b={b} /></Link>
