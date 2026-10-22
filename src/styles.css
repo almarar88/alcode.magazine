@@ -265,3 +265,10 @@ textarea.field-input { font-family: var(--font-body); font-size: .95rem; line-he
 .portrait-frame { box-shadow: 0 30px 50px -30px rgb(0 0 0 / .7); }
 @media (prefers-reduced-motion: reduce) { .expand[data-open="true"], .tab-panel:not([hidden]) { animation: none; } }
 .tab-chip[aria-selected="true"] { background: var(--primary); border-color: var(--primary); color: var(--primary-foreground); }
+/* panels, fly-to-cart, page transition */
+@keyframes panelIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.panel-in { animation: panelIn .25s ease both; }
+.fly-img { position: fixed; z-index: 60; pointer-events: none; object-fit: contain; filter: drop-shadow(0 10px 14px rgb(0 0 0 / .3)); }
+@keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.page-in { animation: pageIn .4s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .panel-in, .page-in { animation: none; } }

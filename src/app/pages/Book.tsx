@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ShareButtons, useRecent } from '../extras';
 import { ZoomIn } from 'lucide-react';
 import { Zap, ExternalLink } from 'lucide-react';
 import { Link } from '../router';
@@ -16,8 +17,10 @@ function Zoom({ b, i }: { b: Book; i: number }) {
   </button>;
 }
 import NotFound from './NotFound';
+import { RecentRow } from '../ui';
 export default function BookPage({ handle }: { handle: string }) {
-  const b = byHandle(handle); const [i, setI] = useState(0);
+  const b = byHandle(handle); const [i, setI] = useState(0); const rec = useRecent();
+  useEffect(() => { if (b) rec.push(b.handle); }, [handle]);
   if (!b) return <NotFound />;
   const v = variantOf(b);
   return <main id="main" className="mx-auto max-w-[1320px] px-4 pt-6 sm:px-6">
@@ -38,6 +41,7 @@ export default function BookPage({ handle }: { handle: string }) {
           {b.available && <a href={permalink([{ id: v.id, qty: 1 }])} className="store-btn !px-5 !py-3" rel="noopener"><Zap size={18} aria-hidden="true" />اشترِ الآن <span className="text-sm font-semibold">(+ شحن 25 د.إ.)</span></a>}
           <WishButton b={b} />
         </div>
+        <ShareButtons b={b} />
         <p className="mt-3 text-sm text-[var(--text-muted)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب. يتم الدفع على متجر الكود الرسمي (alcode.ae).</p>
         <div className="desc-ar mt-8">{b.description.map((p, k) => <p key={k}>{p}</p>)}</div>
         <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
@@ -48,6 +52,7 @@ export default function BookPage({ handle }: { handle: string }) {
         <a href={`${SHOP}/products/${encodeURIComponent(b.handle)}`} target="_blank" rel="noopener" className="mt-4 inline-flex items-center gap-1.5 font-semibold text-[var(--accent)] hover:underline">صفحة الكتاب في متجر الكود<ExternalLink size={15} aria-hidden="true" /></a>
       </div>
     </div>
+    <RecentRow exclude={b.handle} />
     <section aria-labelledby="rel" className="pt-16"><h2 id="rel" className="text-2xl sm:text-3xl">كتب ذات صلة</h2><div className="mt-5"><Grid items={related(b)} /></div></section>
   </main>;
 }

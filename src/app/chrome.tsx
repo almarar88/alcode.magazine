@@ -5,6 +5,7 @@ import { Link } from './router';
 import { collections, SHOP } from './data';
 import { LogoMark } from './art';
 import { useCart } from './store';
+import { HeaderSearch, MiniCart } from './extras';
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>('light');
@@ -28,9 +29,9 @@ export function Logo() {
     </span>
   </span>;
 }
-export function CartBadge() {
+export function CartBadge({ open, toggle }: { open?: boolean; toggle?: () => void }) {
   const { count } = useCart();
-  return <Link to="cart/" className="tool-btn relative" aria-label={count ? `سلة التسوق، ${count} ${count === 1 ? 'كتاب' : 'كتب'}` : 'سلة التسوق'}>
+  return <Link to="cart/" data-cart-target onClick={e => { if (toggle) { e.preventDefault(); toggle(); } }} aria-expanded={toggle ? open : undefined} aria-controls={toggle ? 'minicart' : undefined} className="tool-btn relative" aria-label={count ? `سلة التسوق، ${count} ${count === 1 ? 'كتاب' : 'كتب'}` : 'سلة التسوق'}>
     <ShoppingCart size={20} />
     {count > 0 && <span aria-hidden="true" className="absolute -top-1 -end-1 grid min-w-5 h-5 place-items-center rounded-full bg-[var(--accent)] px-1 text-[.72rem] font-bold text-[#1b1208]">{count}</span>}
   </Link>;
@@ -39,16 +40,16 @@ const NAV = [{ to: '', label: 'الرئيسية' }, { to: 'books/', label: 'كل
 
 export function Header({ path }: { path: string }) {
   const [theme, setTheme] = useTheme();
-  const [open, setOpen] = useState(false);
-  useEffect(() => setOpen(false), [path]);
+  const [open, setOpen] = useState(false); const [sOpen, setS] = useState(false); const [cOpen, setC] = useState(false);
+  useEffect(() => { setOpen(false); setS(false); setC(false); }, [path]);
   const cur = (to: string) => (to === '' ? path === '' : (path + '/').startsWith(to));
   return <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--background)]">
     <div className="mx-auto flex max-w-[1320px] items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
       <Link to="" aria-label="متجر الكود — الرئيسية" className="shrink-0 rounded-xl"><Logo /></Link>
       <div className="ms-auto flex items-center gap-0.5 sm:gap-1.5">
-        <Link to="books/" aria-label="ابحث في الكتب" className="tool-btn"><Search size={20} /></Link>
+        <Link to="books/" aria-label="ابحث في الكتب" aria-expanded={sOpen} aria-controls="hsearch" onClick={e => { e.preventDefault(); setS(v => !v); setC(false); }} className="tool-btn"><Search size={20} /></Link>
         <Link to="wishlist/" aria-label="قائمة الأمنيات" className="tool-btn"><Heart size={20} /></Link>
-        <CartBadge />
+        <CartBadge open={cOpen} toggle={() => { setC(v => !v); setS(false); }} />
         <ThemeSwitch theme={theme} iconOnly variant="eclipse" label={theme === 'dark' ? 'التبديل إلى الوضع الفاتح' : 'التبديل إلى الوضع الداكن'} onThemeChange={t => setTheme(t)} />
         <SocialLinks className="hidden lg:flex" />
         <button type="button" className="tool-btn xl:hidden" aria-expanded={open} aria-controls="mnav" aria-label={open ? 'إغلاق القائمة' : 'فتح القائمة'} onClick={() => setOpen(o => !o)}>{open ? <X size={22} /> : <Menu size={22} />}</button>
@@ -59,6 +60,8 @@ export function Header({ path }: { path: string }) {
         {NAV.map(n => <li key={n.to}><Link to={n.to} aria-current={cur(n.to) ? 'page' : undefined} className={`rounded-full px-3 py-2 text-[.95rem] font-semibold hover:text-[var(--accent)] ${cur(n.to) ? 'text-[var(--accent)] underline decoration-2 underline-offset-8' : 'text-[var(--text-secondary)]'}`}>{n.label}</Link></li>)}
       </ul>
     </nav>
+    <HeaderSearch open={sOpen} setOpen={setS} />
+    <MiniCart open={cOpen} setOpen={setC} />
     {open && <nav id="mnav" aria-label="القائمة" className="border-t border-[var(--border)] bg-[var(--background)] xl:hidden">
       <ul className="mx-auto grid max-w-[1320px] gap-1 px-4 py-4 sm:grid-cols-2 sm:px-6">
         {NAV.map(n => <li key={n.to}><Link to={n.to} aria-current={cur(n.to) ? 'page' : undefined} className="flex items-center justify-between rounded-xl px-3 py-3 text-lg font-bold hover:bg-[var(--accent-subtle)]">{n.label}<span aria-hidden="true" className="text-[var(--accent)]">◆</span></Link></li>)}

@@ -4,6 +4,8 @@ import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { Link } from './router';
 import { asset, fmtPrice, variantOf, permalink, collectionTitle, type Book } from './data';
 import { useCart, useWishlist, useStored } from './store';
+import { flyToCart, useRecent } from './extras';
+import { byHandle } from './data';
 
 type Img = Book['images'][number] & { cut?: string; cutSm?: string };
 const imgOf = (b: Book, i = 0) => b.images[i] as Img | undefined;
@@ -42,7 +44,7 @@ export function Availability({ b }: { b: Book }) {
 export function AddButton({ b, className = '', label = 'أضف إلى السلة', icon = false }: { b: Book; className?: string; label?: string; icon?: boolean }) {
   const { add } = useCart(); const [done, setDone] = useState(false); const v = variantOf(b);
   if (!b.available) return icon ? null : <button type="button" disabled className={`ghost-btn opacity-60 ${className}`}>غير متوفر</button>;
-  const go = () => { add(v.id, b.handle); setDone(true); setTimeout(() => setDone(false), 1600); };
+  const go = (e?: React.MouseEvent) => { add(v.id, b.handle); flyToCart(e?.currentTarget ?? null); setDone(true); setTimeout(() => setDone(false), 1600); };
   if (icon) return <button type="button" onClick={go} aria-label={`أضف «${b.title}» إلى السلة`} className={`tool-btn quick-btn ${className}`}>{done ? <Check size={18} aria-hidden="true" /> : <ShoppingCart size={18} aria-hidden="true" />}<span className="sr-only" aria-live="polite">{done ? `أُضيف «${b.title}» إلى السلة` : ''}</span></button>;
   return <button type="button" className={`ink-btn ${className}`} onClick={go}>
     {done ? <Check size={18} aria-hidden="true" /> : <ShoppingCart size={18} aria-hidden="true" />}{done ? 'أُضيف إلى السلة' : label}
@@ -162,4 +164,11 @@ export function PageHead({ kicker, title, desc, children }: { kicker?: string; t
   return <div className="border-b border-[var(--border)] paper"><div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6">
     {kicker && <p className="kicker">{kicker}</p>}<h1 className="mt-2 text-3xl sm:text-4xl">{title}</h1>{desc && <p className="mt-3 max-w-3xl text-[var(--text-secondary)]">{desc}</p>}{children}
   </div></div>;
+}
+
+/** "Recently viewed" row from this device's history; renders nothing until there is history. */
+export function RecentRow({ exclude }: { exclude?: string }) {
+  const { list } = useRecent(); const items = list.filter(h => h !== exclude).map(byHandle).filter(Boolean) as Book[];
+  if (!items.length) return null;
+  return <section aria-labelledby="recent" className="pt-14"><h2 id="recent" className="text-2xl sm:text-3xl">شاهدتها مؤخرًا</h2><p className="mt-1 text-sm text-[var(--text-muted)]">محفوظة على جهازك فقط.</p><div className="mt-5"><Carousel items={items} label="شاهدتها مؤخرًا" /></div></section>;
 }

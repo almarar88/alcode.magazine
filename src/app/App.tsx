@@ -41,7 +41,7 @@ export default function App() {
   return <>
     <a href="#main" className="skip">تخطَّ إلى المحتوى</a>
     <Header path={path} />
-    <div key={path}>{route(path)}</div>
+    <div key={path} className={first.current ? undefined : "page-in"}>{route(path)}</div>
     <Footer />
   </>;
 }

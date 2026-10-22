@@ -4,21 +4,25 @@ import { Grid, PageHead, ViewToggle, useView } from '../ui';
 import { Link } from '../router';
 import { navigate } from '../router';
 const norm = (s: string) => s.toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
+// price bands derived from the real catalog prices
+const PR = books.map(b => b.price).sort((a, b) => a - b); const lo = PR[Math.floor(PR.length / 3)], hi = PR[Math.floor(PR.length * 2 / 3)];
+const PRICES = [{ v: '', l: 'كل الأسعار' }, { v: `0-${lo}`, l: `حتى ${lo} د.إ.` }, { v: `${lo}-${hi}`, l: `${lo}–${hi} د.إ.` }, { v: `${hi}-9999`, l: `${hi} د.إ. فأكثر` }];
+const inPrice = (p: number, r: string) => { if (!r) return true; const [a, b] = r.split('-').map(Number); return p >= a && p <= b; };
 const SORTS = [{ v: 'featured', l: 'الترتيب الافتراضي' }, { v: 'new', l: 'الأحدث' }, { v: 'price-asc', l: 'السعر: من الأقل' }, { v: 'price-desc', l: 'السعر: من الأعلى' }, { v: 'title', l: 'العنوان (أ–ي)' }];
 export default function Catalog({ collection }: { collection?: string }) {
-  const [q, setQ] = useState(''); const [c, setC] = useState(collection || ''); const [sort, setSort] = useState('featured'); const [stock, setStock] = useState(false); const [view, setView] = useView();
-  useEffect(() => { const p = new URLSearchParams(location.search); setQ(p.get('q') || ''); if (!collection) setC(p.get('c') || ''); setSort(p.get('sort') || 'featured'); setStock(p.get('stock') === '1'); }, [collection]);
-  useEffect(() => { const p = new URLSearchParams(); if (q) p.set('q', q); if (c && !collection) p.set('c', c); if (sort !== 'featured') p.set('sort', sort); if (stock) p.set('stock', '1'); const s = p.toString(); history.replaceState(null, '', location.pathname + (s ? '?' + s : '')); }, [q, c, sort, stock]);
+  const [q, setQ] = useState(''); const [c, setC] = useState(collection || ''); const [sort, setSort] = useState('featured'); const [stock, setStock] = useState(false); const [view, setView] = useView(); const [price, setPrice] = useState('');
+  useEffect(() => { const p = new URLSearchParams(location.search); setQ(p.get('q') || ''); if (!collection) setC(p.get('c') || ''); setSort(p.get('sort') || 'featured'); setStock(p.get('stock') === '1'); setPrice(p.get('price') || ''); }, [collection]);
+  useEffect(() => { const p = new URLSearchParams(); if (q) p.set('q', q); if (c && !collection) p.set('c', c); if (sort !== 'featured') p.set('sort', sort); if (stock) p.set('stock', '1'); if (price) p.set('price', price); const s = p.toString(); history.replaceState(null, '', location.pathname + (s ? '?' + s : '')); }, [q, c, sort, stock, price]);
   const items = useMemo(() => {
     const n = norm(q.trim());
-    let r: Book[] = books.filter(b => (!c || b.collections.includes(c)) && (!stock || b.available) && (!n || norm([b.title, b.author, ...b.tags, ...b.description].join(' ')).includes(n)));
+    let r: Book[] = books.filter(b => (!c || b.collections.includes(c)) && (!stock || b.available) && inPrice(b.price, price) && (!n || norm([b.title, b.author, ...b.tags, ...b.description].join(' ')).includes(n)));
     const s = [...r];
     if (sort === 'new') s.sort((a, b) => b.published.localeCompare(a.published));
     if (sort === 'price-asc') s.sort((a, b) => a.price - b.price);
     if (sort === 'price-desc') s.sort((a, b) => b.price - a.price);
     if (sort === 'title') s.sort((a, b) => a.title.localeCompare(b.title, 'ar'));
     return s;
-  }, [q, c, sort, stock]);
+  }, [q, c, sort, stock, price]);
   const col = collections.find(x => x.handle === (collection || c));
   return <main id="main">
     <PageHead kicker={collection ? 'تصنيف' : 'المتجر'} title={collection ? collectionTitle(collection) : 'كل الكتب'} desc={collection ? col?.description[0] : `جميع إصدارات مؤسسة الكود: ${books.length} كتابًا.`} />
@@ -33,6 +37,7 @@ export default function Catalog({ collection }: { collection?: string }) {
       <div role="group" aria-label="التصنيفات" className="mt-4 flex flex-wrap gap-2">{collection
         ? <><Link to="books/" className="cat-chip">كل الكتب</Link>{collections.map(x => <Link key={x.handle} to={`collection/${x.handle}/`} aria-current={x.handle === collection ? 'page' : undefined} className="cat-chip">{x.title} ({x.count})</Link>)}</>
         : <><button type="button" aria-pressed={!c} onClick={() => setC('')} className="cat-chip">الكل ({books.length})</button>{collections.map(x => <button key={x.handle} type="button" aria-pressed={c === x.handle} onClick={() => setC(c === x.handle ? '' : x.handle)} className="cat-chip">{x.title} ({x.count})</button>)}</>}</div>
+      <div role="group" aria-label="السعر" className="mt-3 flex flex-wrap items-center gap-2"><span className="font-semibold text-[var(--text-secondary)]">السعر:</span>{PRICES.map(x => <button key={x.v} type="button" aria-pressed={price === x.v} onClick={() => setPrice(x.v)} className="cat-chip !py-1.5 text-sm">{x.l}</button>)}</div>
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><p className="text-[var(--text-muted)]" aria-live="polite">{items.length ? `${items.length} ${items.length === 1 ? 'كتاب' : items.length <= 10 ? 'كتب' : 'كتابًا'}` : 'لا توجد كتب مطابقة. جرّب كلمة أخرى أو تصنيفًا آخر.'}</p><ViewToggle view={view} setView={setView} /></div>
       <div className="mt-4"><Grid items={items} eager={4} view={view} /></div>
     </div>

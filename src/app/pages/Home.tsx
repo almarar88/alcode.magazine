@@ -3,7 +3,7 @@ import { Pause, Play } from 'lucide-react';
 import { Link } from '../router';
 import data from '../../generated/store.json';
 import { books, collections, featured, newest, byHandle, fmtPrice, asset, type Book } from '../data';
-import { Carousel, Cover, AddButton } from '../ui';
+import { Carousel, Cover, AddButton, RecentRow } from '../ui';
 import { LogoMark } from '../art';
 import { AuthorTeaser } from './Author';
 type Inside = { src: string; sm: string; w: number; h: number; caption: string; handle: string };
@@ -72,6 +72,7 @@ export default function Home() {
       <div className="flex items-end justify-between gap-3"><h2 id="new" className="text-2xl sm:text-3xl">وصل حديثًا</h2><Link to="books/?sort=new" className="font-semibold text-[var(--accent)] hover:underline">عرض الكل</Link></div>
       <div className="mt-5"><Carousel items={nw} label="وصل حديثًا" /></div>
     </section>
+    <div className="mx-auto max-w-[1320px] px-4 sm:px-6"><RecentRow /></div>
     {pick.length > 0 && <section aria-labelledby="fe" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
       <div className="flex items-end justify-between gap-3"><h2 id="fe" className="text-2xl sm:text-3xl">مختارات المتجر</h2><Link to="books/" className="font-semibold text-[var(--accent)] hover:underline">كل الكتب</Link></div>
       <div className="mt-5"><Carousel items={pick} label="مختارات المتجر" /></div>
