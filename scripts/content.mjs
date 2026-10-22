@@ -13,10 +13,18 @@ const collections = cat.collections.map(c => ({ ...c, count: books.filter(b => b
 const authors = [...new Set(books.map(b => b.author).filter(Boolean))];
 fs.mkdirSync(path.join(root, 'src/generated'), { recursive: true });
 fs.writeFileSync(path.join(root, 'src/generated/store.json'), JSON.stringify({ shop: cat.source, books, collections, featured: cat.featured, authors, inside, integrations: { analytics: INT.analytics, flags: FLAGS } }));
+const ORG = { '@context': 'https://schema.org', '@type': 'Organization', name: 'مؤسسة الكود لنشر الكتب', alternateName: 'Alcode Books', url: url(''), logo: url('brand/icon-512.png'), email: 'info@alcode.ae',
+  contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer service', email: 'info@alcode.ae', availableLanguage: ['ar'] }] };
+const FAQ_LD = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [
+  ['كم تكلفة الشحن؟', 'رسوم الشحن ثابتة: 25 درهمًا لكل طلب مهما كان عدد الكتب.'],
+  ['هل تُضاف ضريبة على السعر؟', 'لا. لا تُضاف أي ضريبة؛ المبلغ هو مجموع أسعار الكتب مضافًا إليه 25 درهمًا للشحن.'],
+  ['كيف يتم الدفع؟', 'تنتقل إلى صفحة الدفع الآمنة في متجر الكود الرسمي على منصة Shopify لإدخال بيانات الشحن والدفع.'],
+  ['كيف أتواصل معكم؟', 'عبر البريد الإلكتروني info@alcode.ae أو حساباتنا على إنستغرام وتيك توك.'],
+].map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
 export function routesList() {
   const first = b => b.description[0] || '';
   return [
-    { path: '', title: SITE.title, desc: SITE.description },
+    { path: '', title: SITE.title, desc: SITE.description, ld: ORG },
     { path: 'books/', title: 'كل الكتب', desc: `جميع إصدارات مؤسسة الكود (${books.length} كتابًا) مع البحث والتصنيف والترتيب بالسعر والأحدث.` },
     ...collections.map(c => ({ path: `collection/${c.handle}/`, title: c.title, desc: c.description[0] || c.title })),
     ...books.map(b => ({ path: `book/${b.handle}/`, title: b.title, desc: `${first(b)} السعر ${b.price} درهم.`.trim(), image: b.images[0]?.src, kind: 'product',
@@ -28,11 +36,12 @@ export function routesList() {
     { path: 'cart/', title: 'سلة التسوق', desc: 'سلة مشترياتك من متجر الكود.' },
     { path: 'wishlist/', title: 'قائمة الأمنيات', desc: 'الكتب التي حفظتها في متصفحك.' },
     { path: 'about/', title: 'عن المتجر', desc: SITE.description },
-    { path: 'contact/', title: 'تواصل معنا', desc: 'طرق التواصل مع متجر الكود.' },
+    { path: 'contact/', title: 'تواصل معنا', desc: 'تواصل مع متجر الكود عبر البريد الإلكتروني info@alcode.ae أو حساباتنا على إنستغرام وتيك توك.', ld: ORG },
+    { path: 'help/', title: 'الشحن والدفع والأسئلة الشائعة', desc: 'الشحن 25 د.إ. ثابتة لكل طلب، بلا ضرائب، والدفع الآمن عبر متجر الكود الرسمي على Shopify.', ld: FAQ_LD },
     { path: 'privacy/', title: 'سياسة الخصوصية', desc: 'كيف يتعامل متجر الكود مع بيانات الزوار.' },
     { path: 'terms/', title: 'شروط الاستخدام', desc: 'شروط استخدام موقع متجر الكود.' },
   ];
 }
-const sm = routesList().filter(r => !['cart/', 'wishlist/'].includes(r.path)).map(r => `<url><loc>${encodeURI(url(r.path))}</loc></url>`).join('');
+const sm = routesList().filter(r => !['cart/', 'wishlist/'].includes(r.path)).map(r => `<url><loc>${encodeURI(url(r.path))}</loc><lastmod>${new Date().toISOString().slice(0, 10)}</lastmod>${r.kind === 'product' || !r.path ? '<changefreq>weekly</changefreq>' : ''}</url>`).join('');
 fs.writeFileSync(path.join(root, 'public/sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sm}</urlset>\n`);
 console.log(`store: ${books.length} books, ${collections.length} collections`);

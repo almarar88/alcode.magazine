@@ -10,9 +10,9 @@ import Wishlist from './pages/Wishlist';
 import NotFound from './pages/NotFound';
 import Author from './pages/Author';
 import { BackToTop } from './extras2';
-import { About, Contact, Privacy, Terms } from './pages/Static';
+import { About, Contact, Privacy, Terms, Help } from './pages/Static';
 const SITE = 'متجر الكود للكتب';
-const TITLES: Record<string, string> = { books: 'كل الكتب', author: 'عن المؤلف علي أحمد الكندي المرر', cart: 'سلة التسوق', wishlist: 'قائمة الأمنيات', about: 'عن المتجر', contact: 'تواصل معنا', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام' };
+const TITLES: Record<string, string> = { books: 'كل الكتب', author: 'عن المؤلف علي أحمد الكندي المرر', cart: 'سلة التسوق', wishlist: 'قائمة الأمنيات', about: 'عن المتجر', contact: 'تواصل معنا', help: 'الشحن والدفع والأسئلة الشائعة', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام' };
 function route(path: string) {
   const [a, b] = path.split('/');
   switch (a) {
@@ -25,6 +25,7 @@ function route(path: string) {
     case 'wishlist': return <Wishlist />;
     case 'about': return <About />;
     case 'contact': return <Contact />;
+    case 'help': return <Help />;
     case 'privacy': return <Privacy />;
     case 'terms': return <Terms />;
     default: return <NotFound />;

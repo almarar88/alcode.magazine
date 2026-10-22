@@ -306,3 +306,12 @@ textarea.field-input { font-family: var(--font-body); font-size: .95rem; line-he
 @media (prefers-reduced-motion:reduce){.trust-item,.carousel > li,.store-btn,.ink-btn,.ghost-btn,.chip,.cat-chip,.tool-btn{transition:none}.trust-item:hover,.carousel > li:hover{transform:none}}
 .shelf,.author-sec{content-visibility:auto;contain-intrinsic-size:auto 520px}
 .marquee-wrap{content-visibility:auto;contain-intrinsic-size:auto 380px}
+/* batch 4 */
+.faq summary::-webkit-details-marker{display:none}
+.faq-chev{transition:transform .2s ease;font-size:1.4rem;line-height:1}
+.faq[open] .faq-chev{transform:rotate(180deg)}
+.inside-cell{transition:grid-column .3s}
+.inside-big{max-height:85vh;animation:growIn .35s cubic-bezier(.2,.8,.2,1) both}
+@keyframes growIn{from{opacity:.4;transform:scale(.96)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.inside-big{animation:none}.faq-chev{transition:none}}
+@media (max-width:379px){header .tool-btn{width:2.05rem;height:2.4rem}header .gap-3{gap:.4rem}header svg.h-9{width:32px;height:28px}header .text-lg{font-size:.98rem}header>div{padding-inline:.6rem}}

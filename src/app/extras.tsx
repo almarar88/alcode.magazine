@@ -58,7 +58,7 @@ export function MiniCart({ open, setOpen }: { open: boolean; setOpen: (v: boolea
         </li>)}</ul>
         <dl className="mt-3 grid grid-cols-[1fr_auto] gap-y-1 border-t border-[var(--border)] pt-3"><dt>المجموع الفرعي</dt><dd data-testid="mc-subtotal">{fmtPrice(sub)}</dd><dt>الشحن (ثابت)</dt><dd data-testid="mc-shipping">{fmtPrice(ship)}</dd><dt className="font-bold">المجموع</dt><dd data-testid="mc-total" className="text-lg font-bold">{fmtPrice(sub + ship)}</dd></dl>
         <div className="mt-3 grid grid-cols-2 gap-2"><Link to="cart/" onClick={() => setOpen(false)} className="ghost-btn justify-center">عرض السلة</Link>
-          {ok.length > 0 && <a href={permalink(ok.map(r => ({ id: r.l.id, qty: r.l.qty })))} rel="noopener" className="store-btn justify-center"><Lock size={16} aria-hidden="true" />إتمام الشراء</a>}</div>
+          {ok.length > 0 && <a href={withNote(permalink(ok.map(r => ({ id: r.l.id, qty: r.l.qty }))))} rel="noopener" className="store-btn justify-center"><Lock size={16} aria-hidden="true" />إتمام الشراء</a>}</div>
       </>}
     </div></div>
   </section>;
@@ -94,4 +94,10 @@ export function ShareButtons({ b }: { b: Book }) {
     <a className="ghost-btn !px-3 !py-2 text-sm" target="_blank" rel="noopener" href={`https://x.com/intent/post?text=${encodeURIComponent(b.title)}&url=${encodeURIComponent(typeof location !== 'undefined' ? location.href : '')}`} onClick={e => { (e.currentTarget as HTMLAnchorElement).href = `https://x.com/intent/post?text=${encodeURIComponent(b.title)}&url=${encodeURIComponent(url())}`; }}>
       <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.8-6.3L6.4 22H3.3l7.3-8.3L1 2h6.3l4.4 5.8zm-1.1 18h1.7L6.3 3.9H4.5z" /></svg>X</a>
   </div>;
+}
+
+/** Appends the saved cart note (gift message) as Shopify's documented `note` permalink parameter. */
+export function withNote(base: string) {
+  let n = ''; try { n = JSON.parse(localStorage.getItem('alcode-note') || '""') || ''; } catch {}
+  n = String(n).trim().slice(0, 500); return n ? `${base}?note=${encodeURIComponent(n)}` : base;
 }

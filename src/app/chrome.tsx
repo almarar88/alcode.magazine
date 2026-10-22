@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Heart, Menu, Search, ShoppingCart, X, ExternalLink } from 'lucide-react';
+import { Heart, Menu, Search, ShoppingCart, X, ExternalLink , Mail } from 'lucide-react';
 import { ThemeSwitch, type Theme } from '@/registry/components/theme-switch/theme-switch';
 import { Link } from './router';
 import { collections, SHOP } from './data';
@@ -81,11 +81,12 @@ export function Footer() {
         <div style={{ ['--text-primary' as any]: '#f6efe1', ['--text-muted' as any]: '#e0d4bb', ['--logo' as any]: '#f3e9d2' }}>
           <Logo />
           <p className="mt-4 max-w-sm text-[#e0d4bb]">متجر إصدارات مؤسسة الكود لنشر الكتب. الأسعار بالدرهم الإماراتي، ويتم الدفع والشحن عبر متجر الكود الرسمي.</p>
+          <p className="mt-4"><a href="mailto:info@alcode.ae" data-testid="footer-email" className="inline-flex items-center gap-2 font-semibold text-[#f6efe1] hover:text-[#e2b866]"><Mail size={18} aria-hidden="true" /><span dir="ltr" className="ulink">info@alcode.ae</span></a></p>
           <div className="mt-4 flex flex-wrap items-center gap-3"><SocialLinks dark /></div>
         </div>
         <div><h2 className="text-base text-[#f6efe1]">التصنيفات</h2><ul className="mt-3 space-y-1.5"><L to="books/">كل الكتب</L>{collections.map(c => <L key={c.handle} to={`collection/${c.handle}/`}>{c.title}</L>)}</ul></div>
         <div><h2 className="text-base text-[#f6efe1]">المتجر</h2><ul className="mt-3 space-y-1.5">
-          <L to="cart/">سلة التسوق</L><L to="wishlist/">قائمة الأمنيات</L><L to="author/">عن المؤلف</L><L to="about/">عن المتجر</L><L to="contact/">تواصل معنا</L><L to="privacy/">سياسة الخصوصية</L><L to="terms/">شروط الاستخدام</L>
+          <L to="cart/">سلة التسوق</L><L to="wishlist/">قائمة الأمنيات</L><L to="author/">عن المؤلف</L><L to="about/">عن المتجر</L><L to="contact/">تواصل معنا</L><L to="help/">الشحن والأسئلة الشائعة</L><L to="privacy/">سياسة الخصوصية</L><L to="terms/">شروط الاستخدام</L>
           <li><a href={SHOP} target="_blank" rel="noopener" className="inline-flex items-center gap-1.5 text-[#e0d4bb] hover:text-[#e2b866]"><span className="ulink">متجر الكود الرسمي</span><ExternalLink size={14} aria-hidden="true" /></a></li>
         </ul></div>
       </div>

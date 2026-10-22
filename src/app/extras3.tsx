@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ShieldCheck, Truck, Wallet, BadgeCheck } from 'lucide-react';
 import { Link } from './router';
 import data from '../generated/store.json';
@@ -61,13 +62,16 @@ export function AuthorBlock({ b }: { b: Book }) {
 }
 
 export function InsideBook({ b }: { b: Book }) {
-  const im = inside.filter(i => i.handle === b.handle);
+  const im = inside.filter(i => i.handle === b.handle); const [open, setOpen] = useState<string | null>(null);
   if (!im.length) return null;
   return <section aria-labelledby="ib-h" data-testid="inside-book" className="pt-14">
     <h2 id="ib-h" className="text-2xl sm:text-3xl">من داخل الكتاب</h2>
-    <ul className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">{im.map(i => <li key={i.src}><figure>
-      <a href={asset(i.src)} target="_blank" rel="noopener" className="block aspect-[4/3] overflow-hidden rounded-2xl bg-[var(--muted)]"><img src={asset(i.sm)} alt={i.caption} width={480} height={360} loading="lazy" decoding="async" className="h-full w-full object-cover transition-transform duration-500 hover:scale-105" /></a>
-      <figcaption className="mt-2 text-sm font-semibold">{i.caption}</figcaption></figure></li>)}</ul>
+    <p className="mt-1 text-[var(--text-muted)]">اضغط على أي صورة لتكبيرها في مكانها، واضغط مرة أخرى لتصغيرها.</p>
+    <ul className="mt-5 grid grid-flow-dense grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">{im.map(i => { const on = open === i.src; return <li key={i.src} className={`inside-cell ${on ? 'col-span-full' : ''}`}><figure>
+      <button type="button" aria-expanded={on} aria-label={on ? `تصغير: ${i.caption}` : `تكبير: ${i.caption}`} onClick={() => setOpen(on ? null : i.src)}
+        className={`block w-full overflow-hidden rounded-2xl bg-[var(--muted)] ${on ? 'cursor-zoom-out' : 'aspect-[4/3] cursor-zoom-in'}`}>
+        <img src={asset(on ? i.src : i.sm)} alt={i.caption} width={on ? i.w : 480} height={on ? i.h : 360} loading="lazy" decoding="async" className={`w-full ${on ? 'inside-big h-auto object-contain' : 'h-full object-cover transition-transform duration-500 hover:scale-105'}`} /></button>
+      <figcaption className="mt-2 text-sm font-semibold">{i.caption}</figcaption></figure></li>; })}</ul>
   </section>;
 }
 
