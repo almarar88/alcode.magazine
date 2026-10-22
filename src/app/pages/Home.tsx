@@ -6,6 +6,7 @@ import { books, collections, featured, newest, byHandle, fmtPrice, asset, type B
 import { Carousel, Cover, AddButton, RecentRow } from '../ui';
 import { LogoMark } from '../art';
 import { AuthorTeaser } from './Author';
+import { Shelves, TrustStrip } from '../extras3';
 type Inside = { src: string; sm: string; w: number; h: number; caption: string; handle: string };
 const inside = (data as any).inside as Inside[];
 const slides = inside.filter(i => i.w >= 1000 && i.w / i.h > 1.1); // wide, sharp ones for the full-bleed hero
@@ -19,7 +20,7 @@ function Slides() {
   const cur = slides[k];
   return <>
     <div className="absolute inset-0 overflow-hidden" aria-hidden="true">{slides.map((im, i) => (Math.abs(i - k) <= 1 || (k === slides.length - 1 && i === 0)) && <div key={im.src} className={`kb ${i === k ? 'on' : ''}`}>
-      <img src={asset(im.src)} alt="" width={im.w} height={im.h} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+      <img src={asset(im.src)} srcSet={`${asset(im.src.replace(".webp", "-md.webp"))} 760w, ${asset(im.src)} ${im.w}w`} sizes="100vw" alt="" width={im.w} height={im.h} loading={i === 0 ? 'eager' : 'lazy'} {...(i === 0 ? { fetchPriority: 'high' } : { decoding: 'async' })} />
     </div>)}</div>
     <div className="hero-shade absolute inset-0" aria-hidden="true" />
     <div className="absolute bottom-3 left-3 z-10 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-full bg-black/70 py-1 pe-3 ps-1 text-sm text-[#f6efe1]">
@@ -43,7 +44,7 @@ function Marquee() {
 export default function Home() {
   const fe = featured.map(byHandle).filter(Boolean) as Book[];
   const hero = newest()[0];
-  const nw = newest().slice(0, 10);
+  const nw = newest().slice(0, 12);
   const pick = fe.filter(b => !nw.includes(b)).slice(0, 10);
   return <main id="main">
     <section className="relative isolate overflow-hidden bg-[var(--hero-bg)] text-[#f6efe1]">
@@ -63,15 +64,13 @@ export default function Home() {
       </div>
     </section>
     <Marquee />
+    <div className="mx-auto max-w-[1320px] px-4 pt-10 sm:px-6"><TrustStrip /></div>
     <section aria-labelledby="cats" className="mx-auto max-w-[1320px] px-4 pt-12 sm:px-6">
       <h2 id="cats" className="text-2xl sm:text-3xl">التصنيفات</h2>
       <ul className="mt-5 flex flex-wrap gap-2">{collections.map(c => <li key={c.handle}><Link to={`collection/${c.handle}/`} className="cat-chip !px-5 !py-2.5 text-lg">{c.title} <span className="ms-2 text-sm text-[var(--text-muted)]">{c.count}</span></Link></li>)}</ul>
     </section>
     <AuthorTeaser />
-    <section aria-labelledby="new" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
-      <div className="flex items-end justify-between gap-3"><h2 id="new" className="text-2xl sm:text-3xl">وصل حديثًا</h2><Link to="books/?sort=new" className="font-semibold text-[var(--accent)] hover:underline">عرض الكل</Link></div>
-      <div className="mt-5"><Carousel items={nw} label="وصل حديثًا" /></div>
-    </section>
+    <Shelves />
     <div className="mx-auto max-w-[1320px] px-4 sm:px-6"><RecentRow /></div>
     {pick.length > 0 && <section aria-labelledby="fe" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
       <div className="flex items-end justify-between gap-3"><h2 id="fe" className="text-2xl sm:text-3xl">مختارات المتجر</h2><Link to="books/" className="font-semibold text-[var(--accent)] hover:underline">كل الكتب</Link></div>

@@ -20,8 +20,8 @@ function Counter({ to, suffix = '' }: { to: number; suffix?: string }) {
     io.observe(el); return () => io.disconnect(); }, [to]);
   return <span ref={ref} className="tabular-nums">{v.toLocaleString('ar-AE-u-nu-latn')}{suffix}</span>;
 }
-export function Portrait({ className = '', eager = false }: { className?: string; eager?: boolean }) {
-  return <img src={asset('author/ali-alkindi-720.webp')} srcSet={`${asset('author/ali-alkindi-360.webp')} 360w, ${asset('author/ali-alkindi-720.webp')} 720w`} sizes="(min-width: 768px) 340px, 60vw"
+export function Portrait({ className = '', eager = false, sizes = '(min-width: 768px) 340px, 60vw' }: { className?: string; eager?: boolean; sizes?: string }) {
+  return <img src={asset('author/ali-alkindi-720.webp')} srcSet={`${asset('author/ali-alkindi-360.webp')} 360w, ${asset('author/ali-alkindi-720.webp')} 720w`} sizes={sizes}
     alt={`صورة المؤلف ${A.name}`} width={720} height={829} loading={eager ? 'eager' : 'lazy'} decoding="async" className={`object-cover object-top ${className}`} />;
 }
 type Item = { k: string; icon: any; tag: string; title: string; detail: string };
@@ -113,7 +113,7 @@ export function AuthorTeaser() {
   const mine = authorBooks();
   return <section aria-labelledby="author-t" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
     <div className="grid items-center gap-6 rounded-[2rem] border border-[var(--border)] bg-[var(--card)] p-5 sm:p-8 md:grid-cols-[220px_1fr]">
-      <Link to="author/" className="mx-auto block w-40 overflow-hidden rounded-[1.5rem] border-4 border-[var(--accent)]/40 md:w-full" aria-label={`عن المؤلف ${A.name}`} tabIndex={-1}><Portrait className="aspect-[720/829] w-full transition-transform duration-500 hover:scale-105" /></Link>
+      <Link to="author/" className="mx-auto block w-40 overflow-hidden rounded-[1.5rem] border-4 border-[var(--accent)]/40 md:w-full" aria-label={`عن المؤلف ${A.name}`} tabIndex={-1}><Portrait sizes="(min-width: 768px) 220px, 160px" className="aspect-[720/829] w-full transition-transform duration-500 hover:scale-105" /></Link>
       <div><p className="kicker">عن المؤلف</p><h2 id="author-t" className="mt-1 text-2xl sm:text-3xl">{A.name}</h2><p className="mt-1 font-semibold text-[var(--accent)]">{A.title.replace(/\.$/, '')}</p>
         <p className="mt-3 leading-8 text-[var(--text-secondary)] clamp-5">{A.bio.split('. ').slice(0, 2).join('. ')}.</p>
         <div className="mt-4 flex flex-wrap gap-2"><span className="chip">{A.award.split('،')[0]}</span><span className="chip">{mine.length} كتابًا في المتجر</span></div>

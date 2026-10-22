@@ -7,6 +7,7 @@ import { Link } from '../router';
 import { byHandle, fmtPrice, related, variantOf, permalink, collectionTitle, SHOP, asset } from '../data';
 import { Cover, AddButton, WishButton, Availability, Grid } from '../ui';
 import { type Book } from '../data';
+import { Specs, TrustStrip, AuthorBlock, InsideBook, SameCollection } from '../extras3';
 
 function Zoom({ b, i }: { b: Book; i: number }) {
   const im = b.images[i] as any; const [on, setOn] = useState(false); const [o, setO] = useState('50% 50%');
@@ -42,17 +43,17 @@ export default function BookPage({ handle }: { handle: string }) {
         <div className="mt-3 flex flex-wrap gap-3">{!b.available && <AddButton b={b} />}<WishButton b={b} /></div>
         <ShareButtons b={b} />
         <p className="mt-3 text-sm text-[var(--text-muted)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب. يتم الدفع على متجر الكود الرسمي (alcode.ae).</p>
+        <div className="no-print"><TrustStrip compact /></div>
         <div className="print-only mt-4 text-sm">{`السعر ${b.price} د.إ. + شحن 25 د.إ. · ${typeof location !== 'undefined' ? location.href : ''}`}</div>
         <div className="desc-ar mt-8">{b.description.map((p, k) => <p key={k}>{p}</p>)}</div>
-        <dl className="mt-8 grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
-          <dt className="font-semibold text-[var(--text-muted)]">المؤلف</dt><dd>{b.author}</dd>
-          {b.collections.length > 0 && <><dt className="font-semibold text-[var(--text-muted)]">التصنيف</dt><dd className="flex flex-wrap gap-2">{b.collections.map(c => <Link key={c} to={`collection/${c}/`} className="chip">{collectionTitle(c)}</Link>)}</dd></>}
-          {b.tags.length > 0 && <><dt className="font-semibold text-[var(--text-muted)]">الوسوم</dt><dd>{b.tags.join('، ')}</dd></>}
-        </dl>
+        <Specs b={b} />
         <a href={`${SHOP}/products/${encodeURIComponent(b.handle)}`} target="_blank" rel="noopener" className="mt-4 inline-flex items-center gap-1.5 font-semibold text-[var(--accent)] hover:underline">صفحة الكتاب في متجر الكود<ExternalLink size={15} aria-hidden="true" /></a>
       </div>
     </div>
+    <InsideBook b={b} />
     <Bundle b={b} />
+    <AuthorBlock b={b} />
+    <SameCollection b={b} />
     <RecentRow exclude={b.handle} />
     <section aria-labelledby="rel" className="pt-16"><h2 id="rel" className="text-2xl sm:text-3xl">كتب ذات صلة</h2><div className="mt-5"><Grid items={related(b)} /></div></section>
   </main>;

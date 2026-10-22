@@ -35,7 +35,7 @@ export function Cover({ b, i = 0, size = 'sm', eager = false, className = '', fl
   return <div ref={tilt} className={`tilt grid aspect-[4/5] place-items-center ${className}`}>
     <div className={`tilt-in relative grid h-full w-full place-items-center ${float ? 'float' : ''}`} style={float ? { animationDelay: `${(b.handle.length % 7) * -.6}s` } : undefined}>
       {!loaded && <span className="skel absolute inset-[8%] rounded-xl" aria-hidden="true" />}
-      <img ref={ir} onLoad={() => setLoaded(true)} onError={() => setLoaded(true)} src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" {...(eager ? { fetchPriority: 'high' } : {})}
+      <img ref={ir} onLoad={() => setLoaded(true)} onError={() => setLoaded(true)} src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" 
         className={`book-img max-h-full max-w-full object-contain ${cut ? 'is-cut' : 'rounded-xl'}`} />
     </div>
   </div>;
@@ -76,7 +76,7 @@ function useReveal<T extends HTMLElement>() {
 export function BookCard({ b, eager = false, list = false, onQuick, quickOpen = false }: { b: Book; eager?: boolean; list?: boolean; onQuick?: () => void; quickOpen?: boolean }) {
   return <article className={`book-card group relative h-full ${list ? 'grid grid-cols-[96px_1fr] items-center gap-4 sm:grid-cols-[120px_1fr_auto]' : 'flex flex-col'}`}>
     <div className="relative">
-      <Link to={`book/${b.handle}/`} className="block rounded-2xl" aria-label={b.title} tabIndex={-1}><Cover b={b} eager={eager} float={!list} /></Link>
+      <Link to={`book/${b.handle}/`} className="block rounded-2xl" aria-label={b.title} tabIndex={-1}><Cover b={b} eager={eager} /></Link>
       {!list && <div className="quick mt-2 flex justify-center gap-2">
         <AddButton b={b} icon /><WishButton b={b} compact />
         {onQuick && <button type="button" onClick={onQuick} aria-expanded={quickOpen} aria-label={`نظرة سريعة على «${b.title}»`} className="tool-btn quick-btn"><Eye size={18} aria-hidden="true" /></button>}
@@ -153,7 +153,7 @@ export function Carousel({ items, label }: { items: Book[]; label: string }) {
   const go = (d: 1 | -1) => { const el = ref.current; if (!el) return; el.scrollBy({ left: -d * el.clientWidth * .85, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); };
   return <div className="relative">
     <ul ref={ref} aria-label={label} className="carousel -mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto px-2 pb-4 pt-4 sm:gap-6">
-      {items.map((b, i) => <li key={b.handle} className="w-[44%] shrink-0 snap-start sm:w-[30%] md:w-[23%] lg:w-[18.5%]"><BookCard b={b} eager={i < 2} /></li>)}
+      {items.map((b, i) => <li key={b.handle} className="w-[44%] shrink-0 snap-start sm:w-[30%] md:w-[23%] lg:w-[18.5%]"><BookCard b={b} /></li>)}
     </ul>
     <div className="mt-1 flex justify-end gap-2">
       <button type="button" onClick={() => go(-1)} disabled={edge.s} aria-label={`السابق في ${label}`} className="tool-btn quick-btn disabled:opacity-40"><ChevronRight size={20} aria-hidden="true" /></button>

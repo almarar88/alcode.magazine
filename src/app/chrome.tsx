@@ -47,7 +47,7 @@ export function Header({ path }: { path: string }) {
   const cur = (to: string) => (to === '' ? path === '' : (path + '/').startsWith(to));
   return <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--background)]">
     <div className="mx-auto flex max-w-[1320px] items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
-      <Link to="" aria-label="متجر الكود — الرئيسية" className="shrink-0 rounded-xl"><Logo /></Link>
+      <Link to="" className="shrink-0 rounded-xl"><Logo /><span className="sr-only"> — الرئيسية</span></Link>
       <div className="ms-auto flex items-center gap-0.5 sm:gap-1.5">
         <Link to="books/" aria-label="ابحث في الكتب (اختصار: /)" aria-keyshortcuts="/" aria-expanded={sOpen} aria-controls="hsearch" onClick={e => { e.preventDefault(); setS(v => !v); setC(false); }} className="tool-btn"><Search size={20} /></Link>
         <Link to="wishlist/" aria-label="قائمة الأمنيات" className="tool-btn"><Heart size={20} /></Link>

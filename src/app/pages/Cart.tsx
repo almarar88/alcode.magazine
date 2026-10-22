@@ -3,6 +3,7 @@ import { Minus, Plus, Trash2, Lock } from 'lucide-react';
 import { Link } from '../router';
 import { byHandle, fmtPrice, permalink } from '../data';
 import { useCart, MAXQ } from '../store';
+import { TrustStrip } from '../extras3';
 import { Cover, PageHead } from '../ui';
 export default function Cart() {
   const { lines, setQty, remove, clear } = useCart();
@@ -33,7 +34,7 @@ export default function Cart() {
         <aside aria-label="ملخص الطلب" className="h-fit rounded-3xl border border-[var(--border-strong)] bg-[var(--card)] p-6 lg:sticky lg:top-24">
           <h2 className="text-xl">ملخص الطلب</h2>
           <dl className="mt-4 grid grid-cols-[1fr_auto] gap-y-2"><dt>عدد النسخ</dt><dd>{rows.reduce((s, r) => s + r.l.qty, 0)}</dd><dt>المجموع الفرعي</dt><dd data-testid="subtotal">{fmtPrice(total)}</dd><dt>الشحن</dt><dd data-testid="shipping">{fmtPrice(ship)}</dd><dt className="border-t border-[var(--border)] pt-2 font-bold">المجموع</dt><dd data-testid="total" className="border-t border-[var(--border)] pt-2 text-xl font-bold">{fmtPrice(total + ship)}</dd></dl>
-          <p className="mt-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-subtle)] p-3 text-[.95rem] font-semibold text-[var(--text-primary)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب، والمبلغ النهائي الذي تدفعه هو المجموع أعلاه.</p>
+          <p className="mt-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-subtle)] p-3 text-[.95rem] font-semibold text-[var(--text-primary)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب، والمبلغ النهائي الذي تدفعه هو المجموع أعلاه.</p><TrustStrip col />
           {ok.length > 0 && <a href={permalink(ok.map(r => ({ id: r.l.id, qty: r.l.qty })))} className="store-btn mt-5 w-full justify-center !py-3 text-lg" rel="noopener"><Lock size={18} aria-hidden="true" />إتمام الشراء</a>}
           <p className="mt-3 text-sm text-[var(--text-muted)]">ستنتقل إلى سلة متجر الكود الرسمي (Shopify) لإتمام الدفع بأمان.</p>
           <button type="button" className="ghost-btn mt-4 w-full justify-center" onClick={clear}>إفراغ السلة</button>

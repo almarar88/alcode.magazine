@@ -10,7 +10,7 @@ const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 export function BackToTop() {
   const [show, setShow] = useState(false);
   useEffect(() => { const on = () => setShow(scrollY > 900); on(); addEventListener('scroll', on, { passive: true }); return () => removeEventListener('scroll', on); }, []);
-  return <button type="button" onClick={() => scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' })} aria-label="العودة إلى أعلى الصفحة" tabIndex={show ? 0 : -1} aria-hidden={!show}
+  return <button type="button" onClick={() => scrollTo({ top: 0, behavior: reduced() ? 'auto' : 'smooth' })} aria-label="العودة إلى أعلى الصفحة" inert={!show}
     className={`to-top tool-btn quick-btn fixed bottom-5 left-5 z-30 !size-12 ${show ? 'on' : ''}`}><ArrowUp size={22} aria-hidden="true" /></button>;
 }
 /** "/" focuses search (ignored while typing in a field). */
@@ -33,7 +33,7 @@ export function Book3D({ b }: { b: Book }) {
   if (!im?.cut || !im.flat) return null; // only flat front covers make a convincing 3D book
   return <button type="button" aria-pressed={turn} onClick={() => setTurn(t => !t)} aria-label={turn ? 'إظهار واجهة الكتاب' : 'تدوير الكتاب لرؤية الكعب'} className="book3d-wrap mx-auto block">
     <span className={`book3d ${turn ? 'turn' : ''}`}>
-      <img src={asset(im.cutSm)} alt="" width={im.w} height={im.h} className="book3d-front" loading="lazy" />
+      <img src={asset(im.cutSm)} alt="" className="book3d-front" loading="lazy" decoding="async" />
       <span className="book3d-spine"><span className="clamp-2">{b.title}</span><span className="text-[.6rem] opacity-80">الكود</span></span>
       <span className="book3d-pages" />
     </span>
@@ -59,7 +59,7 @@ export function BuyRow({ b }: { b: Book }) {
       <button type="button" className="ink-btn" onClick={go} data-testid="add-qty">{done ? <Check size={18} aria-hidden="true" /> : <ShoppingCart size={18} aria-hidden="true" />}{done ? 'أُضيف إلى السلة' : 'أضف إلى السلة'}<span className="sr-only" aria-live="polite">{done ? `أُضيف ${q} من «${b.title}» إلى السلة` : ''}</span></button>
       <a href={permalink([{ id: v.id, qty: q }])} className="store-btn !px-5 !py-3" rel="noopener" data-testid="buy-now"><Zap size={18} aria-hidden="true" />اشترِ الآن <span className="text-sm font-semibold">(+ شحن 25 د.إ.)</span></a>
     </div>
-    <div className={`buy-bar fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--background)] px-3 py-2 md:hidden ${stick ? 'on' : ''}`} aria-hidden={!stick}>
+    <div className={`buy-bar fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--background)] px-3 py-2 md:hidden ${stick ? 'on' : ''}`} inert={!stick}>
       <div className="flex items-center gap-2"><div className="min-w-0 flex-1"><p className="clamp-1 text-sm font-semibold">{b.title}</p><p className="text-sm"><span className="font-bold">{fmtPrice(b.price * q)}</span> <span className="text-[var(--text-muted)]">+ شحن 25 د.إ.</span></p></div>
         <Qty q={q} set={setQ} label={b.title} />
         <button type="button" tabIndex={stick ? 0 : -1} className="ink-btn !px-3 !py-2" onClick={go} aria-label={`أضف ${q} إلى السلة`}><ShoppingCart size={18} aria-hidden="true" /></button></div>
