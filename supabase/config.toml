@@ -1,0 +1,10 @@
+project_id = "olkhmscftouksbgjmtjt"
+
+# Store checkout functions: called by guests with the publishable key, so the gateway JWT check is off;
+# each function does its own validation (DB prices, access tokens, Ziina re-verification).
+[functions.create-checkout]
+verify_jwt = false
+[functions.order-status]
+verify_jwt = false
+[functions.ziina-webhook]
+verify_jwt = false

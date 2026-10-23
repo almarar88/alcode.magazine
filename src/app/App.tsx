@@ -9,10 +9,12 @@ import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import NotFound from './pages/NotFound';
 import Author from './pages/Author';
+import Checkout, { CheckoutSuccess } from './pages/Checkout';
+import Admin from './pages/Admin';
 import { BackToTop } from './extras2';
 import { About, Contact, Privacy, Terms, Help } from './pages/Static';
 const SITE = 'متجر الكود للكتب';
-const TITLES: Record<string, string> = { books: 'كل الكتب', author: 'عن المؤلف علي أحمد الكندي المرر', cart: 'سلة التسوق', wishlist: 'قائمة الأمنيات', about: 'عن المتجر', contact: 'تواصل معنا', help: 'الشحن والدفع والأسئلة الشائعة', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام' };
+const TITLES: Record<string, string> = { books: 'كل الكتب', author: 'عن المؤلف علي أحمد الكندي المرر', cart: 'سلة التسوق', checkout: 'إتمام الطلب', admin: 'لوحة الطلبات', wishlist: 'قائمة الأمنيات', about: 'عن المتجر', contact: 'تواصل معنا', help: 'الشحن والدفع والأسئلة الشائعة', privacy: 'سياسة الخصوصية', terms: 'شروط الاستخدام' };
 function route(path: string) {
   const [a, b] = path.split('/');
   switch (a) {
@@ -22,6 +24,8 @@ function route(path: string) {
     case 'book': return <BookPage handle={b} />;
     case 'author': return <Author />;
     case 'cart': return <Cart />;
+    case 'checkout': return b === 'success' ? <CheckoutSuccess /> : <Checkout />;
+    case 'admin': return <Admin />;
     case 'wishlist': return <Wishlist />;
     case 'about': return <About />;
     case 'contact': return <Contact />;

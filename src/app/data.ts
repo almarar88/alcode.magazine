@@ -3,7 +3,7 @@ export type Book = (typeof data.books)[number];
 export const books = data.books as Book[];
 export const collections = data.collections;
 export const featured = data.featured as string[];
-import { SHOP_ORIGIN } from './config';
+import { SHOP_ORIGIN, CHECKOUT } from './config';
 export const SHOP = SHOP_ORIGIN; // Shopify storefront (checkout happens there); set in config.ts
 export const BASE = import.meta.env.BASE_URL;
 export const asset = (p: string) => (/^https?:/.test(p) ? p : BASE + p.replace(/^\//, ''));
@@ -15,7 +15,11 @@ export const arNum = (n: number) => n.toLocaleString('ar-AE-u-nu-latn');
 export const collectionTitle = (h: string) => collections.find(c => c.handle === h)?.title || h;
 export const newest = () => [...books].sort((a, b) => b.published.localeCompare(a.published));
 /** Shopify cart permalink: /cart/VARIANT:QTY,VARIANT:QTY → opens the real Shopify cart/checkout. */
-export const permalink = (items: { id: number; qty: number }[]) => `${SHOP}/cart/${items.map(i => `${i.id}:${i.qty}`).join(',')}`;
+export const permalink = (items: { id: number; qty: number }[]) => CHECKOUT === 'ziina'
+  ? `${BASE}checkout/?buy=${items.map(i => `${i.id}:${i.qty}`).join(',')}` // on-site checkout (buy-now items)
+  : `${SHOP}/cart/${items.map(i => `${i.id}:${i.qty}`).join(',')}`;
+/** Where "checkout" goes for the whole cart. */
+export const cartCheckoutHref = (items: { id: number; qty: number }[]) => CHECKOUT === 'ziina' ? `${BASE}checkout/` : permalink(items);
 export function related(b: Book, n = 4) {
   const score = (x: Book) => x.collections.filter(c => b.collections.includes(c)).length * 2 + x.tags.filter(t => b.tags.includes(t)).length;
   return books.filter(x => x.handle !== b.handle).map(x => [score(x), x] as const).sort((a, c) => c[0] - a[0]).slice(0, n).map(x => x[1]);

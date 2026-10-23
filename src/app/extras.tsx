@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Search, ShoppingCart, X, Lock, Minus, Plus, Trash2, Share2, Link2, Check } from 'lucide-react';
 import { Link, navigate } from './router';
-import { books, byHandle, fmtPrice, permalink, asset, type Book } from './data';
+import { books, byHandle, fmtPrice, permalink, cartCheckoutHref, asset, type Book } from './data';
 import { useCart, useStored, MAXQ } from './store';
 
 export const SHIPPING = 25;
@@ -58,7 +58,7 @@ export function MiniCart({ open, setOpen }: { open: boolean; setOpen: (v: boolea
         </li>)}</ul>
         <dl className="mt-3 grid grid-cols-[1fr_auto] gap-y-1 border-t border-[var(--border)] pt-3"><dt>المجموع الفرعي</dt><dd data-testid="mc-subtotal">{fmtPrice(sub)}</dd><dt>الشحن (ثابت)</dt><dd data-testid="mc-shipping">{fmtPrice(ship)}</dd><dt className="font-bold">المجموع</dt><dd data-testid="mc-total" className="text-lg font-bold">{fmtPrice(sub + ship)}</dd></dl>
         <div className="mt-3 grid grid-cols-2 gap-2"><Link to="cart/" onClick={() => setOpen(false)} className="ghost-btn justify-center">عرض السلة</Link>
-          {ok.length > 0 && <a href={withNote(permalink(ok.map(r => ({ id: r.l.id, qty: r.l.qty }))))} rel="noopener" className="store-btn justify-center"><Lock size={16} aria-hidden="true" />إتمام الشراء</a>}</div>
+          {ok.length > 0 && <a href={withNote(cartCheckoutHref(ok.map(r => ({ id: r.l.id, qty: r.l.qty }))))} rel="noopener" className="store-btn justify-center"><Lock size={16} aria-hidden="true" />إتمام الشراء</a>}</div>
       </>}
     </div></div>
   </section>;
@@ -98,6 +98,7 @@ export function ShareButtons({ b }: { b: Book }) {
 
 /** Appends the saved cart note (gift message) as Shopify's documented `note` permalink parameter. */
 export function withNote(base: string) {
+  if (!/^https?:/.test(base)) return base; // on-site checkout reads the note itself
   let n = ''; try { n = JSON.parse(localStorage.getItem('alcode-note') || '""') || ''; } catch {}
   n = String(n).trim().slice(0, 500); return n ? `${base}?note=${encodeURIComponent(n)}` : base;
 }

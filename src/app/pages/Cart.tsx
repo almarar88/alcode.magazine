@@ -1,10 +1,10 @@
 import { EmptyArt } from '../extras2';
 import { Minus, Plus, Trash2, Lock } from 'lucide-react';
 import { Link } from '../router';
-import { byHandle, fmtPrice, permalink } from '../data';
+import { byHandle, fmtPrice, cartCheckoutHref } from '../data';
 import { useCart, MAXQ, useStored } from '../store';
 import { useRecent } from '../extras';
-import { EMAIL } from '../config';
+import { EMAIL, CHECKOUT } from '../config';
 import { Mail, ArrowRight, Gift } from 'lucide-react';
 import { TrustStrip } from '../extras3';
 import { Cover, PageHead } from '../ui';
@@ -14,7 +14,7 @@ export default function Cart() {
   const total = rows.reduce((s, r) => s + Number(r.v.price) * r.l.qty, 0);
   const ok = rows.filter(r => r.v.available);
   const [note, setNote] = useStored<string>('alcode-note', ''); const rec = useRecent(); const last = rec.list.map(byHandle).find(Boolean);
-  const href = (base: string) => note.trim() ? `${base}?note=${encodeURIComponent(note.trim().slice(0, 500))}` : base;
+  const href = (base: string) => CHECKOUT === 'ziina' ? base : note.trim() ? `${base}?note=${encodeURIComponent(note.trim().slice(0, 500))}` : base;
   const SHIP = 25; const ship = rows.length ? SHIP : 0;
   return <main id="main">
     <PageHead kicker="المتجر" title="سلة التسوق" />
@@ -42,9 +42,9 @@ export default function Cart() {
           <p className="mt-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-subtle)] p-3 text-[.95rem] font-semibold text-[var(--text-primary)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب، والمبلغ النهائي الذي تدفعه هو المجموع أعلاه.</p><TrustStrip col />
           <div className="mt-5"><label htmlFor="note" className="field-label flex items-center gap-2"><Gift size={18} aria-hidden="true" className="text-[var(--accent)]" />ملاحظة أو إهداء مع الطلب (اختياري)</label>
             <textarea id="note" data-testid="note" value={note} maxLength={500} onChange={e => setNote(e.target.value)} rows={3} className="field-input mt-1 resize-y" placeholder="مثال: هدية إلى … مع عبارة إهداء" />
-            <p className="mt-1 text-sm text-[var(--text-muted)]">تُرسل الملاحظة مع طلبك إلى متجر الكود.</p></div>
-          {ok.length > 0 && <a data-testid="checkout" href={href(permalink(ok.map(r => ({ id: r.l.id, qty: r.l.qty }))))} className="store-btn mt-5 w-full justify-center !py-3 text-lg" rel="noopener"><Lock size={18} aria-hidden="true" />إتمام الشراء</a>}
-          <p className="mt-3 text-sm text-[var(--text-muted)]">ستنتقل إلى سلة متجر الكود الرسمي (Shopify) لإتمام الدفع بأمان.</p>
+            <p className="mt-1 text-sm text-[var(--text-muted)]">تُرسل الملاحظة مع طلبك إلى متجر الكود، ويمكنك تعديلها في صفحة إتمام الطلب.</p></div>
+          {ok.length > 0 && <a data-testid="checkout" href={href(cartCheckoutHref(ok.map(r => ({ id: r.l.id, qty: r.l.qty }))))} className="store-btn mt-5 w-full justify-center !py-3 text-lg" rel="noopener"><Lock size={18} aria-hidden="true" />إتمام الشراء</a>}
+          <p className="mt-3 text-sm text-[var(--text-muted)]">{CHECKOUT === 'ziina' ? 'تُدخل بيانات التوصيل في الخطوة التالية، ثم تدفع بأمان عبر Ziina (بطاقة أو Apple Pay أو Google Pay).' : 'ستنتقل إلى سلة متجر الكود الرسمي (Shopify) لإتمام الدفع بأمان.'}</p>
           <Link to={last ? `book/${last.handle}/` : 'books/'} data-testid="continue" className="ghost-btn mt-4 w-full justify-center"><ArrowRight size={18} aria-hidden="true" />متابعة التسوق{last ? ` («${last.title.split(/[:،(]/)[0].trim()}»)` : ''}</Link>
           <button type="button" className="ghost-btn mt-3 w-full justify-center" onClick={clear}>إفراغ السلة</button>
           <div data-testid="cart-help" className="mt-5 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4"><p className="font-bold">تحتاج مساعدة في طلبك؟</p><p className="mt-1 text-[.95rem] leading-7 text-[var(--text-secondary)]">راسلنا على <a href={`mailto:${EMAIL}`} dir="ltr" className="font-semibold text-[var(--accent)] underline underline-offset-4">{EMAIL}</a> أو اطّلع على <Link to="help/" className="font-semibold text-[var(--accent)] underline underline-offset-4">الشحن والأسئلة الشائعة</Link>.</p>
