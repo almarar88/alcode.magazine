@@ -315,3 +315,9 @@ textarea.field-input { font-family: var(--font-body); font-size: .95rem; line-he
 @keyframes growIn{from{opacity:.4;transform:scale(.96)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.inside-big{animation:none}.faq-chev{transition:none}}
 @media (max-width:379px){header .tool-btn{width:2.05rem;height:2.4rem}header .gap-3{gap:.4rem}header svg.h-9{width:32px;height:28px}header .text-lg{font-size:.98rem}header>div{padding-inline:.6rem}}
+/* batch 5 */
+.fan-img{transform:translateX(calc(-50% + var(--i) * -46px)) rotate(calc(var(--i) * 8deg));transform-origin:50% 100%;transition:transform .35s ease;filter:drop-shadow(0 8px 8px rgb(27 23 18 / .22))}
+.shelf-card{transition:border-color .2s,transform .2s}.shelf-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+.shelf-card:hover .fan-img{transform:translateX(calc(-50% + var(--i) * -60px)) rotate(calc(var(--i) * 12deg)) translateY(-4px)}
+.fan-img:nth-child(2){z-index:1}
+@media (prefers-reduced-motion:reduce){.fan-img,.shelf-card{transition:none}.shelf-card:hover{transform:none}}

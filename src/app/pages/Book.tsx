@@ -1,3 +1,4 @@
+import { SaveBadge } from '../extras5';
 import { useEffect, useState } from 'react';
 import { ShareButtons, useRecent } from '../extras';
 import { Book3D, BuyRow, Bundle } from '../extras2';
@@ -38,7 +39,7 @@ export default function BookPage({ handle }: { handle: string }) {
       <div>
         <h1 className="text-3xl leading-snug sm:text-4xl">{b.title}</h1>
         <p className="mt-2 text-lg text-[var(--text-secondary)]">{b.author}</p>
-        <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-3xl font-bold">{fmtPrice(b.price)}</span><span className="font-semibold text-[var(--text-secondary)]">+ شحن 25 د.إ.</span>{v.compare && Number(v.compare) > b.price && <s className="text-[var(--text-muted)]">{fmtPrice(v.compare)}</s>}<Availability b={b} /></div>
+        <div className="mt-4 flex flex-wrap items-center gap-3"><span className="text-3xl font-bold">{fmtPrice(b.price)}</span><span className="font-semibold text-[var(--text-secondary)]">+ شحن 25 د.إ.</span>{v.compare && Number(v.compare) > b.price && <s className="text-[var(--text-muted)]">{fmtPrice(v.compare)}</s>}<SaveBadge price={b.price} compare={v.compare} /><Availability b={b} /></div>
         <BuyRow b={b} />
         <div className="mt-3 flex flex-wrap gap-3">{!b.available && <AddButton b={b} />}<WishButton b={b} /></div>
         <ShareButtons b={b} />

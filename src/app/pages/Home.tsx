@@ -7,6 +7,7 @@ import { Carousel, Cover, AddButton, RecentRow } from '../ui';
 import { LogoMark } from '../art';
 import { AuthorTeaser } from './Author';
 import { Shelves, TrustStrip } from '../extras3';
+import { ShelfCards, HowToOrder } from '../extras5';
 type Inside = { src: string; sm: string; w: number; h: number; caption: string; handle: string };
 const inside = (data as any).inside as Inside[];
 const slides = inside.filter(i => i.w >= 1000 && i.w / i.h > 1.1); // wide, sharp ones for the full-bleed hero
@@ -65,13 +66,11 @@ export default function Home() {
     </section>
     <Marquee />
     <div className="mx-auto max-w-[1320px] px-4 pt-10 sm:px-6"><TrustStrip /></div>
-    <section aria-labelledby="cats" className="mx-auto max-w-[1320px] px-4 pt-12 sm:px-6">
-      <h2 id="cats" className="text-2xl sm:text-3xl">التصنيفات</h2>
-      <ul className="mt-5 flex flex-wrap gap-2">{collections.map(c => <li key={c.handle}><Link to={`collection/${c.handle}/`} className="cat-chip !px-5 !py-2.5 text-lg">{c.title} <span className="ms-2 text-sm text-[var(--text-muted)]">{c.count}</span></Link></li>)}</ul>
-    </section>
+    <ShelfCards />
     <AuthorTeaser />
     <Shelves />
     <div className="mx-auto max-w-[1320px] px-4 sm:px-6"><RecentRow /></div>
+    <HowToOrder />
     {pick.length > 0 && <section aria-labelledby="fe" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
       <div className="flex items-end justify-between gap-3"><h2 id="fe" className="text-2xl sm:text-3xl">مختارات المتجر</h2><Link to="books/" className="font-semibold text-[var(--accent)] hover:underline">كل الكتب</Link></div>
       <div className="mt-5"><Carousel items={pick} label="مختارات المتجر" /></div>
