@@ -32,6 +32,11 @@ function tokScore(t: string, f: [string[], number][]) {
 export function smartSearch(q: string, pool: Book[] = books): Book[] {
   const toks = words(q); if (!toks.length) return pool;
   const allow = new Set(pool.map(b => b.handle));
-  return index().filter(x => allow.has(x.b.handle)).map(x => { let s = 0; for (const t of toks) { const v = tokScore(t, x.f); if (!v) return [0, x.b] as const; s += v; } return [s, x.b] as const; })
+  const compact = normAr(q).replace(/ /g, '');
+  const res = index().filter(x => allow.has(x.b.handle)).map(x => { let s = 0; for (const t of toks) { const v = tokScore(t, x.f); if (!v) return [0, x.b] as const; s += v; } return [s, x.b] as const; })
     .filter(x => x[0] > 0).sort((a, c) => c[0] - a[0]).map(x => x[1]);
+  if (res.length || compact.length < 4) return res;
+  // no-space queries like «قصرالحصن»: match against fields with spaces removed
+  const flat = (b: Book) => normAr([b.title, b.author, ...b.tags, b.description.join(' ')].join(' ')).replace(/ /g, '');
+  return pool.filter(b => flat(b).includes(compact) || flat(b).includes(compact.replace(/^ال/, '')));
 }

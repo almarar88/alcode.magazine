@@ -10,6 +10,7 @@ import Wishlist from './pages/Wishlist';
 import NotFound from './pages/NotFound';
 import Author from './pages/Author';
 import { BackToTop } from './extras2';
+import { BottomNav } from './extras7';
 import { ThemePage, ThemesIndex, themes } from './extras6';
 import { About, Contact, Privacy, Terms, Help } from './pages/Static';
 const SITE = 'متجر الكود للكتب';
@@ -48,5 +49,6 @@ export default function App() {
     <div key={path} className={first.current ? undefined : "page-in"}>{route(path)}</div>
     <Footer />
     <BackToTop />
+    <BottomNav path={path} />
   </>;
 }

@@ -9,6 +9,7 @@ import { AuthorTeaser } from './Author';
 import { Shelves, TrustStrip } from '../extras3';
 import { ShelfCards, HowToOrder } from '../extras5';
 import { OtherThemes, Sadu } from '../extras6';
+import { FollowCTA } from '../extras7';
 type Inside = { src: string; sm: string; w: number; h: number; caption: string; handle: string };
 const inside = (data as any).inside as Inside[];
 const slides = inside.filter(i => i.w >= 1000 && i.w / i.h > 1.1); // wide, sharp ones for the full-bleed hero
@@ -54,7 +55,7 @@ export default function Home() {
       <div className="relative mx-auto grid max-w-[1320px] items-center gap-10 px-4 pb-20 pt-14 sm:px-6 md:grid-cols-[1.3fr_1fr] md:pb-24 md:pt-20">
         <div>
           <LogoMark className="h-16 w-[76px] text-[#e2b866]" />
-          <h1 className="mt-5 text-4xl leading-tight text-[#f6efe1] sm:text-5xl">إصدارات مؤسسة الكود لنشر الكتب</h1>
+          <h1 className="hero-title mt-5 text-[2.6rem] leading-[1.25] text-[#f6efe1] sm:text-6xl">إصدارات مؤسسة الكود لنشر الكتب</h1>
           <p className="mt-4 max-w-xl text-lg leading-9 text-[#efe5cf]">{books.length} كتابًا في تاريخ الخليج العربي والظفرة وأبوظبي وأدب الرحلات والشعر. تصفّح الكتب، وأضفها إلى السلة، وأتمّ الدفع على متجر الكود الرسمي.</p>
           <div className="mt-7 flex flex-wrap gap-3"><Link to="books/" className="store-btn !px-6 !py-3 text-lg">تصفّح كل الكتب</Link>{collections[0] && <Link to={`collection/${collections[0].handle}/`} className="ghost-btn !border-white/50 !bg-black/30 !text-[#f6efe1] hover:!bg-black/50">{collections[0].title}</Link>}</div>
         </div>
@@ -78,5 +79,6 @@ export default function Home() {
       <div className="flex items-end justify-between gap-3"><h2 id="fe" className="text-2xl sm:text-3xl">مختارات المتجر</h2><Link to="books/" className="font-semibold text-[var(--accent)] hover:underline">كل الكتب</Link></div>
       <div className="mt-5"><Carousel items={pick} label="مختارات المتجر" /></div>
     </section>}
+    <FollowCTA />
   </main>;
 }

@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Link2, Check, Layers } from 'lucide-react';
 import data from '../generated/store.json';
-import { byHandle, fmtPrice, type Book } from './data';
+import { byHandle, fmtPrice, asset, type Book } from './data';
 import { Grid, PageHead, Cover } from './ui';
 import { Link } from './router';
 export type Theme = { slug: string; title: string; desc: string; handles: string[] };
@@ -36,7 +36,7 @@ export function ThemePage({ slug }: { slug: string }) {
 function ThemeCard({ t }: { t: Theme }) {
   const bs = themeBooks(t).slice(0, 3);
   return <Link to={`t/${t.slug}/`} className="theme-card group" data-testid="theme-card">
-    <div className="theme-fan" aria-hidden="true">{bs.map((b, i) => <div key={b.handle} style={{ ['--i' as any]: i }}><Cover b={b} /></div>)}</div>
+    <div className="theme-fan" aria-hidden="true">{bs.map(b => { const im = b.images[0] as any; return <img key={b.handle} src={asset(im.cutSm || im.sm)} className={im.cutSm ? "is-cut" : undefined} alt="" width={240} height={300} loading="lazy" decoding="async" />; })}</div>
     <div className="p-4"><h3 className="text-lg group-hover:text-[var(--accent)]">{t.title}</h3><p className="mt-1 text-sm text-[var(--text-muted)]">{t.handles.length} كتب</p></div>
   </Link>;
 }

@@ -20,6 +20,7 @@ function Zoom({ b, i }: { b: Book; i: number }) {
   </button>;
 }
 import NotFound from './NotFound';
+import { SampleViewer } from '../extras7';
 import { themes } from '../extras6';
 import { RecentRow } from '../ui';
 export default function BookPage({ handle }: { handle: string }) {
@@ -32,6 +33,7 @@ export default function BookPage({ handle }: { handle: string }) {
     <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-12">
       <div>
         <Zoom b={b} i={i} />
+        <SampleViewer b={b} />
         <div className="mt-6 hidden sm:block no-print"><Book3D b={b} /></div>
         {b.images.length > 1 && <ul className="mt-3 flex flex-wrap gap-2" aria-label="صور الكتاب">{b.images.map((im, k) => <li key={im.src}>
           <button type="button" onClick={() => setI(k)} aria-pressed={i === k} aria-label={`الصورة ${k + 1} من ${b.images.length}`} className={`block w-20 overflow-hidden rounded-xl border-2 bg-[var(--surface-raised)] ${i === k ? 'border-[var(--accent)]' : 'border-[var(--border)]'}`}>
