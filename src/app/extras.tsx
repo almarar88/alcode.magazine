@@ -4,6 +4,7 @@ import { Search, ShoppingCart, X, Lock, Minus, Plus, Trash2, Share2, Link2, Chec
 import { Link, navigate } from './router';
 import { books, byHandle, fmtPrice, permalink, asset, type Book } from './data';
 import { useCart, useStored, MAXQ } from './store';
+import { smartSearch } from './search';
 
 export const SHIPPING = 25;
 export const norm = (s: string) => s.toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
@@ -14,7 +15,7 @@ const thumb = (b: Book) => { const im = b.images[0] as any; return im ? asset(im
 export function HeaderSearch({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
   const [q, setQ] = useState(''); const [k, setK] = useState(0); const inp = useRef<HTMLInputElement>(null);
   useEffect(() => { if (open) inp.current?.focus(); }, [open]);
-  const res = useMemo(() => { const n = norm(q.trim()); if (!n) return []; return books.filter(b => norm([b.title, b.author, ...b.tags, ...b.collections].join(' ')).includes(n)).slice(0, 6); }, [q]);
+  const res = useMemo(() => q.trim() ? smartSearch(q).slice(0, 6) : [], [q]);
   useEffect(() => setK(0), [q]);
   if (!open) return null;
   const go = (to: string) => { setOpen(false); setQ(''); navigate(to); };
@@ -93,6 +94,8 @@ export function ShareButtons({ b }: { b: Book }) {
     <button type="button" className="ghost-btn !px-3 !py-2 text-sm" onClick={async () => { try { await navigator.clipboard.writeText(url()); setCopied(true); setTimeout(() => setCopied(false), 1800); } catch {} }}>{copied ? <Check size={16} aria-hidden="true" /> : <Link2 size={16} aria-hidden="true" />}{copied ? 'نُسخ الرابط' : 'نسخ الرابط'}<span className="sr-only" aria-live="polite">{copied ? 'تم نسخ رابط الكتاب' : ''}</span></button>
     <a className="ghost-btn !px-3 !py-2 text-sm" target="_blank" rel="noopener" href={`https://x.com/intent/post?text=${encodeURIComponent(b.title)}&url=${encodeURIComponent(typeof location !== 'undefined' ? location.href : '')}`} onClick={e => { (e.currentTarget as HTMLAnchorElement).href = `https://x.com/intent/post?text=${encodeURIComponent(b.title)}&url=${encodeURIComponent(url())}`; }}>
       <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23 22h-6.2l-4.8-6.3L6.4 22H3.3l7.3-8.3L1 2h6.3l4.4 5.8zm-1.1 18h1.7L6.3 3.9H4.5z" /></svg>X</a>
+    <a className="ghost-btn !px-3 !py-2 text-sm" data-testid="share-wa" target="_blank" rel="noopener" href={`https://wa.me/?text=${encodeURIComponent(b.title)}`} onClick={e => { (e.currentTarget as HTMLAnchorElement).href = `https://wa.me/?text=${encodeURIComponent(`${b.title}\n${url()}`)}`; }}>
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2s.2-1.1.2-1.2-.2-.2-.4-.3z"/></svg>واتساب</a>
   </div>;
 }
 

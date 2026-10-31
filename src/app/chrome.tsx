@@ -37,7 +37,7 @@ export function CartBadge({ open, toggle }: { open?: boolean; toggle?: () => voi
     {count > 0 && <span aria-hidden="true" className="absolute -top-1 -end-1 grid min-w-5 h-5 place-items-center rounded-full bg-[var(--accent)] px-1 text-[.72rem] font-bold text-[#1b1208]">{count}</span>}
   </Link>;
 }
-const NAV = [{ to: '', label: 'الرئيسية' }, { to: 'books/', label: 'كل الكتب' }, { to: 'author/', label: 'عن المؤلف' }, ...collections.map(c => ({ to: `collection/${c.handle}/`, label: c.title }))];
+const NAV = [{ to: '', label: 'الرئيسية' }, { to: 'books/', label: 'كل الكتب' }, { to: 't/', label: 'مجموعات مختارة' }, { to: 'author/', label: 'عن المؤلف' }, ...collections.map(c => ({ to: `collection/${c.handle}/`, label: c.title }))];
 
 export function Header({ path }: { path: string }) {
   const [theme, setTheme] = useTheme();
@@ -86,7 +86,7 @@ export function Footer() {
         </div>
         <div><h2 className="text-base text-[#f6efe1]">التصنيفات</h2><ul className="mt-3 space-y-1.5"><L to="books/">كل الكتب</L>{collections.map(c => <L key={c.handle} to={`collection/${c.handle}/`}>{c.title}</L>)}</ul></div>
         <div><h2 className="text-base text-[#f6efe1]">المتجر</h2><ul className="mt-3 space-y-1.5">
-          <L to="cart/">سلة التسوق</L><L to="wishlist/">قائمة الأمنيات</L><L to="author/">عن المؤلف</L><L to="about/">عن المتجر</L><L to="contact/">تواصل معنا</L><L to="help/">الشحن والأسئلة الشائعة</L><L to="privacy/">سياسة الخصوصية</L><L to="terms/">شروط الاستخدام</L>
+          <L to="cart/">سلة التسوق</L><L to="wishlist/">قائمة الأمنيات</L><L to="t/">مجموعات مختارة</L><L to="author/">عن المؤلف</L><L to="about/">عن المتجر</L><L to="contact/">تواصل معنا</L><L to="help/">الشحن والأسئلة الشائعة</L><L to="privacy/">سياسة الخصوصية</L><L to="terms/">شروط الاستخدام</L>
           <li><a href={SHOP} target="_blank" rel="noopener" className="inline-flex items-center gap-1.5 text-[#e0d4bb] hover:text-[#e2b866]"><span className="ulink">متجر الكود الرسمي</span><ExternalLink size={14} aria-hidden="true" /></a></li>
         </ul></div>
       </div>

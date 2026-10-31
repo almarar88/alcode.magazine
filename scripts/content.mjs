@@ -10,9 +10,11 @@ const withCut = im => { const n = path.basename(im.src, '.webp'); return !reject
 const inside = JSON.parse(fs.readFileSync(path.join(root, 'content/inside.json'), 'utf8'));
 const books = cat.books.map(b => ({ ...b, images: b.images.map(withCut), price: Number(b.variants[0].price), available: b.variants.some(v => v.available) }));
 const collections = cat.collections.map(c => ({ ...c, count: books.filter(b => b.collections.includes(c.handle)).length })).filter(c => c.count);
+const themeDefs = JSON.parse(fs.readFileSync(path.join(root, 'content/themes.json'), 'utf8'));
+const themes = themeDefs.map(t => ({ slug: t.slug, title: t.title, desc: t.desc, handles: books.filter(b => t.match.some(m => [b.title, ...b.tags].join(' ').includes(m))).map(b => b.handle) })).filter(t => t.handles.length >= 2);
 const authors = [...new Set(books.map(b => b.author).filter(Boolean))];
 fs.mkdirSync(path.join(root, 'src/generated'), { recursive: true });
-fs.writeFileSync(path.join(root, 'src/generated/store.json'), JSON.stringify({ shop: cat.source, books, collections, featured: cat.featured, authors, inside, integrations: { analytics: INT.analytics, flags: FLAGS } }));
+fs.writeFileSync(path.join(root, 'src/generated/store.json'), JSON.stringify({ shop: cat.source, books, collections, featured: cat.featured, themes, authors, inside, integrations: { analytics: INT.analytics, flags: FLAGS } }));
 const ORG = { '@context': 'https://schema.org', '@type': 'Organization', name: 'مؤسسة الكود لنشر الكتب', alternateName: 'Alcode Books', url: url(''), logo: url('brand/icon-512.png'), email: 'info@alcode.ae',
   contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer service', email: 'info@alcode.ae', availableLanguage: ['ar'] }] };
 const FAQ_LD = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [
@@ -27,11 +29,17 @@ export function routesList() {
     { path: '', title: SITE.title, desc: SITE.description, ld: ORG },
     { path: 'books/', title: 'كل الكتب', desc: `جميع إصدارات مؤسسة الكود (${books.length} كتابًا) مع البحث والتصنيف والترتيب بالسعر والأحدث.` },
     ...collections.map(c => ({ path: `collection/${c.handle}/`, title: c.title, desc: c.description[0] || c.title })),
-    ...books.map(b => ({ path: `book/${b.handle}/`, title: b.title, desc: `${first(b)} السعر ${b.price} درهم.`.trim(), image: b.images[0]?.src, kind: 'product',
+    ...themes.map(t => ({ path: `t/${t.slug}/`, title: t.title, desc: `${t.desc} ${t.handles.length} كتب.`, image: books.find(b => b.handle === t.handles[0])?.images[0]?.src,
+      ld: { '@context': 'https://schema.org', '@type': 'CollectionPage', name: t.title, url: url(`t/${t.slug}/`), mainEntity: { '@type': 'ItemList', numberOfItems: t.handles.length,
+        itemListElement: t.handles.map((h, i) => ({ '@type': 'ListItem', position: i + 1, url: url(`book/${h}/`), name: books.find(b => b.handle === h).title })) } } })),
+    { path: 't/', title: 'مجموعات مختارة', desc: 'مجموعات موضوعية من إصدارات مؤسسة الكود: الظفرة، الرحلات في الخليج والجزيرة العربية، أبوظبي، الكويت وغيرها.' },
+    ...books.map(b => ({ path: `book/${b.handle}/`, title: b.title, desc: `${first(b)} السعر ${b.price} درهم.`.trim(), image: b.images[0]?.src, kind: 'product', price: b.price,
       // structured data only from catalog fields
       ld: { '@context': 'https://schema.org', '@type': ['Book', 'Product'], name: b.title, author: { '@type': 'Person', name: b.author }, inLanguage: 'ar', image: url(b.images[0]?.src || ''), description: first(b),
         publisher: { '@type': 'Organization', name: 'مؤسسة الكود لنشر الكتب' }, url: url(`book/${b.handle}/`),
-        offers: { '@type': 'Offer', price: String(b.price), priceCurrency: 'AED', availability: b.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: url(`book/${b.handle}/`) } } })),
+        offers: { '@type': 'Offer', price: String(b.price), priceCurrency: 'AED', availability: b.available ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', url: url(`book/${b.handle}/`), seller: { '@type': 'Organization', name: 'مؤسسة الكود لنشر الكتب' } } },
+      ld2: { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'الرئيسية', item: url('') }, { '@type': 'ListItem', position: 2, name: 'كل الكتب', item: url('books/') },
+        ...(b.collections[0] ? [{ '@type': 'ListItem', position: 3, name: collections.find(c => c.handle === b.collections[0])?.title || '', item: url(`collection/${b.collections[0]}/`) }] : []), { '@type': 'ListItem', position: b.collections[0] ? 4 : 3, name: b.title }] } })),
     { path: 'author/', title: 'عن المؤلف: علي أحمد الكندي المرر', desc: 'شاعر وباحث في التاريخ والأدب والتراث المحلي: نبذة تعريفية، المسيرة، التأهيل العلمي، المؤلفات والجوائز، وكتبه في متجر الكود.', image: 'author/ali-alkindi-720.webp' },
     { path: 'cart/', title: 'سلة التسوق', desc: 'سلة مشترياتك من متجر الكود.' },
     { path: 'wishlist/', title: 'قائمة الأمنيات', desc: 'الكتب التي حفظتها في متصفحك.' },

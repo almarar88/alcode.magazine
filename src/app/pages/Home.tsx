@@ -8,6 +8,7 @@ import { LogoMark } from '../art';
 import { AuthorTeaser } from './Author';
 import { Shelves, TrustStrip } from '../extras3';
 import { ShelfCards, HowToOrder } from '../extras5';
+import { OtherThemes, Sadu } from '../extras6';
 type Inside = { src: string; sm: string; w: number; h: number; caption: string; handle: string };
 const inside = (data as any).inside as Inside[];
 const slides = inside.filter(i => i.w >= 1000 && i.w / i.h > 1.1); // wide, sharp ones for the full-bleed hero
@@ -64,9 +65,11 @@ export default function Home() {
         </div>}
       </div>
     </section>
+    <Sadu />
     <Marquee />
     <div className="mx-auto max-w-[1320px] px-4 pt-10 sm:px-6"><TrustStrip /></div>
     <ShelfCards />
+    <OtherThemes />
     <AuthorTeaser />
     <Shelves />
     <div className="mx-auto max-w-[1320px] px-4 sm:px-6"><RecentRow /></div>

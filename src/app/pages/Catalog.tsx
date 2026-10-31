@@ -3,6 +3,7 @@ import { books, collections, collectionTitle, type Book } from '../data';
 import { Grid, PageHead, ViewToggle, useView } from '../ui';
 import { Link } from '../router';
 import { navigate } from '../router';
+import { smartSearch } from '../search';
 const norm = (s: string) => s.toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
 // price bands derived from the real catalog prices
 const PR = books.map(b => b.price).sort((a, b) => a - b); const lo = PR[Math.floor(PR.length / 3)], hi = PR[Math.floor(PR.length * 2 / 3)];
@@ -15,8 +16,10 @@ export default function Catalog({ collection }: { collection?: string }) {
   useEffect(() => { const p = new URLSearchParams(); if (q) p.set('q', q); if (cs.length && !collection) p.set('c', cs.join(',')); if (sort !== 'featured') p.set('sort', sort); if (stock) p.set('stock', '1'); if (price) p.set('price', price); const s = p.toString(); history.replaceState(null, '', location.pathname + (s ? '?' + s : '')); }, [q, cs, sort, stock, price]);
   const items = useMemo(() => {
     const n = norm(q.trim());
-    let r: Book[] = books.filter(b => (c ? b.collections.includes(c) : !cs.length || cs.some(x => b.collections.includes(x))) && (!stock || b.available) && inPrice(b.price, price) && (!n || norm([b.title, b.author, ...b.tags, ...b.description].join(' ')).includes(n)));
+    let r: Book[] = books.filter(b => (c ? b.collections.includes(c) : !cs.length || cs.some(x => b.collections.includes(x))) && (!stock || b.available) && inPrice(b.price, price) && true);
+    if (n) r = smartSearch(q, r);
     const s = [...r];
+    if (n && sort === 'featured') return s;
     if (sort === 'new') s.sort((a, b) => b.published.localeCompare(a.published));
     if (sort === 'price-asc') s.sort((a, b) => a.price - b.price);
     if (sort === 'price-desc') s.sort((a, b) => b.price - a.price);

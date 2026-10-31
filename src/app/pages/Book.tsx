@@ -20,6 +20,7 @@ function Zoom({ b, i }: { b: Book; i: number }) {
   </button>;
 }
 import NotFound from './NotFound';
+import { themes } from '../extras6';
 import { RecentRow } from '../ui';
 export default function BookPage({ handle }: { handle: string }) {
   const b = byHandle(handle); const [i, setI] = useState(0); const rec = useRecent();
@@ -43,6 +44,7 @@ export default function BookPage({ handle }: { handle: string }) {
         <BuyRow b={b} />
         <div className="mt-3 flex flex-wrap gap-3">{!b.available && <AddButton b={b} />}<WishButton b={b} /></div>
         <ShareButtons b={b} />
+        {themes.some(t => t.handles.includes(b.handle)) && <div className="mt-4 flex flex-wrap items-center gap-2" data-testid="book-themes"><span className="font-semibold text-[var(--text-secondary)]">ضمن مجموعات:</span>{themes.filter(t => t.handles.includes(b.handle)).map(t => <Link key={t.slug} to={`t/${t.slug}/`} className="cat-chip !py-1.5 text-sm">{t.title}</Link>)}</div>}
         <p className="mt-3 text-sm text-[var(--text-muted)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب. يتم الدفع على متجر الكود الرسمي (alcode.ae).</p>
         <div className="no-print"><TrustStrip compact /></div>
         <div className="print-only mt-4 text-sm">{`السعر ${b.price} د.إ. + شحن 25 د.إ. · ${typeof location !== 'undefined' ? location.href : ''}`}</div>
