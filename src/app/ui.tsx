@@ -32,11 +32,11 @@ export function Cover({ b, i = 0, size = 'sm', eager = false, className = '', fl
   useEffect(() => { const el = ir.current; if (el && !el.complete) setLoaded(false); }, [b.handle, i, size]);
   if (!im) return <div className={`cover-plate ${className}`} />;
   const src = size === 'sm' ? im.sm : im.src;
-  const portrait = im.w / im.h < 0.98;
+  const plain = Boolean((im as { plain?: boolean }).plain);
   return <div ref={tilt} className={`cover-plate tilt ${size === 'lg' ? 'cover-plate-lg' : ''} ${className}`}>
     <div className={`tilt-in cover-mat ${float ? 'float' : ''}`} style={float ? { animationDelay: `${(b.handle.length % 7) * -.6}s` } : undefined}>
       {!loaded && <span className="skel cover-skel" aria-hidden="true" />}
-      <img ref={ir} onLoad={() => setLoaded(true)} onError={() => setLoaded(true)} src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" className={`book-img${portrait ? ' fit-fill' : ''}`} />
+      <img ref={ir} onLoad={() => setLoaded(true)} onError={() => setLoaded(true)} src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" className={`book-img${plain ? ' fit-fill' : ''}`} />
     </div>
   </div>;
 }

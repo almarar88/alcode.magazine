@@ -43,7 +43,7 @@ const badge = await pg.$eval('header a[href$="/cart/"]', a => a.getAttribute('ar
 // book page: buy now + wishlist + gallery
 await pg.goto(B + 'book/' + encodeURIComponent('رحلة-مايلز') + '/', { waitUntil: 'networkidle0' });
 const bn = await pg.$eval('main a.store-btn', a => a.href); ok(new RegExp('^' + SHOPRE + '/cart/\\d+:1$').test(bn), 'buy now ' + bn);
-const thumbs = await pg.$$('ul[aria-label="صور الكتاب"] button'); ok(thumbs.length === 3, 'gallery thumbs ' + thumbs.length);
+const thumbs = await pg.$$('ul[aria-label="صور الكتاب"] button'); ok(thumbs.length === 4, 'gallery thumbs ' + thumbs.length);
 const s1 = await pg.$eval('main img', i => i.src); await thumbs[1].click(); await new Promise(r => setTimeout(r, 200)); ok(s1 !== await pg.$eval('main img', i => i.src), 'gallery switches image');
 await pg.click('main button[aria-pressed="false"][aria-label*="الأمنيات"]'); await pg.goto(B + 'wishlist/', { waitUntil: 'networkidle0' }); ok(await cards() === 1, 'wishlist persisted');
 ok(await pg.$$eval('main section article', a => a.length) >= 0, 'ok'); ok(!errs.length, 'no console errors ' + errs.slice(0, 2));
