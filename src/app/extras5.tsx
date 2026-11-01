@@ -5,7 +5,7 @@ import { books, collections, asset, fmtPrice, type Book } from './data';
 export function Illo({ name, className = '' }: { name: 'reading' | 'inspired'; className?: string }) {
   return <img src={asset(`art/${name}.svg`)} alt="" aria-hidden="true" width={240} height={240} loading="lazy" decoding="async" className={`illo mx-auto h-40 w-auto ${className}`} />;
 }
-const sm = (b: Book) => { const im = b.images[0]; return im ? (im.cutSm || im.sm) : ''; };
+const sm = (b: Book) => b.images[0]?.sm || '';
 /** Collection shelves as cards with a fan of real covers from that collection. */
 export function ShelfCards() {
   return <section aria-labelledby="cats" className="mx-auto max-w-[1320px] px-4 pt-12 sm:px-6">
@@ -14,7 +14,7 @@ export function ShelfCards() {
       const bs = books.filter(b => b.collections.includes(c.handle) && b.images[0]).slice(0, 3);
       const min = Math.min(...books.filter(b => b.collections.includes(c.handle)).map(b => b.price));
       return <li key={c.handle}><Link to={`collection/${c.handle}/`} className="shelf-card group block h-full rounded-3xl border border-[var(--border)] bg-[var(--card)] p-4">
-        <div className="fan relative mx-auto h-36 w-full" aria-hidden="true">{bs.map((b, i) => <img key={b.handle} src={asset(sm(b))} alt="" width={120} height={150} loading="lazy" decoding="async" style={{ ['--i' as any]: i - (bs.length - 1) / 2 }} className="fan-img absolute bottom-0 left-1/2 h-32 w-auto object-contain" />)}</div>
+        <div className="fan relative mx-auto h-40 w-full" aria-hidden="true">{bs.map((b, i) => <span key={b.handle} className="cover-plate fan-plate" style={{ ['--i' as any]: i - (bs.length - 1) / 2 }}><span className="cover-mat"><img src={asset(sm(b))} alt="" width={b.images[0].w} height={b.images[0].h} loading="lazy" decoding="async" className={`book-img${b.images[0].w / b.images[0].h < 0.98 ? ' fit-fill' : ''}`} /></span></span>)}</div>
         <h3 className="mt-3 text-lg group-hover:text-[var(--accent)]">{c.title}</h3>
         <p className="text-sm text-[var(--text-muted)]">{c.count} كتب{Number.isFinite(min) ? ` · من ${fmtPrice(min)}` : ''}</p>
       </Link></li>;

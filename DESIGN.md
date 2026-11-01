@@ -12,7 +12,9 @@ Page and section titles use Aref Ruqaa. Interface labels use Noto Kufi Arabic. B
 
 ## Signature
 
-A short gold rule draws under a page title or section title (scale from the start edge). It is already at full length when reduced motion is requested. Covers sit on a warm well with a shelf lip so cut-out jackets read as books, not floating stickers.
+A short gold rule draws under a page title or section title (scale from the start edge). It is already at full length when reduced motion is requested. Every cover sits in the same paper plate: aspect 4/5, a gold hairline, and the full photograph contained so titles are not cropped. Portrait jackets fill the plate; wider photographs keep even paper margins. The plate stays paper in dark mode so a dark jacket still reads.
+
+The home hero keeps the newest book on a light gold stage, separate from the ink slideshow, so the jacket color does not have to match the night background.
 
 ## Chrome
 
