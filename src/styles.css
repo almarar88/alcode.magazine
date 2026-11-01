@@ -546,3 +546,6 @@ h1.display::after, h2.sec::after {
   .bnav a { font-size: .62rem; }
   .hero-grid { padding-inline: .8rem; }
 }
+.field-input, .cat-chip, .qty-btn { min-height: 44px; }
+.ship-bar { height: .5rem; border-radius: 999px; background: var(--muted); overflow: hidden; }
+.ship-bar > span { display: block; height: 100%; background: #e2b866; }
