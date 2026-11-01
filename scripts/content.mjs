@@ -16,12 +16,12 @@ const authors = [...new Set(books.map(b => b.author).filter(Boolean))];
 fs.mkdirSync(path.join(root, 'src/generated'), { recursive: true });
 fs.writeFileSync(path.join(root, 'src/generated/store.json'), JSON.stringify({ shop: cat.source, books, collections, featured: cat.featured, themes, authors, inside, integrations: { analytics: INT.analytics, flags: FLAGS } }));
 const ORG = { '@context': 'https://schema.org', '@type': 'Organization', name: 'مؤسسة الكود لنشر الكتب', alternateName: 'Alcode Books', url: url(''), logo: url('brand/icon-512.png'), email: 'info@alcode.ae',
-  contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer service', email: 'info@alcode.ae', availableLanguage: ['ar'] }] };
+  contactPoint: [{ '@type': 'ContactPoint', contactType: 'customer service', email: 'info@alcode.ae', telephone: '+971563244942', availableLanguage: ['ar'] }] };
 const FAQ_LD = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: [
   ['كم تكلفة الشحن؟', 'رسوم الشحن ثابتة: 25 درهمًا لكل طلب مهما كان عدد الكتب.'],
   ['هل تُضاف ضريبة على السعر؟', 'لا. لا تُضاف أي ضريبة؛ المبلغ هو مجموع أسعار الكتب مضافًا إليه 25 درهمًا للشحن.'],
   ['كيف يتم الدفع؟', 'تنتقل إلى صفحة الدفع الآمنة في متجر الكود الرسمي على منصة Shopify لإدخال بيانات الشحن والدفع.'],
-  ['كيف أتواصل معكم؟', 'عبر البريد الإلكتروني info@alcode.ae أو حساباتنا على إنستغرام وتيك توك.'],
+  ['كيف أتواصل معكم؟', 'عبر واتساب +971563244942 أو البريد الإلكتروني info@alcode.ae، أو عبر حساباتنا على إنستغرام وتيك توك.'],
 ].map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) };
 export function routesList() {
   const first = b => b.description[0] || '';
@@ -44,7 +44,7 @@ export function routesList() {
     { path: 'cart/', title: 'سلة التسوق', desc: 'سلة مشترياتك من متجر الكود.' },
     { path: 'wishlist/', title: 'قائمة الأمنيات', desc: 'الكتب التي حفظتها في متصفحك.' },
     { path: 'about/', title: 'عن المتجر', desc: SITE.description },
-    { path: 'contact/', title: 'تواصل معنا', desc: 'تواصل مع متجر الكود عبر البريد الإلكتروني info@alcode.ae أو حساباتنا على إنستغرام وتيك توك.', ld: ORG },
+    { path: 'contact/', title: 'تواصل معنا', desc: 'تواصل مع متجر الكود عبر واتساب +971563244942 أو البريد الإلكتروني info@alcode.ae أو حساباتنا على إنستغرام وتيك توك.', ld: ORG },
     { path: 'help/', title: 'الشحن والدفع والأسئلة الشائعة', desc: 'الشحن 25 د.إ. ثابتة لكل طلب، بلا ضرائب، والدفع الآمن عبر متجر الكود الرسمي على Shopify.', ld: FAQ_LD },
     { path: 'privacy/', title: 'سياسة الخصوصية', desc: 'كيف يتعامل متجر الكود مع بيانات الزوار.' },
     { path: 'terms/', title: 'شروط الاستخدام', desc: 'شروط استخدام موقع متجر الكود.' },

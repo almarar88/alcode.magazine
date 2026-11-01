@@ -48,7 +48,7 @@ export function MiniCart({ open, setOpen }: { open: boolean; setOpen: (v: boolea
   const rows = lines.map(l => { const b = byHandle(l.handle); const v = b?.variants.find(x => x.id === l.id); return b && v ? { l, b, v } : null; }).filter(Boolean) as { l: any; b: Book; v: any }[];
   const sub = rows.reduce((s, r) => s + Number(r.v.price) * r.l.qty, 0); const ship = rows.length ? SHIPPING : 0; const ok = rows.filter(r => r.v.available);
   return <section id="minicart" aria-label="سلة التسوق المختصرة" className="panel-in border-t border-[var(--border)] bg-[var(--background)]" onKeyDown={e => { if (e.key === 'Escape') setOpen(false); }}>
-    <div className="mx-auto max-w-[1320px] px-4 py-4 sm:px-6"><div className="ms-auto max-w-[440px] rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+    <div className="mx-auto max-w-[1320px] px-4 py-4 sm:px-6"><div className="mini-sheet ms-auto max-w-[440px] rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
       <div className="flex items-center justify-between"><h2 className="text-lg">سلتك</h2><button type="button" className="tool-btn" onClick={() => setOpen(false)} aria-label="إغلاق السلة المختصرة"><X size={18} aria-hidden="true" /></button></div>
       {rows.length === 0 ? <p className="py-4 text-[var(--text-secondary)]">سلتك فارغة. <Link to="books/" onClick={() => setOpen(false)} className="font-semibold text-[var(--accent)] hover:underline">تصفّح الكتب</Link></p> : <>
         <ul className="mt-2 max-h-[45vh] divide-y divide-[var(--border)] overflow-y-auto">{rows.map(({ l, b, v }) => <li key={l.id} className="flex items-center gap-3 py-2">
