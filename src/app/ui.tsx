@@ -76,7 +76,9 @@ function useReveal<T extends HTMLElement>() {
 export function BookCard({ b, eager = false, list = false, onQuick, quickOpen = false }: { b: Book; eager?: boolean; list?: boolean; onQuick?: () => void; quickOpen?: boolean }) {
   return <article className={`book-card group relative h-full ${list ? 'grid grid-cols-[96px_1fr] items-center gap-4 sm:grid-cols-[120px_1fr_auto]' : 'flex flex-col'}`}>
     <div className="relative">
+      <div className={list ? '' : 'cover-well'}>
       <Link to={`book/${b.handle}/`} className="block rounded-2xl" aria-label={b.title} tabIndex={-1}><Cover b={b} eager={eager} /></Link>
+      </div>
       {!list && <div className="quick mt-2 flex justify-center gap-2">
         <AddButton b={b} icon /><WishButton b={b} compact />
         {onQuick && <button type="button" onClick={onQuick} aria-expanded={quickOpen} aria-label={`نظرة سريعة على «${b.title}»`} className="tool-btn quick-btn"><Eye size={18} aria-hidden="true" /></button>}
@@ -162,15 +164,18 @@ export function Carousel({ items, label }: { items: Book[]; label: string }) {
   </div>;
 }
 
-export function PageHead({ kicker, title, desc, children }: { kicker?: string; title: string; desc?: string; children?: ReactNode }) {
-  return <div className="border-b border-[var(--border)] paper"><div className="mx-auto max-w-[1320px] px-4 py-10 sm:px-6">
-    {kicker && <p className="kicker">{kicker}</p>}<h1 className="mt-2 text-3xl sm:text-4xl">{title}</h1>{desc && <p className="mt-3 max-w-3xl text-[var(--text-secondary)]">{desc}</p>}{children}
-  </div></div>;
+export function PageHead({ title, desc, children }: { kicker?: string; title: string; desc?: string; children?: ReactNode }) {
+  return <header className="page-head"><div className="page-head-in">
+    <h1 className="display">{title}</h1>{desc && <p className="page-lead">{desc}</p>}{children}
+  </div><div className="sadu" aria-hidden="true" /></header>;
+}
+export function SecHead({ id, title, to, more = 'عرض الكل', sub }: { id: string; title: string; to?: string; more?: string; sub?: string }) {
+  return <div className="sec-head"><div className="min-w-0"><h2 id={id} className="sec">{title}</h2>{sub && <p className="sec-sub">{sub}</p>}</div>{to && <Link to={to} className="sec-more">{more}</Link>}</div>;
 }
 
 /** "Recently viewed" row from this device's history; renders nothing until there is history. */
 export function RecentRow({ exclude }: { exclude?: string }) {
   const { list } = useRecent(); const items = list.filter(h => h !== exclude).map(byHandle).filter(Boolean) as Book[];
   if (!items.length) return null;
-  return <section aria-labelledby="recent" className="pt-14"><h2 id="recent" className="text-2xl sm:text-3xl">شاهدتها مؤخرًا</h2><p className="mt-1 text-sm text-[var(--text-muted)]">محفوظة على جهازك فقط.</p><div className="mt-5"><Carousel items={items} label="شاهدتها مؤخرًا" /></div></section>;
+  return <section aria-labelledby="recent" className="pt-14"><SecHead id="recent" title="شاهدتها مؤخرًا" sub="محفوظة على جهازك فقط." /><div className="mt-5"><Carousel items={items} label="شاهدتها مؤخرًا" /></div></section>;
 }

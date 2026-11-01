@@ -28,7 +28,6 @@ export function ThemePage({ slug }: { slug: string }) {
       <p className="mt-2 text-[var(--text-muted)]">{items.length} كتب · من {fmtPrice(Math.min(...prices))} إلى {fmtPrice(Math.max(...prices))}</p>
       <div className="mt-4 flex flex-wrap gap-2"><CopyLink /><WaLink text={t.title} /></div>
     </PageHead>
-    <Sadu />
     <div className="mx-auto max-w-[1320px] px-4 pt-8 sm:px-6"><Grid items={items} eager={4} /></div>
     <OtherThemes exclude={slug} />
   </main>;
@@ -43,11 +42,11 @@ function ThemeCard({ t }: { t: Theme }) {
 export function OtherThemes({ exclude }: { exclude?: string }) {
   const list = themes.filter(t => t.slug !== exclude); if (!list.length) return null;
   return <section aria-labelledby="themes-h" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
-    <div className="flex items-end justify-between gap-3"><h2 id="themes-h" className="flex items-center gap-2 text-2xl sm:text-3xl"><Layers size={24} aria-hidden="true" className="text-[var(--accent)]" />مجموعات مختارة</h2><Link to="t/" className="font-semibold text-[var(--accent)] hover:underline">كل المجموعات</Link></div>
+    <div className="sec-head"><h2 id="themes-h" className="sec flex items-center gap-2"><Layers size={22} aria-hidden="true" className="text-[var(--accent)]" />مجموعات مختارة</h2><Link to="t/" className="sec-more">كل المجموعات</Link></div>
     <div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">{list.map(t => <ThemeCard key={t.slug} t={t} />)}</div>
   </section>;
 }
 export function ThemesIndex() {
-  return <main id="main"><PageHead kicker="المتجر" title="مجموعات مختارة" desc="مجموعات موضوعية من إصداراتنا، بروابط قصيرة يسهل مشاركتها." /><Sadu />
+  return <main id="main"><PageHead title="مجموعات مختارة" desc="مجموعات موضوعية من إصداراتنا، بروابط قصيرة يسهل مشاركتها." />
     <div className="mx-auto grid max-w-[1320px] grid-cols-2 gap-4 px-4 pt-8 sm:px-6 md:grid-cols-3 lg:grid-cols-5">{themes.map(t => <ThemeCard key={t.slug} t={t} />)}</div></main>;
 }

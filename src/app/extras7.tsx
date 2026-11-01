@@ -55,7 +55,7 @@ export function SampleViewer({ b }: { b: Book }) {
 export function FollowCTA() {
   return <section aria-labelledby="follow-h" className="mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
     <div className="follow relative overflow-hidden rounded-3xl p-8 text-[#f6efe1] sm:p-12">
-      <h2 id="follow-h" className="text-3xl text-[#f6efe1] sm:text-4xl">تابع إصداراتنا الجديدة</h2>
+      <h2 id="follow-h" className="sec text-[#f6efe1]">تابع إصداراتنا الجديدة</h2>
       <p className="mt-3 max-w-xl text-lg leading-8 text-[#efe5cf]">نعلن عن الكتب الجديدة والمجموعات المختارة على حساباتنا، ويسعدنا تواصلك بالبريد لأي استفسار عن الطلبات.</p>
       <div className="mt-6 flex flex-wrap gap-3">{SOCIAL.map(({ href, label, Icon }) => <a key={href} href={href} target="_blank" rel="noopener" className="follow-btn"><Icon />{label}</a>)}
         <a href={`mailto:${EMAIL}`} className="follow-btn"><Mail size={18} aria-hidden="true" />{EMAIL}</a></div>

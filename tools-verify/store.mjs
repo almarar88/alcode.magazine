@@ -7,6 +7,7 @@ await pg.setViewport({ width: 390, height: 844 });
 const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) process.exitCode = 1; };
 const cards = () => pg.$$eval('main article', a => a.length);
 await pg.goto(B + 'books/', { waitUntil: 'networkidle0' });
+await pg.click('[data-testid=filter-launch]'); await new Promise(r => setTimeout(r, 300));
 const all = await cards(); ok(all === 26, 'catalog shows all books: ' + all);
 await pg.type('#q', 'الكويت'); await new Promise(r => setTimeout(r, 900)); const k = await cards(); ok(k > 0 && k < all, 'search الكويت → ' + k); ok((await pg.url()).includes('q='), 'search in URL');
 await pg.click('#q', { clickCount: 3 }); await pg.keyboard.press('Backspace');
@@ -20,6 +21,7 @@ await pg.select('#s', 'new'); await new Promise(r => setTimeout(r, 200));
 // chips, view toggle, inline quick look (no dialog)
 await pg.click('button.cat-chip:nth-of-type(2)'); await new Promise(r => setTimeout(r, 900)); const ch = await cards(); ok(ch > 0 && ch < 26, 'category chip filters → ' + ch);
 await pg.click('button.cat-chip:nth-of-type(1)'); await new Promise(r => setTimeout(r, 900)); ok(await cards() === 26, 'chip «الكل» resets');
+await pg.keyboard.press('Escape'); await new Promise(r => setTimeout(r, 200));
 await pg.click('button[aria-label^="نظرة سريعة"]'); await new Promise(r => setTimeout(r, 600));
 ok(await pg.$eval('.quicklook', e => !!e.closest('li.col-span-full') && !document.querySelector('[role=dialog]') && e.textContent.includes('شحن 25')), 'quick look opens inline with price + shipping');
 ok(await pg.evaluate(() => document.activeElement?.tagName === 'H3'), 'quick look focuses its heading');

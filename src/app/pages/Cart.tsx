@@ -4,7 +4,7 @@ import { Link } from '../router';
 import { byHandle, fmtPrice, permalink } from '../data';
 import { useCart, MAXQ, useStored } from '../store';
 import { useRecent } from '../extras';
-import { EMAIL, WHATSAPP_NUMBER, FREE_SHIPPING_THRESHOLD } from '../config';
+import { EMAIL, waMe, WHATSAPP, FREE_SHIPPING_THRESHOLD } from '../config';
 import { Mail, ArrowRight, Gift } from 'lucide-react';
 import { TrustStrip } from '../extras3';
 import { Cover, PageHead } from '../ui';
@@ -19,9 +19,9 @@ export default function Cart() {
   return <main id="main">
     <PageHead kicker="المتجر" title="سلة التسوق" />
     <div className="mx-auto max-w-[1100px] px-4 pt-8 sm:px-6">
-      {rows.length === 0 ? <div className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-8 text-center"><EmptyArt kind="cart" /><p className="mt-4 text-lg">سلتك فارغة.</p><Link to="books/" className="ink-btn mt-5">تصفّح الكتب</Link><p className="mt-5 text-[var(--text-secondary)]">للاستفسار: <a href={`mailto:${EMAIL}`} dir="ltr" className="font-semibold text-[var(--accent)] underline">{EMAIL}</a></p></div> :
+      {rows.length === 0 ? <div className="empty-panel rounded-3xl border border-[var(--border)] bg-[var(--card)] p-8"><EmptyArt kind="cart" /><p className="mt-4 text-lg">سلتك فارغة.</p><Link to="books/" className="ink-btn mt-5">تصفّح الكتب</Link><p className="mt-5 text-[var(--text-secondary)]">للاستفسار: <a href={`mailto:${EMAIL}`} dir="ltr" className="font-semibold text-[var(--accent)] underline">{EMAIL}</a> أو <a data-testid="cart-wa" href={waMe('مرحباً، أستفسر عن طلب من متجر الكود للكتب.')} target="_blank" rel="noopener" className="font-semibold text-[var(--accent)] underline">واتساب</a></p></div> :
       <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
-        <ul className="grid gap-3" aria-label="الكتب في السلة">{rows.map(({ l, b, v }) => <li key={l.id} className="grid grid-cols-[84px_1fr] gap-4 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-3 sm:grid-cols-[100px_1fr]">
+        <ul className="ledger grid gap-3" aria-label="الكتب في السلة">{rows.map(({ l, b, v }) => <li key={l.id} className="grid grid-cols-[84px_1fr] gap-4 border border-[var(--border)] bg-[var(--card)] p-3 sm:grid-cols-[100px_1fr]">
           <Link to={`book/${b.handle}/`} aria-label={b.title}><Cover b={b} /></Link>
           <div className="flex min-w-0 flex-col gap-2">
             <h2 className="text-lg leading-snug"><Link to={`book/${b.handle}/`} className="hover:text-[var(--accent)]">{b.title}</Link></h2>
@@ -36,8 +36,8 @@ export default function Cart() {
             </div>
           </div>
         </li>)}</ul>
-        <aside aria-label="ملخص الطلب" className="h-fit rounded-3xl border border-[var(--border-strong)] bg-[var(--card)] p-6 lg:sticky lg:top-24">
-          <h2 className="text-xl">ملخص الطلب</h2>
+        <aside aria-label="ملخص الطلب" className="invoice h-fit border border-[var(--border-strong)] bg-[var(--card)] p-6 lg:sticky lg:top-24">
+          <h2 className="sec">ملخص الطلب</h2>
           <dl className="mt-4 grid grid-cols-[1fr_auto] gap-y-2"><dt>عدد النسخ</dt><dd>{rows.reduce((s, r) => s + r.l.qty, 0)}</dd><dt>المجموع الفرعي</dt><dd data-testid="subtotal">{fmtPrice(total)}</dd><dt>الشحن</dt><dd data-testid="shipping">{fmtPrice(ship)}</dd><dt className="border-t border-[var(--border)] pt-2 font-bold">المجموع</dt><dd data-testid="total" className="border-t border-[var(--border)] pt-2 text-xl font-bold">{fmtPrice(total + ship)}</dd></dl>
           {FREE_SHIPPING_THRESHOLD > 0 ? <div data-testid="free-ship" className="mt-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-subtle)] p-3 text-[.95rem] font-semibold"><p>{free ? 'طلبك مؤهل للشحن المجاني.' : `أضف ${fmtPrice(FREE_SHIPPING_THRESHOLD - total)} للحصول على شحن مجاني.`}</p><div className="ship-bar mt-2" role="progressbar" aria-valuemin={0} aria-valuemax={FREE_SHIPPING_THRESHOLD} aria-valuenow={Math.min(total, FREE_SHIPPING_THRESHOLD)} aria-label="التقدم نحو الشحن المجاني"><span style={{ width: `${Math.min(100, total / FREE_SHIPPING_THRESHOLD * 100)}%` }} /></div></div>
             : <p className="mt-3 rounded-xl border border-[var(--accent)] bg-[var(--accent-subtle)] p-3 text-[.95rem] font-semibold text-[var(--text-primary)]">رسوم الشحن ثابتة: 25 د.إ. لكل طلب، والمبلغ النهائي الذي تدفعه هو المجموع أعلاه.</p>}<TrustStrip col />
@@ -48,8 +48,8 @@ export default function Cart() {
           <p className="mt-3 text-sm text-[var(--text-muted)]">ستنتقل إلى سلة متجر الكود الرسمي (Shopify) لإتمام الدفع بأمان.</p>
           <Link to={last ? `book/${last.handle}/` : 'books/'} data-testid="continue" className="ghost-btn mt-4 w-full justify-center"><ArrowRight size={18} aria-hidden="true" />متابعة التسوق{last ? ` («${last.title.split(/[:،(]/)[0].trim()}»)` : ''}</Link>
           <button type="button" className="ghost-btn mt-3 w-full justify-center" onClick={clear}>إفراغ السلة</button>
-          <div data-testid="cart-help" className="mt-5 rounded-2xl border border-[var(--border)] bg-[var(--surface-raised)] p-4"><p className="font-bold">تحتاج مساعدة في طلبك؟</p><p className="mt-1 text-[.95rem] leading-7 text-[var(--text-secondary)]">راسلنا على <a href={`mailto:${EMAIL}`} dir="ltr" className="font-semibold text-[var(--accent)] underline underline-offset-4">{EMAIL}</a> أو اطّلع على <Link to="help/" className="font-semibold text-[var(--accent)] underline underline-offset-4">الشحن والأسئلة الشائعة</Link>.</p>
-            <a href={`mailto:${EMAIL}?subject=${encodeURIComponent('استفسار عن طلب من متجر الكود')}`} className="ink-btn mt-3 !py-2"><Mail size={17} aria-hidden="true" />راسلنا</a>{WHATSAPP_NUMBER && <a data-testid="cart-wa" href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('استفسار عن طلب من متجر الكود')}`} target="_blank" rel="noopener" className="ghost-btn mt-3 ms-2 !py-2">واتساب</a>}</div>
+          <div data-testid="cart-help" className="mt-5 border border-[var(--border)] bg-[var(--surface-raised)] p-4"><p className="font-bold">تحتاج مساعدة في طلبك؟</p><p className="mt-1 text-[.95rem] leading-7 text-[var(--text-secondary)]">راسلنا على <a href={`mailto:${EMAIL}`} dir="ltr" className="font-semibold text-[var(--accent)] underline underline-offset-4">{EMAIL}</a> أو واتساب <a data-testid="cart-wa" href={waMe('مرحباً، لدي استفسار عن طلب من متجر الكود للكتب.')} target="_blank" rel="noopener" dir="ltr" className="font-semibold text-[var(--accent)] underline underline-offset-4">+{WHATSAPP}</a> أو اطّلع على <Link to="help/" className="font-semibold text-[var(--accent)] underline underline-offset-4">الشحن والأسئلة الشائعة</Link>.</p>
+            <div className="mt-3 flex flex-wrap gap-2"><a href={`mailto:${EMAIL}?subject=${encodeURIComponent('استفسار عن طلب من متجر الكود')}`} className="ink-btn !py-2"><Mail size={17} aria-hidden="true" />راسلنا</a><a href={waMe('مرحباً، لدي استفسار عن طلب من متجر الكود للكتب.')} target="_blank" rel="noopener" className="ghost-btn !py-2">واتساب</a></div></div>
         </aside>
       </div>}
     </div>

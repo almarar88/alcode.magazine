@@ -3,7 +3,9 @@
 export const SHOP_ORIGIN = 'https://8sq2wc-ye.myshopify.com';
 /** Store contact email (shown in footer, contact page, cart help, JSON-LD). */
 export const EMAIL = 'info@alcode.ae';
-/** PLACEHOLDERS awaiting Ahmed's input — leave empty until confirmed; UI that depends on them stays hidden.
- *  WHATSAPP_NUMBER: international digits only, e.g. '9715XXXXXXXX'. FREE_SHIPPING_THRESHOLD: AED subtotal (0 = no free-shipping offer). */
+/** Store WhatsApp, international digits only. Do not substitute another number. */
 export const WHATSAPP_NUMBER = '971563244942';
+export const WHATSAPP = WHATSAPP_NUMBER;
+/** 0 means no free-shipping offer: every non-empty order pays a flat 25 AED. */
 export const FREE_SHIPPING_THRESHOLD = 0;
+export const waMe = (text?: string) => `https://wa.me/${WHATSAPP_NUMBER}${text ? `?text=${encodeURIComponent(text)}` : ''}`;

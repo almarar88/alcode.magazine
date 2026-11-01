@@ -4,6 +4,7 @@ const b = await puppeteer.launch({ executablePath: '/usr/bin/google-chrome', arg
 const errs = []; const ok = (c, m) => console.log((c ? 'PASS ' : 'FAIL ') + m);
 const page = async (w, h) => { const pg = await b.newPage(); pg.on('pageerror', e => errs.push(String(e))); pg.on('console', m => m.type() === 'error' && errs.push(m.text())); await pg.setViewport({ width: w, height: h }); return pg; };
 const wait = t => new Promise(r => setTimeout(r, t));
+const openFilters = async pg => { const show = await pg.evaluate(() => { const e = document.querySelector('[data-testid=filter-launch]'); return !!e && getComputedStyle(e).display !== 'none'; }); if (show) { await pg.click('[data-testid=filter-launch]'); await wait(300); } };
 for (const [w, h, tag] of [[1440, 900, 'desktop'], [390, 844, 'mobile']]) {
   const pg = await page(w, h);
   await pg.goto(B, { waitUntil: 'networkidle0' });
@@ -24,6 +25,7 @@ for (const [w, h, tag] of [[1440, 900, 'desktop'], [390, 844, 'mobile']]) {
   await pg.$eval('#minicart button[aria-label^="إغلاق"]', e => e.click());
   // catalog price filter
   await pg.goto(B + 'books/', { waitUntil: 'networkidle0' }); const all = await pg.$$eval('main article', a => a.length);
+  await openFilters(pg);
   await pg.$eval('[aria-label="السعر"] button:nth-of-type(2)', e => e.click()); await wait(900); const f = await pg.$$eval('main article', a => a.length);
   ok(f > 0 && f < all && pg.url().includes('price='), `${tag} price filter ${all}→${f}`); await pg.screenshot({ path: `${D}/catalog-price-${tag}.png` });
   // home with recently viewed

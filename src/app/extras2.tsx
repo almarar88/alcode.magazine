@@ -59,9 +59,9 @@ export function BuyRow({ b }: { b: Book }) {
       <button type="button" className="ink-btn" onClick={go} data-testid="add-qty">{done ? <Check size={18} aria-hidden="true" /> : <ShoppingCart size={18} aria-hidden="true" />}{done ? 'أُضيف إلى السلة' : 'أضف إلى السلة'}<span className="sr-only" aria-live="polite">{done ? `أُضيف ${q} من «${b.title}» إلى السلة` : ''}</span></button>
       <a href={permalink([{ id: v.id, qty: q }])} className="store-btn !px-5 !py-3" rel="noopener" data-testid="buy-now"><Zap size={18} aria-hidden="true" />اشترِ الآن <span className="text-sm font-semibold">(+ شحن 25 د.إ.)</span></a>
     </div>
-    <div className={`buy-bar fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--background)] px-3 py-2 md:hidden ${stick ? 'on' : ''}`} inert={!stick}>
-      <div className="flex items-center gap-2"><div className="min-w-0 flex-1"><p className="clamp-1 text-sm font-semibold">{b.title}</p><p className="text-sm"><span className="font-bold">{fmtPrice(b.price * q)}</span> <span className="text-[var(--text-muted)]">+ شحن 25 د.إ.</span></p></div>
-        <Qty q={q} set={setQ} label={b.title} />
+    <div className={`buy-bar fixed inset-x-0 bottom-0 z-30 border-t border-[var(--border)] bg-[var(--background)] px-3 py-2 ${stick ? 'on' : ''}`} inert={!stick}>
+      <div className="buy-bar-inner mx-auto flex max-w-[1100px] items-center gap-2"><div className="min-w-0 flex-1"><p className="clamp-1 text-sm font-semibold">{b.title}</p><p className="text-sm"><span className="font-bold">{fmtPrice(b.price * q)}</span> <span className="text-[var(--text-muted)]">+ شحن 25 د.إ.</span></p></div>
+        <div className="qty-wrap"><Qty q={q} set={setQ} label={b.title} /></div>
         <button type="button" tabIndex={stick ? 0 : -1} className="ink-btn !px-3 !py-2" onClick={go} aria-label={`أضف ${q} إلى السلة`}><ShoppingCart size={18} aria-hidden="true" /></button></div>
     </div>
   </>;
@@ -73,7 +73,7 @@ export function Bundle({ b }: { b: Book }) {
   if (items.length < 3) return null;
   const sub = items.reduce((s, x) => s + x.price, 0);
   return <section aria-labelledby="bundle" className="mt-10 rounded-3xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-6">
-    <h2 id="bundle" className="flex items-center gap-2 text-xl sm:text-2xl"><PackagePlus size={22} aria-hidden="true" className="text-[var(--accent)]" />اقتنِها معًا</h2>
+    <h2 id="bundle" className="sec flex items-center gap-2"><PackagePlus size={22} aria-hidden="true" className="text-[var(--accent)]" />اقتنِها معًا</h2>
     <p className="mt-1 text-sm text-[var(--text-muted)]">كتب من التصنيف نفسه. الشحن ثابت 25 د.إ. للطلب كله.</p>
     <ul className="mt-4 flex flex-wrap items-center gap-3">{items.map((x, i) => <li key={x.handle} className="flex items-center gap-3">{i > 0 && <span aria-hidden="true" className="text-2xl font-bold text-[var(--accent)]">+</span>}
       <Link to={`book/${x.handle}/`} className="flex w-28 flex-col items-center gap-1 text-center text-sm hover:text-[var(--accent)]"><img src={asset((x.images[0] as any)?.cutSm || x.images[0]?.sm)} alt="" width={110} height={140} loading="lazy" className="book-img h-32 w-auto object-contain" /><span className="clamp-2">{x.title}</span><span className="font-bold">{fmtPrice(x.price)}</span></Link></li>)}</ul>

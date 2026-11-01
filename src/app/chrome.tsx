@@ -3,6 +3,7 @@ import { Heart, Menu, Search, ShoppingCart, X, ExternalLink , Mail } from 'lucid
 import { ThemeSwitch, type Theme } from '@/registry/components/theme-switch/theme-switch';
 import { Link } from './router';
 import { collections, SHOP } from './data';
+import { waMe, WHATSAPP } from './config';
 import { LogoMark } from './art';
 import { useCart } from './store';
 import { HeaderSearch, MiniCart } from './extras';
@@ -24,9 +25,9 @@ export function SocialLinks({ className = '', dark = false }: { className?: stri
 export function Logo() {
   return <span className="flex items-center gap-3">
     <LogoMark className="h-9 w-[42px] shrink-0 text-[var(--logo)] sm:h-11 sm:w-[52px]" />
-    <span className="flex flex-col leading-none">
-      <span className="text-lg font-bold text-[var(--text-primary)] sm:text-xl">متجر الكود</span>
-      <span className="mt-1 text-[.72rem] font-semibold text-[var(--text-muted)]">Alcode Books</span>
+    <span className="mast-name flex flex-col leading-none">
+      <span className="mast-ar text-[var(--text-primary)]">متجر الكود</span>
+      <span className="mast-en">Alcode Books</span>
     </span>
   </span>;
 }
@@ -45,7 +46,7 @@ export function Header({ path }: { path: string }) {
   useEffect(() => { setOpen(false); setS(false); setC(false); }, [path]);
   useSlashSearch(() => { setS(true); setC(false); });
   const cur = (to: string) => (to === '' ? path === '' : (path + '/').startsWith(to));
-  return <header className="sticky top-0 z-40 border-b border-[var(--border)] bg-[var(--background)]">
+  return <header className="mast sticky top-0 z-40 border-b border-[var(--border)]">
     <div className="mx-auto flex max-w-[1320px] items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
       <Link to="" className="shrink-0 rounded-xl"><Logo /><span className="sr-only"> — الرئيسية</span></Link>
       <div className="ms-auto flex items-center gap-0.5 sm:gap-1.5">
@@ -66,7 +67,7 @@ export function Header({ path }: { path: string }) {
     <MiniCart open={cOpen} setOpen={setC} />
     {open && <nav id="mnav" aria-label="القائمة" className="border-t border-[var(--border)] bg-[var(--background)] xl:hidden">
       <ul className="mx-auto grid max-w-[1320px] gap-1 px-4 py-4 sm:grid-cols-2 sm:px-6">
-        {NAV.map(n => <li key={n.to}><Link to={n.to} aria-current={cur(n.to) ? 'page' : undefined} className="flex items-center justify-between rounded-xl px-3 py-3 text-lg font-bold hover:bg-[var(--accent-subtle)]">{n.label}<span aria-hidden="true" className="text-[var(--accent)]">◆</span></Link></li>)}
+        {NAV.map(n => <li key={n.to}><Link to={n.to} aria-current={cur(n.to) ? 'page' : undefined} className="flex items-center justify-between rounded-xl px-3 py-3 text-lg font-bold hover:bg-[var(--accent-subtle)]">{n.label}<span aria-hidden="true" className="nav-diamond" /></Link></li>)}
         <li className="flex items-center justify-between gap-3 px-3 pt-2 sm:col-span-2"><SocialLinks /></li>
       </ul>
     </nav>}
@@ -81,7 +82,10 @@ export function Footer() {
         <div style={{ ['--text-primary' as any]: '#f6efe1', ['--text-muted' as any]: '#e0d4bb', ['--logo' as any]: '#f3e9d2' }}>
           <Logo />
           <p className="mt-4 max-w-sm text-[#e0d4bb]">متجر إصدارات مؤسسة الكود لنشر الكتب. الأسعار بالدرهم الإماراتي، ويتم الدفع والشحن عبر متجر الكود الرسمي.</p>
-          <p className="mt-4"><a href="mailto:info@alcode.ae" data-testid="footer-email" className="inline-flex items-center gap-2 font-semibold text-[#f6efe1] hover:text-[#e2b866]"><Mail size={18} aria-hidden="true" /><span dir="ltr" className="ulink">info@alcode.ae</span></a></p>
+          <p className="mt-4 flex flex-col items-start gap-2">
+            <a href="mailto:info@alcode.ae" data-testid="footer-email" className="inline-flex items-center gap-2 font-semibold text-[#f6efe1] hover:text-[#e2b866]"><Mail size={18} aria-hidden="true" /><span dir="ltr" className="ulink">info@alcode.ae</span></a>
+            <a href={waMe('مرحباً، أستفسر عن إصدارات مؤسسة الكود.')} data-testid="footer-wa" target="_blank" rel="noopener" className="inline-flex items-center gap-2 font-semibold text-[#f6efe1] hover:text-[#e2b866]">واتساب <span dir="ltr" className="ulink">+{WHATSAPP}</span></a>
+          </p>
           <div className="mt-4 flex flex-wrap items-center gap-3"><SocialLinks dark /></div>
         </div>
         <div><h2 className="text-base text-[#f6efe1]">التصنيفات</h2><ul className="mt-3 space-y-1.5"><L to="books/">كل الكتب</L>{collections.map(c => <L key={c.handle} to={`collection/${c.handle}/`}>{c.title}</L>)}</ul></div>
