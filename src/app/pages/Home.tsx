@@ -60,7 +60,7 @@ export default function Home() {
           <div className="hero-actions"><Link to="books/" className="store-btn !px-6 !py-3 text-lg">تصفّح كل الكتب</Link>{collections[0] && <Link to={`collection/${collections[0].handle}/`} className="ghost-btn !border-white/50 !bg-black/30 !text-[#f6efe1] hover:!bg-black/50">{collections[0].title}</Link>}</div>
         </div>
         {hero && <aside className="hero-plinth" aria-label="أحدث إصدار">
-          <Link to={`book/${hero.handle}/`} className="hero-cover"><Cover b={hero} size="lg" eager float /></Link>
+          <Link to={`book/${hero.handle}/`} className="hero-cover"><Cover b={hero} size="lg" eager /></Link>
           <div className="hero-shelf" aria-hidden="true" />
           <h2 className="sec plinth-title"><Link to={`book/${hero.handle}/`} className="hover:underline">{hero.title}</Link></h2>
           <p className="hero-price"><span className="hero-flag">أحدث إصدار</span><span>{fmtPrice(hero.price)}</span></p>

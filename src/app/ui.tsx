@@ -26,17 +26,17 @@ function useTilt<T extends HTMLElement>() {
   return ref;
 }
 
-/** Book image without a box: transparent cut-out on the page with a soft drop shadow; original image as fallback. */
+/** Every cover sits in the same paper plate: full image, contained, never cropped. */
 export function Cover({ b, i = 0, size = 'sm', eager = false, className = '', float = false }: { b: Book; i?: number; size?: 'sm' | 'lg'; eager?: boolean; className?: string; float?: boolean }) {
   const im = imgOf(b, i); const tilt = useTilt<HTMLDivElement>(); const [loaded, setLoaded] = useState(true); const ir = useRef<HTMLImageElement>(null);
   useEffect(() => { const el = ir.current; if (el && !el.complete) setLoaded(false); }, [b.handle, i, size]);
-  if (!im) return <div className={`aspect-[4/5] ${className}`} />;
-  const cut = size === 'sm' ? im.cutSm : im.cut; const src = cut || (size === 'sm' ? im.sm : im.src);
-  return <div ref={tilt} className={`tilt grid aspect-[4/5] place-items-center ${className}`}>
-    <div className={`tilt-in relative grid h-full w-full place-items-center ${float ? 'float' : ''}`} style={float ? { animationDelay: `${(b.handle.length % 7) * -.6}s` } : undefined}>
-      {!loaded && <span className="skel absolute inset-[8%] rounded-xl" aria-hidden="true" />}
-      <img ref={ir} onLoad={() => setLoaded(true)} onError={() => setLoaded(true)} src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" 
-        className={`book-img max-h-full max-w-full object-contain ${cut ? 'is-cut' : 'rounded-xl'}`} />
+  if (!im) return <div className={`cover-plate ${className}`} />;
+  const src = size === 'sm' ? im.sm : im.src;
+  const portrait = im.w / im.h < 0.98;
+  return <div ref={tilt} className={`cover-plate tilt ${size === 'lg' ? 'cover-plate-lg' : ''} ${className}`}>
+    <div className={`tilt-in cover-mat ${float ? 'float' : ''}`} style={float ? { animationDelay: `${(b.handle.length % 7) * -.6}s` } : undefined}>
+      {!loaded && <span className="skel cover-skel" aria-hidden="true" />}
+      <img ref={ir} onLoad={() => setLoaded(true)} onError={() => setLoaded(true)} src={asset(src)} alt={im.alt || b.title} width={im.w} height={im.h} loading={eager ? 'eager' : 'lazy'} decoding="async" className={`book-img${portrait ? ' fit-fill' : ''}`} />
     </div>
   </div>;
 }
@@ -76,9 +76,7 @@ function useReveal<T extends HTMLElement>() {
 export function BookCard({ b, eager = false, list = false, onQuick, quickOpen = false }: { b: Book; eager?: boolean; list?: boolean; onQuick?: () => void; quickOpen?: boolean }) {
   return <article className={`book-card group relative h-full ${list ? 'grid grid-cols-[96px_1fr] items-center gap-4 sm:grid-cols-[120px_1fr_auto]' : 'flex flex-col'}`}>
     <div className="relative">
-      <div className={list ? '' : 'cover-well'}>
-      <Link to={`book/${b.handle}/`} className="block rounded-2xl" aria-label={b.title} tabIndex={-1}><Cover b={b} eager={eager} /></Link>
-      </div>
+      <Link to={`book/${b.handle}/`} className="block" aria-label={b.title} tabIndex={-1}><Cover b={b} eager={eager} /></Link>
       {!list && <div className="quick mt-2 flex justify-center gap-2">
         <AddButton b={b} icon /><WishButton b={b} compact />
         {onQuick && <button type="button" onClick={onQuick} aria-expanded={quickOpen} aria-label={`نظرة سريعة على «${b.title}»`} className="tool-btn quick-btn"><Eye size={18} aria-hidden="true" /></button>}

@@ -35,7 +35,7 @@ export function ThemePage({ slug }: { slug: string }) {
 function ThemeCard({ t }: { t: Theme }) {
   const bs = themeBooks(t).slice(0, 3);
   return <Link to={`t/${t.slug}/`} className="theme-card group" data-testid="theme-card">
-    <div className="theme-fan" aria-hidden="true">{bs.map(b => { const im = b.images[0] as any; return <img key={b.handle} src={asset(im.cutSm || im.sm)} className={im.cutSm ? "is-cut" : undefined} alt="" width={240} height={300} loading="lazy" decoding="async" />; })}</div>
+    <div className="theme-fan" aria-hidden="true">{bs.map(b => { const im = b.images[0]; return <span key={b.handle} className="cover-plate"><span className="cover-mat"><img src={asset(im.sm)} alt="" width={im.w} height={im.h} loading="lazy" decoding="async" className={`book-img${im.w / im.h < 0.98 ? ' fit-fill' : ''}`} /></span></span>; })}</div>
     <div className="p-4"><h3 className="text-lg group-hover:text-[var(--accent)]">{t.title}</h3><p className="mt-1 text-sm text-[var(--text-muted)]">{t.handles.length} كتب</p></div>
   </Link>;
 }

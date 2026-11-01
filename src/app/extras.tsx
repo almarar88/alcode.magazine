@@ -9,7 +9,7 @@ import { smartSearch } from './search';
 export const SHIPPING = 25;
 export const norm = (s: string) => s.toLowerCase().replace(/[\u064B-\u0652\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي');
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-const thumb = (b: Book) => { const im = b.images[0] as any; return im ? asset(im.cutSm || im.sm) : ''; };
+const thumb = (b: Book) => { const im = b.images[0]; return im ? asset(im.sm) : ''; };
 
 /** Instant search: results appear under the header while typing (no modal); Enter opens the catalog search. */
 export function HeaderSearch({ open, setOpen }: { open: boolean; setOpen: (v: boolean) => void }) {
@@ -32,7 +32,7 @@ export function HeaderSearch({ open, setOpen }: { open: boolean; setOpen: (v: bo
       {q.trim() && <div className="mt-3">
         <ul id="hres" role="listbox" aria-label="نتائج البحث" className="grid gap-1">{res.map((b, i) => <li key={b.handle} id={`hr-${i}`} role="option" aria-selected={i === k}>
           <Link to={`book/${b.handle}/`} onClick={() => { setOpen(false); setQ(''); }} onMouseEnter={() => setK(i)} className={`flex items-center gap-3 rounded-xl p-2 ${i === k ? 'bg-[var(--accent-subtle)]' : ''}`}>
-            <img src={thumb(b)} alt="" width={40} height={52} className="h-[52px] w-10 object-contain" loading="lazy" />
+            <span className="cover-plate cover-mini"><span className="cover-mat"><img src={thumb(b)} alt="" width={40} height={52} className="book-img" loading="lazy" /></span></span>
             <span className="flex-1"><span className="clamp-1 font-semibold">{b.title}</span><span className="text-sm text-[var(--text-muted)]">{fmtPrice(b.price)}{!b.available && ' · نفد'}</span></span>
           </Link></li>)}</ul>
         <p className="mt-2 text-sm text-[var(--text-muted)]" aria-live="polite">{res.length ? <Link to={`books/?q=${encodeURIComponent(q)}`} onClick={() => setOpen(false)} className="font-semibold text-[var(--accent)] hover:underline">عرض كل النتائج في صفحة الكتب</Link> : 'لا توجد نتائج مطابقة.'}</p>
@@ -52,7 +52,7 @@ export function MiniCart({ open, setOpen }: { open: boolean; setOpen: (v: boolea
       <div className="flex items-center justify-between"><h2 className="text-lg">سلتك</h2><button type="button" className="tool-btn" onClick={() => setOpen(false)} aria-label="إغلاق السلة المختصرة"><X size={18} aria-hidden="true" /></button></div>
       {rows.length === 0 ? <p className="py-4 text-[var(--text-secondary)]">سلتك فارغة. <Link to="books/" onClick={() => setOpen(false)} className="font-semibold text-[var(--accent)] hover:underline">تصفّح الكتب</Link></p> : <>
         <ul className="mt-2 max-h-[45vh] divide-y divide-[var(--border)] overflow-y-auto">{rows.map(({ l, b, v }) => <li key={l.id} className="flex items-center gap-3 py-2">
-          <img src={thumb(b)} alt="" width={40} height={52} className="h-[52px] w-10 object-contain" />
+          <span className="cover-plate cover-mini"><span className="cover-mat"><img src={thumb(b)} alt="" width={40} height={52} className="book-img" /></span></span>
           <div className="min-w-0 flex-1"><Link to={`book/${b.handle}/`} onClick={() => setOpen(false)} className="clamp-1 font-semibold hover:text-[var(--accent)]">{b.title}</Link>
             <div className="mt-1 flex items-center gap-1"><button type="button" className="qty-btn" aria-label={`إنقاص الكمية من «${b.title}»`} onClick={() => setQty(l.id, l.qty - 1)}><Minus size={14} aria-hidden="true" /></button><span className="w-6 text-center tabular-nums" aria-label={`الكمية ${l.qty}`}>{l.qty}</span><button type="button" className="qty-btn" disabled={l.qty >= MAXQ} aria-label={`زيادة الكمية من «${b.title}»`} onClick={() => setQty(l.id, l.qty + 1)}><Plus size={14} aria-hidden="true" /></button>
               <span className="ms-auto font-bold">{fmtPrice(Number(v.price) * l.qty)}</span><button type="button" className="tool-btn !size-8" aria-label={`إزالة «${b.title}»`} onClick={() => remove(l.id)}><Trash2 size={15} aria-hidden="true" /></button></div></div>

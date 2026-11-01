@@ -14,8 +14,8 @@ function Zoom({ b, i }: { b: Book; i: number }) {
   const im = b.images[i] as any; const [on, setOn] = useState(false); const [o, setO] = useState('50% 50%');
   const pos = (e: React.PointerEvent<HTMLButtonElement>) => { const r = e.currentTarget.getBoundingClientRect(); setO(`${((e.clientX - r.left) / r.width * 100).toFixed(1)}% ${((e.clientY - r.top) / r.height * 100).toFixed(1)}%`); };
   return <button type="button" aria-pressed={on} aria-label={on ? 'تصغير صورة الغلاف' : 'تكبير صورة الغلاف'} onClick={e => { pos(e as any); setOn(x => !x); }} onPointerMove={e => on && pos(e)} onPointerLeave={() => setOn(false)}
-    className={`zoom relative block aspect-[4/5] w-full rounded-2xl ${on ? 'on bg-[var(--surface-raised)]' : ''}`}>
-    <img src={asset(on ? im.src : (im.cut || im.src))} alt={im.alt || b.title} width={im.w} height={im.h} fetchPriority="high" style={{ transformOrigin: o }} className={`book-img h-full w-full object-contain ${im.cut && !on ? 'is-cut' : ''}`} />
+    className={`cover-plate zoom ${on ? 'on' : ''}`}>
+    <span className="cover-mat"><img src={asset(im.src)} alt={im.alt || b.title} width={im.w} height={im.h} fetchPriority="high" style={{ transformOrigin: o }} className={`book-img${im.w / im.h < 0.98 ? ' fit-fill' : ''}`} /></span>
     <span className="pointer-events-none absolute bottom-2 left-2 inline-flex items-center gap-1 rounded-full bg-[var(--card)] px-2.5 py-1 text-sm font-semibold text-[var(--text-secondary)] shadow"><ZoomIn size={15} aria-hidden="true" />{on ? 'اضغط للتصغير' : 'اضغط للتكبير'}</span>
   </button>;
 }
@@ -34,8 +34,8 @@ export default function BookPage({ handle }: { handle: string }) {
       <div className="book-gallery">
         <div className="book-stage"><Zoom b={b} i={i} /></div>
         {b.images.length > 1 && <ul className="thumbs mt-3" aria-label="صور الكتاب">{b.images.map((im, k) => <li key={im.src}>
-          <button type="button" onClick={() => setI(k)} aria-pressed={i === k} aria-label={`الصورة ${k + 1} من ${b.images.length}`} className={`block w-20 overflow-hidden rounded-xl border-2 bg-[var(--surface-raised)] ${i === k ? 'border-[var(--accent)]' : 'border-[var(--border)]'}`}>
-            <img src={asset((im as any).cutSm || im.sm)} alt="" width={im.w} height={im.h} className="aspect-[4/5] w-full object-contain" loading="lazy" /></button></li>)}</ul>}
+          <button type="button" onClick={() => setI(k)} aria-pressed={i === k} aria-label={`الصورة ${k + 1} من ${b.images.length}`} className={`cover-plate cover-thumb ${i === k ? 'is-on' : ''}`}>
+            <span className="cover-mat"><img src={asset(im.sm)} alt="" width={im.w} height={im.h} className={`book-img${im.w / im.h < 0.98 ? ' fit-fill' : ''}`} loading="lazy" /></span></button></li>)}</ul>}
         <SampleViewer b={b} />
         <div className="mt-6 hidden sm:block no-print"><Book3D b={b} /></div>
       </div>
