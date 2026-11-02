@@ -8,7 +8,14 @@ const cat = JSON.parse(fs.readFileSync(path.join(root, 'content/catalog.json'), 
 const reject = new Set(fs.existsSync(path.join(root, 'content/cut-reject.json')) ? JSON.parse(fs.readFileSync(path.join(root, 'content/cut-reject.json'), 'utf8')) : []);
 const withCut = im => { const n = path.basename(im.src, '.webp'); return !reject.has(n) && fs.existsSync(path.join(root, `public/books/cut/${n}.webp`)) ? { ...im, cut: `books/cut/${n}.webp`, cutSm: `books/cut/${n}-sm.webp`, flat: n.startsWith('15786') } : im; };
 const inside = JSON.parse(fs.readFileSync(path.join(root, 'content/inside.json'), 'utf8'));
-const books = cat.books.map(b => ({ ...b, images: b.images.map(withCut), price: Number(b.variants[0].price), available: b.variants.some(v => v.available) }));
+const covers = fs.existsSync(path.join(root, 'content/covers.json')) ? JSON.parse(fs.readFileSync(path.join(root, 'content/covers.json'), 'utf8')) : {};
+const books = cat.books.map(b => {
+  const c = covers[String(b.id)];
+  const front = c && fs.existsSync(path.join(root, 'public/books/covers', `${b.id}.webp`))
+    ? [{ src: `books/covers/${b.id}.webp`, sm: `books/covers/${b.id}-sm.webp`, w: c.w, h: c.h, alt: b.title, plain: true }]
+    : [];
+  return { ...b, images: [...front, ...b.images].map(withCut), price: Number(b.variants[0].price), available: b.variants.some(v => v.available) };
+});
 const collections = cat.collections.map(c => ({ ...c, count: books.filter(b => b.collections.includes(c.handle)).length })).filter(c => c.count);
 const themeDefs = JSON.parse(fs.readFileSync(path.join(root, 'content/themes.json'), 'utf8'));
 const themes = themeDefs.map(t => ({ slug: t.slug, title: t.title, desc: t.desc, handles: books.filter(b => t.match.some(m => [b.title, ...b.tags].join(' ').includes(m))).map(b => b.handle) })).filter(t => t.handles.length >= 2);

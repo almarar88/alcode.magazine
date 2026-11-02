@@ -87,11 +87,11 @@ export function SameCollection({ b, exclude = [] }: { b: Book; exclude?: string[
 }
 
 /** Curated shelves: one per real Shopify collection, plus newest. */
-export function Shelves() {
+export function Shelves({ skip = [] }: { skip?: string[] }) {
   const shelves = [
     { key: 'new', title: 'وصل حديثًا', to: 'books/?sort=new', items: newest().slice(0, 12), sub: 'أحدث ما أُضيف إلى المتجر' },
     ...collections.map(c => ({ key: c.handle, title: c.title, to: `collection/${c.handle}/`, items: books.filter(b => b.collections.includes(c.handle)), sub: `${c.count} ${Number(c.count) > 10 ? 'كتابًا' : 'كتب'}` })),
-  ].filter(s => s.items.length);
+  ].filter(s => s.items.length && !skip.includes(s.key));
   return <div data-testid="shelves">{shelves.map(s => <section key={s.key} aria-labelledby={`sh-${s.key}`} className="shelf mx-auto max-w-[1320px] px-4 pt-14 sm:px-6">
     <SecHead id={`sh-${s.key}`} title={s.title} to={s.to} sub={s.sub} />
     <div className="mt-3"><Carousel items={s.items} label={s.title} /></div>
