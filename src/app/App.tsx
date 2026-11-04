@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound';
 import Author from './pages/Author';
 import { BackToTop } from './extras2';
 import { BottomNav } from './extras7';
+import { ScrollFilament, useV4Reveal } from './v3';
 import { ThemePage, ThemesIndex, themes } from './extras6';
 import { About, Contact, Privacy, Terms, Help } from './pages/Static';
 const SITE = 'متجر الكود للكتب';
@@ -40,11 +41,13 @@ function titleFor(path: string) {
 }
 export default function App() {
   const path = usePath(); const first = useRef(true);
+  useV4Reveal(path);
   useEffect(() => { if (first.current) { first.current = false; return; }
     const t = setTimeout(() => { const gc = (window as any).goatcounter; if (gc?.count) gc.count({ path: location.pathname + location.search, title: document.title }); }, 300); return () => clearTimeout(t); }, [path]);
   useEffect(() => { const t = titleFor(path); document.title = t ? `${t} — ${SITE}` : `${SITE} · Alcode Books`; }, [path]);
   return <>
     <a href="#main" className="skip">تخطَّ إلى المحتوى</a>
+    <ScrollFilament />
     <Header path={path} />
     <div key={path} className={first.current ? undefined : "page-in"}>{route(path)}</div>
     <Footer />

@@ -89,3 +89,17 @@ export function useV3Reveal() {
     els.forEach(e => io.observe(e)); return () => io.disconnect(); }, []);
 }
 export { byHandle };
+
+/** Site-wide: staggered fade-up for sections/cards and ink reveal for section titles, re-run per route. */
+export function useV4Reveal(path: string) {
+  useEffect(() => { if (reduce() || !('IntersectionObserver' in window)) return;
+    let io: IntersectionObserver | null = null;
+    const t = setTimeout(() => {
+      const sel = 'main h2.sec, main .v3-h2, main .book-card, main .shelf-card, main .theme-card, main .v3-tile, main .step, main .essay, main [data-v3reveal]';
+      const els = [...document.querySelectorAll<HTMLElement>(sel)].filter(e => !e.closest('.carousel,.v3-ribbon,.marquee') && e.getBoundingClientRect().top > innerHeight * .92);
+      els.forEach(e => e.classList.add(e.matches('h2.sec,.v3-h2') ? 'v4-ink' : 'v4-fade'));
+      let k = 0; io = new IntersectionObserver(es => { es.forEach(en => { if (en.isIntersecting) { const el = en.target as HTMLElement; el.style.transitionDelay = `${(k++ % 4) * 70}ms`; el.classList.add('v4-in'); io!.unobserve(el); } }); k = 0; }, { rootMargin: '0px 0px -8% 0px' });
+      els.forEach(e => io!.observe(e));
+    }, 60);
+    return () => { clearTimeout(t); io?.disconnect(); }; }, [path]);
+}

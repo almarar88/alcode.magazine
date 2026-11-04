@@ -162,9 +162,10 @@ export function Carousel({ items, label }: { items: Book[]; label: string }) {
   </div>;
 }
 
-export function PageHead({ title, desc, children }: { kicker?: string; title: string; desc?: string; children?: ReactNode }) {
-  return <header className="page-head"><div className="page-head-in">
-    <h1 className="display">{title}</h1>{desc && <p className="page-lead">{desc}</p>}{children}
+export function PageHead({ kicker, title, desc, children }: { kicker?: string; title: string; desc?: string; children?: ReactNode }) {
+  return <header className="page-head v4-band"><div className="v3-grain" aria-hidden="true" /><div className="page-head-in">
+    {kicker && <p className="v3-kicker"><span className="v3-dot" aria-hidden="true" />{kicker}</p>}
+    <h1 className="display v4-rise"><span>{title}</span></h1>{desc && <p className="page-lead">{desc}</p>}{children}
   </div><div className="sadu" aria-hidden="true" /></header>;
 }
 export function SecHead({ id, title, to, more = 'عرض الكل', sub }: { id: string; title: string; to?: string; more?: string; sub?: string }) {

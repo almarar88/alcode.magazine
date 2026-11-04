@@ -32,7 +32,7 @@ export default function BookPage({ handle }: { handle: string }) {
     <nav className="crumbs" aria-label="مسار التنقل"><ol><li><Link to="">الرئيسية</Link></li><li aria-hidden="true"><ChevronLeft size={14} /></li><li><Link to="books/">كل الكتب</Link></li>{b.collections[0] && <><li aria-hidden="true"><ChevronLeft size={14} /></li><li><Link to={`collection/${b.collections[0]}/`}>{collectionTitle(b.collections[0])}</Link></li></>}<li aria-hidden="true"><ChevronLeft size={14} /></li><li aria-current="page">{b.title}</li></ol></nav>
     <div className="book-layout">
       <div className="book-gallery">
-        <div className="book-stage"><Zoom b={b} i={i} /></div>
+        <div className="book-stage v4-stage"><Zoom b={b} i={i} /></div>
         {b.images.length > 1 && <ul className="thumbs mt-3" aria-label="صور الكتاب">{b.images.map((im, k) => <li key={im.src}>
           <button type="button" onClick={() => setI(k)} aria-pressed={i === k} aria-label={`الصورة ${k + 1} من ${b.images.length}`} className={`cover-plate cover-thumb ${i === k ? 'is-on' : ''}`}>
             <span className="cover-mat"><img src={asset(im.sm)} alt="" width={im.w} height={im.h} className={`book-img${im.w / im.h < 0.98 ? ' fit-fill' : ''}`} loading="lazy" /></span></button></li>)}</ul>}

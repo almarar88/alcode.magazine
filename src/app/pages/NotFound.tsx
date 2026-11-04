@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { Link, navigate } from '../router';
-import { Illo, SurpriseButton } from '../extras5';
+import { SurpriseButton } from '../extras5';
 import { newest } from '../data';
 import { Carousel } from '../ui';
 export default function NotFound() {
   const [q, setQ] = useState('');
   return <main id="main" className="mx-auto max-w-[1320px] px-4 py-20 sm:px-6">
     <div className="mx-auto grid max-w-[720px] place-items-center text-center">
-      <Illo name="inspired" />
+      <p className="v4-404" aria-hidden="true">404</p>
       <h1 className="display mt-6">الصفحة غير موجودة</h1>
       <p className="mt-3 text-[var(--text-secondary)]">ربما نُقلت الصفحة أو حُذف الكتاب من المتجر. ابحث عن الكتاب الذي تريده:</p>
       <form role="search" data-testid="nf-search" onSubmit={e => { e.preventDefault(); navigate(`books/${q.trim() ? '?q=' + encodeURIComponent(q.trim()) : ''}`); }} className="mt-5 flex w-full max-w-lg flex-wrap gap-2">

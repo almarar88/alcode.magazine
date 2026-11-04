@@ -24,12 +24,11 @@ function Marquee() {
   </section>;
 }
 export default function Home() {
-  useV3Reveal();
+  
   const fe = featured.map(byHandle).filter(Boolean) as Book[];
   const nw = newest().slice(0, 12);
   const pick = fe.filter(b => !nw.includes(b)).slice(0, 10);
   return <main id="main" className="home-flow">
-    <ScrollFilament />
     <Hero3 />
     <CoverRibbon />
     <Sadu />

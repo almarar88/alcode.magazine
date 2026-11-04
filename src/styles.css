@@ -704,3 +704,57 @@ html{overflow-x:clip}
 .v3-tile a{min-width:0}
 @media (max-width:600px){.v3-tile:not(.t0) img,.v3-tile.t0 img{inset-inline-end:1rem;bottom:-12%}}
 @media (max-width:600px){.v3-tile.t0 img{width:30%;inset-inline-end:.75rem}.v3-tile.t0 h3,.v3-tile.t0 p{max-width:64%}.v3-tile:not(.t0) img{width:26%;inset-inline-end:.75rem}.v3-tile:not(.t0) h3,.v3-tile:not(.t0) p{max-width:66%}}
+
+/* ===== v4: site-wide language ===== */
+.v4-band{position:relative;overflow:hidden;isolation:isolate;background:radial-gradient(110% 120% at 88% 0%,#3a2a12 0%,#17130d 48%,#0e0c09 100%)!important;color:#f6efe1}
+.v4-band .page-head-in{position:relative;padding-block:3.2rem 2.4rem}
+.v4-band h1.display{font-family:var(--font-ruqaa);font-weight:700;font-size:clamp(2.3rem,1.2rem + 4.6vw,5.4rem);line-height:1.25;color:#f6efe1;overflow-wrap:anywhere;margin-top:.7rem}
+.v4-band .v3-kicker{font-size:.85rem}
+.v4-rise{overflow:hidden;padding-bottom:.18em}
+.v4-rise>span{display:inline-block;animation:v3rise .85s cubic-bezier(.2,.8,.2,1) both}
+.v4-band .page-lead{color:#d9cdb6;max-width:42rem;font-size:1.05rem;line-height:1.9}
+.v4-band .chip{border-color:rgb(226 184 102/.4);color:#f1d59c;background:transparent}
+@media (max-width:600px){.v4-band .page-head-in{padding-block:2.2rem 1.7rem}}
+/* section titles: bigger calligraphy */
+h2.sec{font-size:clamp(1.8rem,1.1rem + 2.4vw,2.9rem);line-height:1.3}
+/* reveals */
+.v4-fade{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s cubic-bezier(.2,.8,.2,1)}
+.v4-fade.v4-in{opacity:1;transform:none}
+.v4-ink{clip-path:inset(0 0 0 100%);transition:clip-path 1s cubic-bezier(.7,0,.2,1)}
+.v4-ink.v4-in{clip-path:inset(0 0 0 0)}
+/* cards: 3D lift + gold edge */
+.book-card{transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.book-card .tilt{perspective:900px}
+.book-card:hover .tilt-in,.book-card:focus-within .tilt-in{transform:rotateX(var(--rx,0)) rotateY(var(--ry,0)) translateY(-10px) translateZ(14px)}
+.shelf-card,.theme-card,.how-panel{border-radius:1.6rem!important}
+.shelf-card:hover,.theme-card:hover{box-shadow:0 26px 44px -26px rgb(138 90 20/.5)}
+/* buttons: press + arrow nudge, gold pill */
+.ink-btn,.store-btn{min-height:44px}
+.ink-btn svg,.ghost-btn svg{transition:transform .25s}
+.ink-btn:hover svg,.ghost-btn:hover svg{transform:translateX(-3px)}
+.ghost-btn{min-height:44px}
+/* book page: spotlight stage */
+.v4-stage{position:relative;border-radius:1.8rem;padding:clamp(1rem,4vw,2.4rem);background:radial-gradient(90% 80% at 70% 10%,#3a2a12,#17130d 55%,#0e0c09);overflow:hidden}
+.v4-stage::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgb(226 184 102/.3) 1px,transparent 1.2px);background-size:22px 22px;opacity:.25;mask-image:linear-gradient(#000,transparent 70%);pointer-events:none}
+.v4-stage .cover-plate{position:relative;box-shadow:0 40px 60px -28px rgb(0 0 0/.8)}
+.price-lg,.plinth-title{font-feature-settings:"tnum"}
+/* thumbs & tap targets */
+.cover-thumb{min-width:48px;min-height:48px}
+.marquee-wrap a p{min-height:24px}
+.marquee-wrap li a{display:block;padding-bottom:.4rem}
+.marquee-wrap li a .clamp-1{display:flex;align-items:center;min-height:32px}
+.crumbs a{display:inline-flex;align-items:center;min-height:36px}
+/* footer */
+.v4-foot{position:relative;overflow:hidden;background:radial-gradient(120% 100% at 85% 0%,#2a1f0f,#12100c 55%,#0b0a07)!important}
+.v4-foot-mark{font-family:var(--font-ruqaa);font-weight:700;font-size:clamp(4rem,16vw,15rem);line-height:1.1;text-align:center;color:transparent;-webkit-text-stroke:1px rgb(226 184 102/.55);padding:2.5rem 1rem 0;white-space:nowrap;overflow:hidden;user-select:none}
+.v4-foot a{min-height:32px;display:inline-flex;align-items:center}
+/* 404 */
+.v4-404{font-family:var(--font-ruqaa);font-weight:700;font-size:clamp(6rem,22vw,14rem);line-height:1;color:transparent;-webkit-text-stroke:2px var(--accent);background:linear-gradient(100deg,#f1d59c,#e2b866 40%,#b07a24);-webkit-background-clip:text;background-clip:text;direction:ltr}
+/* header: gold underline nudge */
+header nav a{transition:color .2s}
+@media (prefers-reduced-motion:reduce){
+  .v4-rise>span{animation:none!important}
+  .v4-fade,.v4-ink{opacity:1!important;transform:none!important;clip-path:none!important;transition:none!important}
+  .book-card:hover .tilt-in{transform:none}
+  .ink-btn svg,.ghost-btn svg{transition:none}
+}

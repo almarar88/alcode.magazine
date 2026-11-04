@@ -76,7 +76,8 @@ export function Header({ path }: { path: string }) {
 
 export function Footer() {
   const L = ({ to, children }: any) => <li><Link to={to} className="text-[#e0d4bb] hover:text-[#e2b866]"><span className="ulink">{children}</span></Link></li>;
-  return <footer className="mt-24 bg-[var(--hero-bg)] text-[#efe4cc]">
+  return <footer className="v4-foot mt-24 bg-[var(--hero-bg)] text-[#efe4cc]">
+    <div className="v4-foot-mark" aria-hidden="true">متجر الكود</div>
     <div className="pattern">
       <div className="mx-auto grid max-w-[1320px] gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
         <div style={{ ['--text-primary' as any]: '#f6efe1', ['--text-muted' as any]: '#e0d4bb', ['--logo' as any]: '#f3e9d2' }}>
