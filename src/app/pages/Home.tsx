@@ -2,12 +2,12 @@ import { Link } from '../router';
 import data from '../../generated/store.json';
 import { books, featured, newest, byHandle, asset, type Book } from '../data';
 import { Carousel, RecentRow, SecHead } from '../ui';
-import { LogoMark } from '../art';
 import { AuthorTeaser } from './Author';
 import { Shelves, TrustStrip } from '../extras3';
 import { ShelfCards, HowToOrder } from '../extras5';
 import { OtherThemes, Sadu } from '../extras6';
 import { FollowCTA } from '../extras7';
+import { Hero3, CoverRibbon, Bento, BigType, ScrollFilament, useV3Reveal } from '../v3';
 type Inside = { src: string; sm: string; w: number; h: number; caption: string; handle: string };
 const inside = (data as any).inside as Inside[];
 const short = (h: string) => (byHandle(h)?.title || '').split(/[:،(]/)[0].trim();
@@ -24,27 +24,21 @@ function Marquee() {
   </section>;
 }
 export default function Home() {
+  useV3Reveal();
   const fe = featured.map(byHandle).filter(Boolean) as Book[];
   const nw = newest().slice(0, 12);
   const pick = fe.filter(b => !nw.includes(b)).slice(0, 10);
   return <main id="main" className="home-flow">
-    <section className="home-open" aria-label="افتتاح المتجر">
-      <div className="home-open-in">
-        <LogoMark className="home-mark" />
-        <h1 className="display">إصدارات مؤسسة الكود لنشر الكتب</h1>
-        <p className="home-lead">{books.length} كتابًا في تاريخ الخليج العربي والظفرة وأبوظبي وأدب الرحلات والشعر. تصفّح، ثم أتمّ الدفع على متجر الكود الرسمي.</p>
-        <div className="home-cta">
-          <Link to="books/" className="store-btn !px-6 !py-3 text-lg">تصفّح كل الكتب</Link>
-          <Link to="t/" className="ghost-btn">مجموعات مختارة</Link>
-        </div>
-      </div>
-    </section>
+    <ScrollFilament />
+    <Hero3 />
+    <CoverRibbon />
     <Sadu />
     <section aria-labelledby="new-h" className="home-block mx-auto max-w-[1320px] px-4 sm:px-6">
       <SecHead id="new-h" title="وصل حديثًا" to="books/?sort=new" sub="أحدث ما أُضيف إلى المتجر" />
       <div className="mt-4"><Carousel items={nw} label="وصل حديثًا" /></div>
     </section>
     <div className="home-block mx-auto max-w-[1320px] px-4 sm:px-6"><TrustStrip /></div>
+    <Bento />
     <ShelfCards />
     <OtherThemes />
     <Marquee />
@@ -56,6 +50,7 @@ export default function Home() {
       <SecHead id="fe" title="مختارات المتجر" to="books/" more="كل الكتب" />
       <div className="mt-4"><Carousel items={pick} label="مختارات المتجر" /></div>
     </section>}
+    <BigType />
     <FollowCTA />
   </main>;
 }
