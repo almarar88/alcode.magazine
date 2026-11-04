@@ -694,3 +694,13 @@ h1.display::after, h2.sec::after {
 @media (max-width:600px){.v3-card{--fix:-28px}}
 @media (max-width:360px){.v3-card{--fix:-24px}}
 .sec-more,.v3-more,.v3-stack-cap a{display:inline-flex;align-items:center;min-height:44px;padding-inline:.25rem}
+/* shelf cards: centred fan, safe text box */
+html{overflow-x:clip}
+.shelf-card{overflow:hidden;padding:1.1rem 1.15rem 1.2rem!important;text-align:start}
+.shelf-card .fan{display:block;max-width:15rem;margin-inline:auto}
+.fan-plate{width:min(5.5rem,30%)}
+.shelf-title,.v3-tile h3,.theme-card h3{overflow-wrap:anywhere;word-break:normal;text-wrap:balance}
+.shelf-card p,.v3-tile p{overflow-wrap:anywhere}
+.v3-tile a{min-width:0}
+@media (max-width:600px){.v3-tile:not(.t0) img,.v3-tile.t0 img{inset-inline-end:1rem;bottom:-12%}}
+@media (max-width:600px){.v3-tile.t0 img{width:30%;inset-inline-end:.75rem}.v3-tile.t0 h3,.v3-tile.t0 p{max-width:64%}.v3-tile:not(.t0) img{width:26%;inset-inline-end:.75rem}.v3-tile:not(.t0) h3,.v3-tile:not(.t0) p{max-width:66%}}

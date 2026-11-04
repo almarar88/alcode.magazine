@@ -14,8 +14,8 @@ export function ShelfCards() {
       const bs = books.filter(b => b.collections.includes(c.handle) && b.images[0]).slice(0, 3);
       const min = Math.min(...books.filter(b => b.collections.includes(c.handle)).map(b => b.price));
       return <li key={c.handle}><Link to={`collection/${c.handle}/`} className="shelf-card group block h-full rounded-3xl border border-[var(--border)] bg-[var(--card)] p-4">
-        <div className="fan relative mx-auto h-40 w-full" aria-hidden="true">{bs.map((b, i) => <span key={b.handle} className="cover-plate fan-plate" style={{ ['--i' as any]: i - (bs.length - 1) / 2 }}><span className="cover-mat"><img src={asset(sm(b))} alt="" width={b.images[0].w} height={b.images[0].h} loading="lazy" decoding="async" className={`book-img${b.images[0].w / b.images[0].h < 0.98 ? ' fit-fill' : ''}`} /></span></span>)}</div>
-        <h3 className="mt-3 text-lg group-hover:text-[var(--accent)]">{c.title}</h3>
+        <div className="fan relative mx-auto h-40 w-full" aria-hidden="true">{bs.map((b, i) => <span key={b.handle} className="cover-plate fan-plate" style={{ ['--i' as any]: bs.length === 1 ? 0 : [0, 1, -1][i] ?? 0, zIndex: 3 - i }}><span className="cover-mat"><img src={asset(sm(b))} alt="" width={b.images[0].w} height={b.images[0].h} loading="lazy" decoding="async" className={`book-img${b.images[0].w / b.images[0].h < 0.98 ? ' fit-fill' : ''}`} /></span></span>)}</div>
+        <h3 className="shelf-title mt-3 text-lg group-hover:text-[var(--accent)]">{c.title}</h3>
         <p className="text-sm text-[var(--text-muted)]">{c.count} كتب{Number.isFinite(min) ? ` · من ${fmtPrice(min)}` : ''}</p>
       </Link></li>;
     })}</ul>
